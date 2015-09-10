@@ -1,0 +1,34 @@
+Download Manager README
+-----------------------------------------------------
+
+To run this script:
+
+python3 ananke.py --arg1 --arg2
+
+Use --help to see all available arguments
+
+i.e. py3 dm.py --help
+
+-----------------------------------------------------
+
+This package requires:
+* Python 3.4+
+* Python JSON RPC package
+
+To enable extraction of compressed rar archives:
+* ---
+
+-----------------------------------------------------
+
+Use pip to install Python third-party package:
+
+* python3 -m pip install json-rpc
+
+To install this on Synology NAS the pip package must be installed first:
+
+* Download get-pip.py to NAS downloads folder (google python pip for more info)
+* SSH into DiskStation as root user: ssh root@$DISKSTATION
+* Change directory to get-pip.py directory (e.g. cd /volume1/downloads/)
+* Execute get-pip script: python3 get-pip.py
+* Proceed with package install as before (e.g. python3 -m pip install json-rpc)
+
