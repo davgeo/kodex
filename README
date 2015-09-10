@@ -13,7 +13,8 @@ i.e. py3 dm.py --help
 
 This package requires:
 * Python 3.4+
-* Python JSON RPC package
+* Python Requests package
+* Python jsonrpcclient package
 
 To enable extraction of compressed rar archives:
 * ---
@@ -22,7 +23,7 @@ To enable extraction of compressed rar archives:
 
 Use pip to install Python third-party package:
 
-* python3 -m pip install json-rpc
+* python3 -m pip install jsonrpcclient
 
 To install this on Synology NAS the pip package must be installed first:
 
@@ -30,5 +31,5 @@ To install this on Synology NAS the pip package must be installed first:
 * SSH into DiskStation as root user: ssh root@$DISKSTATION
 * Change directory to get-pip.py directory (e.g. cd /volume1/downloads/)
 * Execute get-pip script: python3 get-pip.py
-* Proceed with package install as before (e.g. python3 -m pip install json-rpc)
+* Proceed with package install as before (e.g. python3 -m pip install jsonrpcclient)
 
