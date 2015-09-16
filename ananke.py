@@ -15,10 +15,11 @@ import kodi
 # main
 ############################################################################
 def main():
-  kodiControl = kodi.Kodi()
-  ident = kodiControl.AddServer('192.168.1.77', '8080', 'xbmc', 'xbmc')
-  playerID = kodiControl.GetActivePlayers(ident)
-  kodiControl.PlayerPause(ident, playerID)
+  host = '192.168.1.68' #'192.168.1.77'
+  xbmc = kodi.Kodi(host, '8080', 'xbmc', 'xbmc')
+  playerID = xbmc.Player.GetActivePlayers()[0]['playerid']
+  #xbmc.Player.PlayPause({"playerid":playerID})
+  xbmc.JSONRPC.Ping()
 
 ############################################################################
 # default process if run as standalone

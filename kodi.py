@@ -1,72 +1,114 @@
 #!/usr/bin/env python3
 
-''' ANANKE '''
+''' KODI '''
 # Python default package imports
-import os
-import sys
-import argparse
 
 # Third-party package imports
 from jsonrpcclient.http_server import HTTPServer
 
 # Local file imports
 
+# Enable logging on jsconrpcclient module
 import logging
 logging.getLogger('jsonrpcclient').setLevel(logging.INFO)
 logging.basicConfig()
 
-#################################################
-# KodiServer
-#################################################
-class KodiServer:
-  headers = {'content-type': 'application/json'}
-  #logVerbosity = logzila.Verbosity.MINIMAL
+KODI_JSON_NAMESPACES = ["VideoLibrary",
+                        "Settings",
+                        "Favourites",
+                        "AudioLibrary",
+                        "Application",
+                        "Player",
+                        "Input",
+                        "System",
+                        "Playlist",
+                        "Addons",
+                        "AudioLibrary",
+                        "Files",
+                        "GUI" ,
+                        "JSONRPC",
+                        "PVR",
+                        "xbmc"]
 
-  #################################################
-  # constructor
-  #################################################
-  def __init__(self, ident, host, port, user, pwd):
-    self.id = ident
-    self.server = HTTPServer('http://{0}:{1}/jsonrpc'.format(host,port), headers=self.headers, auth=(user, pwd))
-
 #################################################
-# Kodi
+#
+# KodiNamespace
+#
 #################################################
-class Kodi:
+class KodiNamespace(object):
   #logVerbosity = logzila.Verbosity.MINIMAL
 
   #################################################
   # constructor
   #################################################
   def __init__(self):
-    self.serverList = []
+    self.server = None
 
-  # *** CLASSES *** #
+  #################################################
+  # __getattr__
+  # catch undefined methods
+  #################################################
+  def __getattr__(self, name):
+    className = self.__class__.__name__
+
+    if self.server is None:
+      print("No server instantiated in {0}".format(className))
+      return None
+
+    method = name
+    kodiMethod = "{0}.{1}".format(className, method)
+
+    def func(*args, **kwargs):
+      print(className, method, kodiMethod, *args, **kwargs)
+      resp = self.server.request(kodiMethod, *args, **kwargs)
+      print(resp)
+      return resp
+    return func
+
+  #################################################
+  # UpdateServer
+  #################################################
+  def UpdateServer(self, server):
+    self.server = server
+
+# Dynamic create classes for all namespaces
+for namespace in KODI_JSON_NAMESPACES:
+  newClass = "class {0}(KodiNamespace):\n\t\tpass\n".format(namespace)
+  exec (newClass)
+
+
+#################################################
+#
+# Kodi
+#
+#################################################
+class Kodi(object):
+  headers = {'content-type': 'application/json'}
+  #logVerbosity = logzila.Verbosity.MINIMAL
+
+  #################################################
+  # constructor
+  #################################################
+  def __init__(self, host, port, user, pwd):
+    self._AddNamespaces()
+    self._SwitchServer(host, port, user, pwd)
+
   ############################################################################
-  # AddServer
+  # _AddNamespaces
+  # Dynamically add namespace classes
   ############################################################################
-  def AddServer(self, host, port, user, pwd):
-    serverID = len(self.serverList)
-    server = KodiServer(serverID, host, port, user, pwd)
-    self.serverList.append(server)
-    return serverID
-
-  ############################################################################
-  # GetActivePlayers
-  ############################################################################
-  def GetActivePlayers(self, ident):
-    resp = self.serverList[ident].server.request('Player.GetActivePlayers')
-    print(resp)
-    return resp[0]['playerid']
+  def _AddNamespaces(self):
+    for namespace in KODI_JSON_NAMESPACES:
+      s = "self.{0} = {0}()".format(namespace)
+      exec(s)
 
   ############################################################################
-  # PlayerPause
+  # _SwitchServer
+  # Switch or set server
   ############################################################################
-  def PlayerPause(self, ident, pID):
-    resp = self.serverList[ident].server.request('Player.PlayPause', playerid=pID)
-    print(resp)
-
-
-
-
+  def _SwitchServer(self, host, port, user, pwd):
+    self.server = HTTPServer('http://{0}:{1}/jsonrpc'.format(host,port), headers=self.headers, auth=(user, pwd))
+    for namespace in KODI_JSON_NAMESPACES:
+      s = "self.{0}.UpdateServer(self.server)".format(namespace)
+      exec(s)
 
