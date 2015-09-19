@@ -15,9 +15,7 @@ This package requires:
 * Python 3.4+
 * Python Requests package
 * Python jsonrpcclient package
-
-To enable extraction of compressed rar archives:
-* ---
+* Python Django package
 
 -----------------------------------------------------
 

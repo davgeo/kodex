@@ -1,0 +1,25 @@
+{% extends "main/base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block indexActive %}class="active"{% endblock %}
+
+{% block sidebar %}
+  <li class="active"><a href="#">Overview<span class="sr-only">(current)</span></a></li>
+  <li><a href="#">Settings</a></li>
+{% endblock %}
+
+{% block content %}
+  <h1>Overview</h1>
+  <p>.col-sm-10</p>
+
+  <div class="row">
+    <div class="col-sm-2">.col-sm-2</div>
+    <div class="col-sm-8">.col-sm-8
+      <div class="row">
+        <div class="col-sm-6">.col-sm-6</div>
+        <div class="col-sm-2">.col-sm-2</div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
