@@ -2,11 +2,14 @@
 
 ''' KODI '''
 # Python default package imports
+import urllib
 
 # Third-party package imports
-from kodijsonrpc import KodiJSONClient
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 # Local file imports
+from .kodijsonrpc import KodiJSONClient
 
 #################################################
 # GetServer
@@ -33,7 +36,7 @@ def Status(server):
 # GetRecentlyAddedEpisodes
 #################################################
 @GetServer
-def RecentlyAddedEpisodes():
+def RecentlyAddedEpisodes(server):
   recentEpisodes = server.VideoLibrary.GetRecentlyAddedEpisodes({'properties':['title', 'showtitle', 'thumbnail', 'tvshowid', 'episode', 'season']})
   episodes = recentEpisodes['episodes']
   for episode in episodes:

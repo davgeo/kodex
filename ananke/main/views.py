@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 
 from .models import Server
 
+import main.kodi as KodiLookUp
+
 # Create your views here.
 def index(request):
   template = loader.get_template('main/index.html')
@@ -15,14 +17,16 @@ def kodi(request):
 
   serverStatusTable = []
   for server in serverList:
-    serverStatusTable.append((server, server.CheckStatus()))
+    serverStatusTable.append((server, KodiLookUp.Status(*server.conn())))
 
   context = {'kodi_server_list': serverStatusTable}
   return render(request, 'main/kodi.html', context)
 
 def server(request, ident):
   server = Server.objects.get(pk=ident)
-  recently_added_episodes = server.GetRecentlyAddedEpisodes()
+  print(server.conn())
+  print(*server.conn())
+  recently_added_episodes = KodiLookUp.RecentlyAddedEpisodes(*server.conn())
 
   context = {'server':server, 'episodes':recently_added_episodes}
   return render(request, 'main/kodi_server_index.html', context)
