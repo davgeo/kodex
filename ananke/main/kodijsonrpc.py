@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-''' KODI '''
+''' KODI JSON RPC Client '''
 # Python default package imports
 
 # Third-party package imports
@@ -36,10 +36,8 @@ KODI_JSON_NAMESPACES = ["VideoLibrary",
 #
 #################################################
 class KodiNamespace(object):
-  #logVerbosity = logzila.Verbosity.MINIMAL
-
   #################################################
-  # constructor
+  # __init__
   #################################################
   def __init__(self):
     self.server = None
@@ -79,15 +77,14 @@ for namespace in KODI_JSON_NAMESPACES:
 
 #################################################
 #
-# Kodi
+# KodiJSONClient
 #
 #################################################
-class Kodi(object):
+class KodiJSONClient(object):
   headers = {'content-type': 'application/json'}
-  #logVerbosity = logzila.Verbosity.MINIMAL
 
   #################################################
-  # constructor
+  # __init__
   #################################################
   def __init__(self, host, port, user, pwd):
     self._AddNamespaces()

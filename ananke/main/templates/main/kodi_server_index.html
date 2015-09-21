@@ -1,0 +1,36 @@
+{% extends "main/kodi_server_base.html" %}
+
+{% block center %}
+  <h2>VideoLibrary.GetRecentlyAddedEpisodes</h2>
+  <p>...</p>
+
+  <table class="table table-condensed table-striped" style="width:100%">
+    <thead>
+      <tr>
+        <th>Thumbnail</th>
+        <th>ShowName</th>
+        <th>Season</th>
+        <th>Episode</th>
+        <th>EpisodeTitle</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for episode in episodes %}
+      <tr>
+        <td>
+          <a href="/main/kodi/{{ server.id }}/{{ episode.tvshowid }}/{{ episode.season }}/{{ episode.episode }}">
+            <img src="{{ episode.thumbnail }}" class="img-responsive" alt={{ episode.title }} width="50" height="50">
+          </a>
+        </td>
+        <td>{{ episode.showtitle }}</td>
+        <td>{{ episode.season }}</td>
+        <td>{{ episode.episode }}</td>
+        <td>{{ episode.title }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>VideoLibrary.GetRecentlyAddedMovies</h2>
+  <p>...</p>
+{% endblock %}

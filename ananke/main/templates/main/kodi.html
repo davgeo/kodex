@@ -5,10 +5,31 @@
 {% block kodiActive %}class="active"{% endblock %}
 
 {% block sidebar %}
-  <li class="active"><a href="#">TV Shows<span class="sr-only">(current)</span></a></li>
+  <li><a href="#">Settings<span class="sr-only">(current)</span></a></li>
 {% endblock %}
 
 {% block content %}
-  <h1>Kodi</h1>
-  <p>...</p>
+<div class="container">
+  <h2>Kodi</h2>
+  {% if kodi_server_list %}
+    <table class="table table-condensed table-striped" style="width:30%">
+      <thead>
+        <tr>
+          <th>Server</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for server, status in kodi_server_list %}
+        <tr>
+          <td><a href="/main/kodi/{{ server.id }}">{{ server }}</a></td>
+          <td>{{ status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No kodi servers are available.</p>
+  {% endif %}
+</div>
 {% endblock %}

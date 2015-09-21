@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+
+{% block title %}Kodi{% endblock %}
+
+{% block kodiActive %}class="active"{% endblock %}
+
+{% block sidebar %}
+  <li><a href="{% url 'kodi'%}/{{ server.id }}/tv">TV Shows<span class="sr-only">(current)</span></a></li>
+  <li><a href="{% url 'kodi'%}/{{ server.id }}/movies">Movies<span class="sr-only">(current)</span></a></li>
+{% endblock %}
+
+{% block content %}
+  <h1>{{ server }}</h1>
+
+  <div class="row">
+    <div class="col-sm-8">
+      {% block center %}{% endblock %}
+    </div>
+    <div class="col-sm-2">Add playlist sidebar here</div>
+  </div>
+{% endblock %}
