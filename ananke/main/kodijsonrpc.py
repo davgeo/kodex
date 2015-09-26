@@ -59,7 +59,7 @@ class KodiNamespace(object):
     def func(*args, **kwargs):
       print(className, method, kodiMethod, *args, **kwargs)
       resp = self.server.request(kodiMethod, *args, **kwargs)
-      print(resp)
+      #print(resp)
       return resp
     return func
 

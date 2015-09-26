@@ -24,22 +24,39 @@ def kodi(request):
 
 def server(request, ident):
   server = Server.objects.get(pk=ident)
-  print(server.conn())
-  print(*server.conn())
-  recently_added_episodes = KodiLookUp.RecentlyAddedEpisodes(*server.conn())
+  recently_added_episodes = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server.conn())
+  recently_added_movies = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server.conn())
 
-  context = {'server':server, 'episodes':recently_added_episodes}
+  context = {'server':server, 'episodes':recently_added_episodes, 'movies':recently_added_movies}
   return render(request, 'main/kodi_server_index.html', context)
 
-def tv(request, ident):
+def tvindex(request, ident):
   server = Server.objects.get(pk=ident)
-  context = {'server':server}
-  return render(request, 'main/kodi_server_index.html', context)
+  tv_list = KodiLookUp.VideoLibrary_GetTVShows(*server.conn())
+  context = {'server':server, 'tvshows':tv_list}
+  return render(request, 'main/kodi_server_tv.html', context)
 
-def movies(request, ident):
+def tvshow(request, server_id, show_id):
+  server = Server.objects.get(pk=server_id)
+  season_list = KodiLookUp.VideoLibrary_GetSeasons(*server.conn(), show_id=show_id)
+  context = {'server':server, 'seasons':season_list}
+  return render(request, 'main/kodi_server_tv_show.html', context)
+
+def tvseason(request, ident):
+  raise NotImplementedError
+
+def tvepisode(request, ident):
+  raise NotImplementedError
+
+def movies_index(request, ident):
   server = Server.objects.get(pk=ident)
-  context = {'server':server}
-  return render(request, 'main/kodi_server_index.html', context)
+  movie_list = KodiLookUp.VideoLibrary_GetMovies(*server.conn())
+  context = {'server':server, 'movies':movie_list}
+  return render(request, 'main/kodi_server_movies.html', context)
+
+def movie(request, ident):
+  raise NotImplementedError
+
 
 # class KodiView(View):
     # def... VideoLibrary.GetRecentlyAddedEpisodes
