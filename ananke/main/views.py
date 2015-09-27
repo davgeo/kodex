@@ -80,7 +80,7 @@ def movie(request, server_id, movie_id):
 
 #def play(request, url):
   #print("PLAY")
-  server = Server.objects.get(pk=server_id)
+  #server = Server.objects.get(pk=server_id)
   #KodiLookUp.Player_Play(*server.conn())
   #context = {'server':server}
   #return redirect(url)

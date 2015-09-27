@@ -15,8 +15,8 @@
       {% for season in seasons %}
       <tr>
         <td>
-          <a href="/main/kodi/{{ server.id }}/tv/{{ season.tvshowid }}/{{ season.season }}">
-            <img src="{{ season.thumbnail }}" class="img-responsive" alt={{ episode.title }} width="50" height="50">
+          <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
+            <img src="{{ season.thumbnail }}" class="img-responsive" alt={{ season.title }} width="50" height="50">
           </a>
         </td>
         <td>{{ season.season }}</td>

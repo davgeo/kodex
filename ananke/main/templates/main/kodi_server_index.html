@@ -18,7 +18,7 @@
       {% for episode in episodes %}
       <tr>
         <td>
-          <a href="/main/kodi/{{ server.id }}/tv/{{ episode.tvshowid }}/{{ episode.season }}/{{ episode.episodeid }}">
+          <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
             <img src="{{ episode.thumbnail }}" class="img-responsive" alt={{ episode.title }} width="50" height="50">
           </a>
         </td>
@@ -45,7 +45,7 @@
       {% for movie in movies %}
       <tr>
         <td>
-          <a href="/main/kodi/{{ server.id }}/movies/{{ movie.movieid }}">
+          <a href="{% url 'movie' server.id movie.movieid %}">
             <img src="{{ movie.thumbnail }}" class="img-responsive" alt={{ movie.title }} width="50" height="50">
           </a>
         </td>
