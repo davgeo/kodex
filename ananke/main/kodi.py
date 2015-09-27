@@ -46,6 +46,22 @@ def ProcessThumbnail(thumbnail):
     return ''
 
 #################################################
+# ProcessThumbnails
+#################################################
+def ProcessThumbnails(thumbnailList, tvEpisode=False, server=None):
+  for item in thumbnailList:
+    thumbnail = ProcessThumbnail(item['thumbnail'])
+
+    if tvEpisode and thumbnail == '':
+      showDetails = server.VideoLibrary.GetTVShowDetails({'tvshowid': item['tvshowid'], 'properties':['thumbnail',]})['tvshowdetails']
+      thumbnail = ProcessThumbnail(showDetails['thumbnail'])
+
+    if thumbnail == '':
+      thumbnail = 'http://placekitten.com/g/50/50'
+
+    item['thumbnail'] = thumbnail
+
+#################################################
 # Status
 #################################################
 @GetServer
@@ -69,12 +85,40 @@ def VideoLibrary_Export(server):
   raise NotImplementedError
 
 @GetServer
-def VideoLibrary_GetEpisodeDetails(server):
+def VideoLibrary_GetEpisodeDetails(server, episode_id):
   raise NotImplementedError
+  '''params = {'episodeid':int(episode_id),
+            'properties':['title',
+                          'plot',
+                          'showtitle',
+                          'thumbnail',
+                          'tvshowid',
+                          'episode',
+                          'season',
+                          'lastplayed',
+                          'resume']}
+
+  response = server.VideoLibrary.GetEpisodeDetails(params)
+  return response'''
 
 @GetServer
-def VideoLibrary_GetEpisodes(server):
-  raise NotImplementedError
+def VideoLibrary_GetEpisodes(server, show_id, season_id):
+  params = {'tvshowid':int(show_id),
+            'season':int(season_id),
+            'properties':['title',
+                          'plot',
+                          'showtitle',
+                          'thumbnail',
+                          'tvshowid',
+                          'episode',
+                          'season',
+                          'lastplayed',
+                          'resume']}
+
+  response = server.VideoLibrary.GetEpisodes(params)
+  episodes = response['episodes']
+  ProcessThumbnails(episodes, tvEpisode=True, server=server)
+  return episodes
 
 @GetServer
 def VideoLibrary_GetGenres(server):
@@ -94,20 +138,13 @@ def VideoLibrary_GetMovieSets(server):
 
 @GetServer
 def VideoLibrary_GetMovies(server):
-  params = {'properties':["title",
-                          "lastplayed",
-                          "thumbnail"]}
-
+  params = {'properties':['title',
+                          'lastplayed',
+                          'thumbnail',
+                          'plot']}
   recentMovies = server.VideoLibrary.GetMovies(params)
   movies = recentMovies['movies']
-  for movie in movies:
-    thumbnail = ProcessThumbnail(movie['thumbnail'])
-
-    if thumbnail == '':
-      thumbnail = 'http://placekitten.com/g/50/50'
-
-    movie['thumbnail'] = thumbnail
-
+  ProcessThumbnails(movies)
   return movies
 
 @GetServer
@@ -129,35 +166,16 @@ def VideoLibrary_GetRecentlyAddedEpisodes(server):
 
   recentEpisodes = server.VideoLibrary.GetRecentlyAddedEpisodes(params)
   episodes = recentEpisodes['episodes']
-  for episode in episodes:
-    thumbnail = ProcessThumbnail(episode['thumbnail'])
-
-    if thumbnail == '':
-      showDetails = server.VideoLibrary.GetTVShowDetails({'tvshowid': episode['tvshowid'], 'properties':['thumbnail',]})['tvshowdetails']
-      thumbnail = ProcessThumbnail(showDetails['thumbnail'])
-
-      if thumbnail == '':
-        thumbnail = 'http://placekitten.com/g/50/50'
-
-    episode['thumbnail'] = thumbnail
-
+  ProcessThumbnails(episodes, tvEpisode=True, server=server)
   return episodes
 
 @GetServer
 def VideoLibrary_GetRecentlyAddedMovies(server):
-  params = {'properties':["title",
-                          "thumbnail"]}
-
+  params = {'properties':['title',
+                          'thumbnail']}
   recentMovies = server.VideoLibrary.GetRecentlyAddedMovies(params)
   movies = recentMovies['movies']
-  for movie in movies:
-    thumbnail = ProcessThumbnail(movie['thumbnail'])
-
-    if thumbnail == '':
-      thumbnail = 'http://placekitten.com/g/50/50'
-
-    movie['thumbnail'] = thumbnail
-
+  ProcessThumbnails(movies)
   return movies
 
 @GetServer
@@ -175,16 +193,8 @@ def VideoLibrary_GetSeasons(server, show_id):
                           'tvshowid',
                           'thumbnail']}
   response = server.VideoLibrary.GetSeasons(params)
-
   seasons = response['seasons']
-  for season in seasons:
-    thumbnail = ProcessThumbnail(season['thumbnail'])
-
-    if thumbnail == '':
-      thumbnail = 'http://placekitten.com/g/50/50'
-
-    season['thumbnail'] = thumbnail
-
+  ProcessThumbnails(seasons)
   return seasons
 
 @GetServer
@@ -196,16 +206,8 @@ def VideoLibrary_GetTVShows(server):
   params = {'properties':['title',
                           'thumbnail']}
   response = server.VideoLibrary.GetTVShows(params)
-
   tvshows = response['tvshows']
-  for tvshow in tvshows:
-    thumbnail = ProcessThumbnail(tvshow['thumbnail'])
-
-    if thumbnail == '':
-      thumbnail = 'http://placekitten.com/g/50/50'
-
-    tvshow['thumbnail'] = thumbnail
-
+  ProcessThumbnails(tvshows)
   return tvshows
 
 @GetServer
@@ -252,4 +254,77 @@ def VideoLibrary_SetSeasonDetails(server):
 def VideoLibrary_SetTVShowDetails(server):
   raise NotImplementedError
 
+#################################################
+# Player
+#################################################
+@GetServer
+def Player_GetActivePlayers(server):
+  raise NotImplementedError
 
+@GetServer
+def Player_GetItem(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_GetPlayers(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_GetProperties(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_GoTo(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_Move(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_Open(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_PlayPause(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_Rotate(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_Seek(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_SetAudioStream(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_SetPartymode(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_SetRepeat(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_SetShuffle(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_SetSpeed(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_SetSubtitle(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_Stop(server):
+  raise NotImplementedError
+
+@GetServer
+def Player_Zoom(server):
+  raise NotImplementedError
