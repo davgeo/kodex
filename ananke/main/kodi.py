@@ -21,6 +21,31 @@ def GetServer(func):
   return wrapper
 
 #################################################
+# GetActivePlayer
+#################################################
+def GetActivePlayer(func):
+  def wrapper(server, *args, **kwargs):
+    try:
+      player_id = server.Player.GetActivePlayers()[0]['playerid']
+    except:
+      player_id = None
+    finally:
+      return func(server, player_id, *args, **kwargs)
+  return wrapper
+
+#################################################
+# GetPlaylists
+#################################################
+def GetPlaylists(func):
+  def wrapper(server, playlistType, *args, **kwargs):
+    response = server.Playlist.GetPlaylists()
+    for playlist in response:
+      if playlist['type'] == playlistType:
+        playlist_id = playlist['playlistid']
+    return func(server, playlistType, playlist_id, *args, **kwargs)
+  return wrapper
+
+#################################################
 # ProcessURL
 #################################################
 def ProcessURL(url):
@@ -258,73 +283,222 @@ def VideoLibrary_SetTVShowDetails(server):
 # Player
 #################################################
 @GetServer
-def Player_GetActivePlayers(server):
+@GetActivePlayer
+def Player_GetItem(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_GetItem(server):
+@GetActivePlayer
+def Player_GetPlayers(server, player_id):
+  raise NotImplementedError
+
+#@GetServer
+#@GetActivePlayer
+def Player_GetProperties(server, player_id):
+  params = {"playerid": player_id,
+            "properties": ["type",
+                           "partymode",
+                           "speed",
+                           "time",
+                           "percentage",
+                           "totaltime",
+                           "playlistid",
+                           "position",
+                           "repeat",
+                           "shuffled",
+                           "canseek",
+                           "canchangespeed",
+                           "canmove",
+                           "canzoom",
+                           "canrotate",
+                           "canshuffle",
+                           "canrepeat",
+                           "currentaudiostream",
+                           "audiostreams",
+                           "subtitleenabled",
+                           "currentsubtitle",
+                           "subtitles",
+                           "live"]}
+
+  response = server.Player.GetProperties(params)
+
+@GetServer
+@GetActivePlayer
+def Player_GoTo(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_GetPlayers(server):
+@GetActivePlayer
+def Player_Move(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_GetProperties(server):
+@GetActivePlayer
+def Player_Open(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_GoTo(server):
+@GetActivePlayer
+def Player_PlayPause(server, player_id):
+  speed = 1
+
+  if player_id is not None:
+    response = server.Player.PlayPause({"playerid":player_id})
+    speed = response['speed']
+
+  return speed
+
+@GetServer
+@GetActivePlayer
+def Player_Rotate(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_Move(server):
+@GetActivePlayer
+def Player_Seek(server, player_id, position):
+  params = {"playerid": player_id}
+  params['value'] = {'percentage': position}
+  response = server.Player.Seek(params)
+
+@GetServer
+@GetActivePlayer
+def Player_SetAudioStream(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_Open(server):
+@GetActivePlayer
+def Player_SetPartymode(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_PlayPause(server):
+@GetActivePlayer
+def Player_SetRepeat(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_Rotate(server):
+@GetActivePlayer
+def Player_SetShuffle(server, player_id):
   raise NotImplementedError
 
 @GetServer
-def Player_Seek(server):
+@GetActivePlayer
+def Player_SetSpeed(server, player_id, speed):
+  params = {"playerid": player_id,
+            "speed": speed}
+  response = server.Player.SetSpeed(params)
+
+@GetServer
+@GetActivePlayer
+def Player_SetSubtitle(server, player_id):
+  Player_GetProperties(server, player_id)
+  #params = {"playerid": player_id,
+  #          "subtitle": "next",
+  #          "enable": toggle}
+  #response = server.Player.SetSubtitle(params)
+
+@GetServer
+@GetActivePlayer
+def Player_Stop(server, player_id):
+  response = server.Player.Stop({"playerid":player_id})
+
+@GetServer
+@GetActivePlayer
+def Player_Zoom(server, player_id):
+  raise NotImplementedError
+
+#################################################
+# Playerlist
+#################################################
+@GetServer
+def Playlist_Add(server):
   raise NotImplementedError
 
 @GetServer
-def Player_SetAudioStream(server):
+def Playlist_Clear(server):
   raise NotImplementedError
 
 @GetServer
-def Player_SetPartymode(server):
+@GetPlaylists
+def Playlist_GetItems(server, playlistType, playlist_id):
+  params = {'playlistid':int(playlist_id),
+            'properties':['title',
+                          'showtitle',
+                          'thumbnail',
+                          'tvshowid',
+                          'episode',
+                          'season']}
+
+  response = server.Playlist.GetItems(params)
+
+  try:
+    episodes = response['items']
+  except KeyError:
+    episodes = []
+  else:
+    ProcessThumbnails(episodes, tvEpisode=True, server=server)
+
+  return episodes
+
+@GetServer
+def Playlist_GetProperties(server):
   raise NotImplementedError
 
 @GetServer
-def Player_SetRepeat(server):
+def Playlist_Insert(server):
   raise NotImplementedError
 
 @GetServer
-def Player_SetShuffle(server):
+def Playlist_Remove(server):
   raise NotImplementedError
 
 @GetServer
-def Player_SetSpeed(server):
+def Playlist_Swap(server):
   raise NotImplementedError
 
 @GetServer
-def Player_SetSubtitle(server):
+def Playlist_OnAdd(server):
   raise NotImplementedError
 
 @GetServer
-def Player_Stop(server):
+def Playlist_OnClear(server):
   raise NotImplementedError
 
 @GetServer
-def Player_Zoom(server):
+def Playlist_OnRemove(server):
+  raise NotImplementedError
+
+@GetServer
+def Playlist_Id(server):
+  raise NotImplementedError
+
+@GetServer
+def Playlist_Item(server):
+  raise NotImplementedError
+
+@GetServer
+def Playlist_Position(server):
+  raise NotImplementedError
+
+@GetServer
+def Playlist_Type(server):
+  raise NotImplementedError
+
+#################################################
+# Application
+#################################################
+@GetServer
+def Application_GetProperties(server):
+  raise NotImplementedError
+
+@GetServer
+def Application_Quit(server):
+  raise NotImplementedError
+
+@GetServer
+def Application_SetMute(server):
+  params = {"mute": "toggle"}
+  response = server.Application.SetMute(params)
+
+@GetServer
+def Application_SetVolume(server):
   raise NotImplementedError

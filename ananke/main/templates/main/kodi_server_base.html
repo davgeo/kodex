@@ -1,35 +1,35 @@
-{% extends "main/base.html" %}
-
-{% block title %}Kodi{% endblock %}
-
-{% block kodiActive %}class="active"{% endblock %}
-
-{% block sidebar %}
-  <li><a href="{% url 'kodi'%}/{{ server.id }}/tv">TV Shows<span class="sr-only">(current)</span></a></li>
-  <li><a href="{% url 'kodi'%}/{{ server.id }}/movies">Movies<span class="sr-only">(current)</span></a></li>
-{% endblock %}
+{% extends "main/kodi_base.html" %}
 
 {% block content %}
-  <h1>{{ server }}</h1>
-
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-9">
       {% block center %}{% endblock %}
     </div>
-    <div class="col-sm-2">
-      <a href="#back"><span class="glyphicon glyphicon-backward"></span></a>
-      <a href="#play"><span class="glyphicon glyphicon-play"></span></a>
-      <a href="#forward"><span class="glyphicon glyphicon-forward"></span></a>
-      <a href="#fastforward"><span class="glyphicon glyphicon-fast-forward"></span></a>
-      <a href="#stop"><span class="glyphicon glyphicon-stop"></span></a>
-      <a href="#fastback"><span class="glyphicon glyphicon-fast-backward"></span></a>
+
+    <div class="col-sm-3">
+      <a href="{{request.get_full_path}}_backward"><span class="glyphicon glyphicon-backward"></span></a>
+      <a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-play"></span></a>
+      <a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-pause"></span></a>
+      <a href="{{request.get_full_path}}_forward"><span class="glyphicon glyphicon-forward"></span></a>
+      <a href="{{request.get_full_path}}_restart"><span class="glyphicon glyphicon-fast-backward"></span></a>
+      <a href="{{request.get_full_path}}_stop"><span class="glyphicon glyphicon-stop"></span></a>
+      <a href="{{request.get_full_path}}_skip"><span class="glyphicon glyphicon-fast-forward"></span></a>
       <span class="glyphicon glyphicon-film"></span>
       <span class="glyphicon glyphicon-off"></span>
       <span class="glyphicon glyphicon-cog"></span>
-      <span class="glyphicon glyphicon-pause"></span>
       <span class="glyphicon glyphicon-option-horizontal"></span>
       <span class="glyphicon glyphicon-option-vertical"></span>
       <span class="glyphicon glyphicon-menu-hamburger"></span>
-  </div>
+      <span class="glyphicon glyphicon-volume-down"></span>
+      <a href="{{request.get_full_path}}_mute"><span class="glyphicon glyphicon-volume-off"></span></a>
+      <span class="glyphicon glyphicon-volume-up"></span>
+      <a href="{{request.get_full_path}}_subtitles"><span class="glyphicon glyphicon-subtitles"></span></a>
+
+      <ul class="list-group">
+        {% for episode in playlist %}
+          <li class="list-group-item">{{ episode.title }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
 {% endblock %}

@@ -1,9 +1,8 @@
 {% extends "main/kodi_server_base.html" %}
 
 {% block center %}
-  <h2>VideoLibrary.GetRecentlyAddedEpisodes</h2>
-  <p>...</p>
-
+<div class="col-sm-6">
+  <h3>Recently Added Episodes</h3>
   <table class="table table-condensed table-striped" style="width:100%">
     <thead>
       <tr>
@@ -30,10 +29,10 @@
       {% endfor %}
     </tbody>
   </table>
+</div>
 
-  <h2>VideoLibrary.GetRecentlyAddedMovies</h2>
-  <p>...</p>
-
+<div class="col-sm-6">
+  <h3>Recently Added Movies</h3>
   <table class="table table-condensed table-striped" style="width:100%">
     <thead>
       <tr>
@@ -54,5 +53,6 @@
       {% endfor %}
     </tbody>
   </table>
+</div>
 
 {% endblock %}

@@ -1,12 +1,4 @@
-{% extends "main/base.html" %}
-
-{% block title %}Kodi{% endblock %}
-
-{% block kodiActive %}class="active"{% endblock %}
-
-{% block sidebar %}
-  <li><a href="#">Settings<span class="sr-only">(current)</span></a></li>
-{% endblock %}
+{% extends "main/kodi_base.html" %}
 
 {% block content %}
 <div class="container">
@@ -22,7 +14,7 @@
       <tbody>
         {% for server, status in kodi_server_list %}
         <tr>
-          <td><a href="/main/kodi/{{ server.id }}">{{ server }}</a></td>
+          <td><a href="{% url 'server' server.id %}">{{ server }}</a></td>
           <td>{{ status }}</td>
         </tr>
         {% endfor %}
