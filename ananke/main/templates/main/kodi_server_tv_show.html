@@ -1,28 +1,26 @@
 {% extends "main/kodi_server_base.html" %}
 
 {% block center %}
-  <h2>VideoLibrary.GetRecentlyAddedEpisodes</h2>
-  <p>...</p>
+  <h2>{{ tvshow.title }}</h2>
 
-  <table class="table table-condensed table-striped" style="width:100%">
-    <thead>
-      <tr>
-        <th>Thumbnail</th>
-        <th>Season</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for season in seasons %}
-      <tr>
-        <td>
-          <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
-            <img src="{{ season.thumbnail }}" class="img-responsive" alt={{ season.title }} width="50" height="50">
-          </a>
-        </td>
-        <td>{{ season.season }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="row">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 thumb">
+      <img src="{{ tvshow.thumbnail }}" class="img-responsive" alt={{ movie.title }} width="210" height="297">
+    </div>
 
+    <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7 text">
+      <p>{{ tvshow.plot }}</p>
+    </div>
+  </div>
+
+  <hr>
+
+  {% for season in seasons %}
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
+      <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
+        <img src="{{ season.thumbnail }}" class="img-responsive" alt="Season {{ season.season }}" width="210" height="297">
+        <p>Season {{ season.season }}</p>
+      </a>
+    </div>
+  {% endfor %}
 {% endblock %}

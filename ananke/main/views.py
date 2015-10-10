@@ -7,6 +7,10 @@ from .models import Server
 
 import main.kodi as KodiLookUp
 
+# Todo: Implement status lookin in parallel
+#import threading
+#from queue import Queue
+
 #################################################
 # Decorators
 #################################################
@@ -66,28 +70,41 @@ def tvindex(request, server, context):
 
 @GetPlaylist
 def tvshow(request, server, context, show_id):
-  # get show details for ID (show title, thumbnail etc)
+  context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
   context['seasons'] = KodiLookUp.VideoLibrary_GetSeasons(*server, show_id=show_id)
-  #context['path'] = 'kodi / {0} / tv / {1}'.format(context['server'].name, show_id)
+  context['path'] = 'kodi / {0} / tv / {1}'.format(context['server'].name, context['tvshow']['title'])
   return render(request, 'main/kodi_server_tv_show.html', context)
 
 @GetPlaylist
 def tvseason(request, server, context, show_id, season_id):
+  context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
+  context['season'] = season_id
   context['episodes'] = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  context['path'] = 'kodi / {0} / tv / {1} / {2}'.format(context['server'].name, context['tvshow']['title'], "Season {0}".format(season_id))
   return render(request, 'main/kodi_server_tv_season.html', context)
 
 @GetPlaylist
 def tvepisode(request, server, context, show_id, season_id, episode_id):
+  context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
+  context['season'] = season_id
+
   episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
 
   for episode in episode_list:
     if int(episode['episodeid']) == int(episode_id):
       name = episode['title']
       plot = episode['plot']
+      number = episode['episode']
 
   context.update({'episodes'  : episode_list,
+                  'showid'    : show_id,
+                  'season'    : season_id,
+                  'episodeid' : episode_id,
+                  'number'    : number,
                   'subheading': name,
                   'subtext'   : plot})
+
+  context['path'] = 'kodi / {0} / tv / {1} / {2} / {3}'.format(context['server'].name, context['tvshow']['title'], "Season {0}".format(season_id), "Episode {0}".format(number))
 
   return render(request, 'main/kodi_server_tv_season.html', context)
 
@@ -102,14 +119,45 @@ def movie(request, server, context, movie_id):
 
   for movie in movie_list:
     if int(movie['movieid']) == int(movie_id):
+      thumbnail = movie['thumbnail']
       name = movie['title']
       plot = movie['plot']
 
   context.update({'movies'    : movie_list,
+                  'movieid'   : movie_id,
+                  'thumbnail' : thumbnail,
                   'subheading': name,
                   'subtext'   : plot})
 
   return render(request, 'main/kodi_server_movies.html', context)
+
+@GetServer
+def playmovie(request, server, context, movie_id):
+  url = request.get_full_path().replace('_play', '')
+  # KodiLookUp.Playlist_Clear(*server, playlistType='video')
+  # KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
+  # KodiLookUp.Player_Open(*server)
+  return redirect(url)
+
+@GetServer
+def addmovie(request, server, context, movie_id):
+  url = request.get_full_path().replace('_add', '')
+  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
+  return redirect(url)
+
+@GetServer
+def playtv(request, server, context, show_id, season_id, episode_id):
+  url = request.get_full_path().replace('_play', '')
+  # KodiLookUp.Playlist_Clear(*server, playlistType='video')
+  # KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
+  # KodiLookUp.Player_Open(*server)
+  return redirect(url)
+
+@GetServer
+def addtv(request, server, context, show_id, season_id, episode_id):
+  url = request.get_full_path().replace('_add', '')
+  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'episodeid':int(episode_id)}})
+  return redirect(url)
 
 @GetServer
 def playpause(request, server, context):

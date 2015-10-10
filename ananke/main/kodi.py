@@ -42,7 +42,7 @@ def GetPlaylists(func):
     for playlist in response:
       if playlist['type'] == playlistType:
         playlist_id = playlist['playlistid']
-    return func(server, playlistType, playlist_id, *args, **kwargs)
+    return func(server, playlist_id, *args, **kwargs)
   return wrapper
 
 #################################################
@@ -208,7 +208,11 @@ def VideoLibrary_GetRecentlyAddedMusicVideos(server):
   raise NotImplementedError
 
 @GetServer
-def VideoLibrary_GetSeasonDetails(server):
+def VideoLibrary_GetSeasonDetails(server, season_id):
+  '''params = {'seasonid':int(season_id),
+            'properties':['title',
+                          'thumbnail',
+                          'plot']}'''
   raise NotImplementedError
 
 @GetServer
@@ -223,8 +227,15 @@ def VideoLibrary_GetSeasons(server, show_id):
   return seasons
 
 @GetServer
-def VideoLibrary_GetTVShowDetails(server):
-  raise NotImplementedError
+def VideoLibrary_GetTVShowDetails(server, show_id):
+  params = {'tvshowid':int(show_id),
+            'properties':['title',
+                          'thumbnail',
+                          'plot']}
+  response = server.VideoLibrary.GetTVShowDetails(params)
+  tvshowdetails = response['tvshowdetails']
+  ProcessThumbnails((tvshowdetails, ))
+  return tvshowdetails
 
 @GetServer
 def VideoLibrary_GetTVShows(server):
@@ -410,16 +421,20 @@ def Player_Zoom(server, player_id):
 # Playerlist
 #################################################
 @GetServer
-def Playlist_Add(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_Clear(server):
-  raise NotImplementedError
+@GetPlaylists
+def Playlist_Add(server, playlist_id, params):
+  params.update({'playlistid':int(playlist_id)})
+  response = server.Playlist.Add(params)
 
 @GetServer
 @GetPlaylists
-def Playlist_GetItems(server, playlistType, playlist_id):
+def Playlist_Clear(server, playlist_id):
+  params = {'playlistid':int(playlist_id)}
+  response = server.Playlist.Clear(params)
+
+@GetServer
+@GetPlaylists
+def Playlist_GetItems(server, playlist_id):
   params = {'playlistid':int(playlist_id),
             'properties':['title',
                           'showtitle',
