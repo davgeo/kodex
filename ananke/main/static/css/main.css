@@ -25,29 +25,55 @@
   padding-top: 30px;
 }
 
-.container-fluid.full-width {
-  padding-left: 0;
-  padding-right: 0;
-  /*overflow-x: hidden;*/
+/*.playlist-wrapper {
+  margin-right: 0px;
 }
 
-.container-fluid.full-width.affix {
-  top: 30px;
-  padding-left: 0;
-  padding-right: 0;
-  /*margin-right: 0px;
-  padding-right: 0px;*/
-  /*z-index:9998;*/
-}
+.playlist-wrapper.affix {
+  margin-right: 0px;
+}*/
 
-.col-sm-3.full-width {
+/*#myContent {
+  padding-right: 0;
+}*/
+
+.no-padding {
   padding-left: 0;
   padding-right: 0;
 }
 
-#myContent {
-  padding-right: 0;
+.center-align {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
 }
+
+.vertical-align {
+  display: flex;
+  flex-direction: row;
+}
+
+.vertical-align > [class^="col-"],
+.vertical-align > [class*=" col-"] {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Optional, to align inner items
+                              horizontally inside the column */
+}
+
+.play-control.affix {
+  bottom: 0px;
+}
+
+.playlist-wrapper {
+  position: fixed;
+  width: 25%;
+}
+
+/*.row {
+  margin-left: 0;
+  margin-right: 0;
+}*/
 
 /*#myContent {
   padding-top: 30px;

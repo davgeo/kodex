@@ -3,10 +3,11 @@
 ''' KODI '''
 # Python default package imports
 import urllib
+import re
 
 # Third-party package imports
-from django.core.validators import URLValidator
-from django.core.exceptions import ValidationError
+#from django.core.validators import URLValidator
+#from django.core.exceptions import ValidationError
 
 # Local file imports
 from .kodijsonrpc import KodiJSONClient
@@ -48,7 +49,7 @@ def GetPlaylists(func):
 #################################################
 # ProcessURL
 #################################################
-def ProcessURL(url):
+'''def ProcessURL(url):
   url = urllib.parse.unquote(url).strip(r'/')
   val = URLValidator()
 
@@ -57,29 +58,32 @@ def ProcessURL(url):
   except ValidationError:
     return ''
   else:
-    return url
+    return url'''
 
 #################################################
 # ProcessThumbnail
 #################################################
-def ProcessThumbnail(thumbnail):
-  url = ProcessURL(thumbnail.replace('image://', ''))
+def ProcessThumbnail(server, thumbnail):
+  #url = ProcessURL(thumbnail.replace('image://', ''))
+  url = server.GetUrl('image/') + urllib.parse.quote_plus(thumbnail)
 
-  if url:
-    return url
-  else:
+  try:
+    re.findall(r'.jpg', url)[0]
+  except IndexError:
     return ''
+  else:
+    return url
 
 #################################################
 # ProcessThumbnails
 #################################################
-def ProcessThumbnails(thumbnailList, tvEpisode=False, server=None):
+def ProcessThumbnails(server, thumbnailList, tvEpisode=False):
   for item in thumbnailList:
-    thumbnail = ProcessThumbnail(item['thumbnail'])
+    thumbnail = ProcessThumbnail(server, item['thumbnail'])
 
     if tvEpisode and thumbnail == '':
       showDetails = server.VideoLibrary.GetTVShowDetails({'tvshowid': item['tvshowid'], 'properties':['thumbnail',]})['tvshowdetails']
-      thumbnail = ProcessThumbnail(showDetails['thumbnail'])
+      thumbnail = ProcessThumbnail(server, showDetails['thumbnail'])
 
     if thumbnail == '':
       thumbnail = 'http://placekitten.com/g/50/50'
@@ -142,7 +146,7 @@ def VideoLibrary_GetEpisodes(server, show_id, season_id):
 
   response = server.VideoLibrary.GetEpisodes(params)
   episodes = response['episodes']
-  ProcessThumbnails(episodes, tvEpisode=True, server=server)
+  ProcessThumbnails(server, episodes, tvEpisode=True)
   return episodes
 
 @GetServer
@@ -169,7 +173,7 @@ def VideoLibrary_GetMovies(server):
                           'plot']}
   recentMovies = server.VideoLibrary.GetMovies(params)
   movies = recentMovies['movies']
-  ProcessThumbnails(movies)
+  ProcessThumbnails(server, movies)
   return movies
 
 @GetServer
@@ -191,7 +195,7 @@ def VideoLibrary_GetRecentlyAddedEpisodes(server):
 
   recentEpisodes = server.VideoLibrary.GetRecentlyAddedEpisodes(params)
   episodes = recentEpisodes['episodes']
-  ProcessThumbnails(episodes, tvEpisode=True, server=server)
+  ProcessThumbnails(server, episodes, tvEpisode=True)
   return episodes
 
 @GetServer
@@ -200,7 +204,7 @@ def VideoLibrary_GetRecentlyAddedMovies(server):
                           'thumbnail']}
   recentMovies = server.VideoLibrary.GetRecentlyAddedMovies(params)
   movies = recentMovies['movies']
-  ProcessThumbnails(movies)
+  ProcessThumbnails(server, movies)
   return movies
 
 @GetServer
@@ -223,7 +227,7 @@ def VideoLibrary_GetSeasons(server, show_id):
                           'thumbnail']}
   response = server.VideoLibrary.GetSeasons(params)
   seasons = response['seasons']
-  ProcessThumbnails(seasons)
+  ProcessThumbnails(server, seasons)
   return seasons
 
 @GetServer
@@ -234,7 +238,7 @@ def VideoLibrary_GetTVShowDetails(server, show_id):
                           'plot']}
   response = server.VideoLibrary.GetTVShowDetails(params)
   tvshowdetails = response['tvshowdetails']
-  ProcessThumbnails((tvshowdetails, ))
+  ProcessThumbnails(server, (tvshowdetails, ))
   return tvshowdetails
 
 @GetServer
@@ -243,7 +247,7 @@ def VideoLibrary_GetTVShows(server):
                           'thumbnail']}
   response = server.VideoLibrary.GetTVShows(params)
   tvshows = response['tvshows']
-  ProcessThumbnails(tvshows)
+  ProcessThumbnails(server, tvshows)
   return tvshows
 
 @GetServer
@@ -450,7 +454,7 @@ def Playlist_GetItems(server, playlist_id):
   except KeyError:
     episodes = []
   else:
-    ProcessThumbnails(episodes, tvEpisode=True, server=server)
+    ProcessThumbnails(server, episodes, tvEpisode=True)
 
   return episodes
 

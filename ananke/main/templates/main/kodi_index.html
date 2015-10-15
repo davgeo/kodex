@@ -1,7 +1,6 @@
 {% extends "main/kodi_base.html" %}
 
 {% block content %}
-<div class="container">
   <h2>Kodi</h2>
   {% if kodi_server_list %}
     <table class="table table-condensed table-striped" style="width:30%">
@@ -23,5 +22,4 @@
   {% else %}
     <p>No kodi servers are available.</p>
   {% endif %}
-</div>
 {% endblock %}

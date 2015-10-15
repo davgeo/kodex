@@ -17,36 +17,34 @@
 
 {% block appnav %}
   <nav class="navbar navbar-default" data-spy="affix" data-offset-top="30">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myAppNavbar">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href={% url 'kodi' %}>Kodi</a>
-      </div>
-      <div class="collapse navbar-collapse" id="myAppNavbar">
-        <ul class="nav navbar-nav">
-          <li><a href="{% url 'kodi' %}">Overview</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Servers <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              {% for server in kodi_servers %}
-                <li><a href="{% url 'server' server.id %}">{{ server }}</a></li>
-              {% endfor %}
-            </ul>
-          </li>
-          {% if server %}
-            <li><a href="{% url 'tvindex' server.id %}">TV</a></li>
-            <li><a href="{% url 'movies_index' server.id %}">Movies</a></li>
-          {% else %}
-            <li><a>TV</a></li>
-            <li><a>Movies</a></li>
-          {% endif %}
-          <li><a href="#">Configure</a></li>
-        </ul>
-      </div>
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myAppNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href={% url 'kodi' %}>Kodi</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myAppNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'kodi' %}">Overview</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Servers <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            {% for server in kodi_servers %}
+              <li><a href="{% url 'server' server.id %}">{{ server }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% if server %}
+          <li><a href="{% url 'tvindex' server.id %}">TV</a></li>
+          <li><a href="{% url 'movies_index' server.id %}">Movies</a></li>
+        {% else %}
+          <li><a>TV</a></li>
+          <li><a>Movies</a></li>
+        {% endif %}
+        <li><a href="#">Configure</a></li>
+      </ul>
     </div>
   </nav>
 {% endblock %}

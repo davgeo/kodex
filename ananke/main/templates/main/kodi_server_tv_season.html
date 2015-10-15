@@ -24,10 +24,20 @@
   <hr>
 
   {% for episode in episodes %}
-    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 thumb">
       <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
         <img src="{{ episode.thumbnail }}" class="img-responsive" width="297" height="210">
+        <a href="{{request.get_full_path}}_watched">
+          {% if episode.lastplayed %}
+            <i class="fa fa-check-square-o pull-right"></i>
+          {% else %}
+            <i class="fa fa-square-o pull-right"></i>
+          {% endif %}
+        </a>
+        <a href="{% url 'addtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
+        <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
         <p>{{ episode.title }}</p>
+        <!-- glyphicon glyphicon-play-circle glyphicon-ok-circle -->
       </a>
     </div>
   {% endfor %}

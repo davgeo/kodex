@@ -104,8 +104,16 @@ class KodiJSONClient(object):
   # Switch or set server
   ############################################################################
   def _SwitchServer(self, host, port, user, pwd):
-    self.server = HTTPServer('http://{0}:{1}/jsonrpc'.format(host,port), headers=self.headers, auth=(user, pwd))
+    self.url = 'http://{0}:{1}/'.format(host, port)
+    self.server = HTTPServer(self.GetUrl('jsonrpc'), headers=self.headers, auth=(user, pwd))
     for namespace in KODI_JSON_NAMESPACES:
       s = "self.{0}.UpdateServer(self.server)".format(namespace)
       exec(s)
+
+  ############################################################################
+  # GetUrl
+  # Get url to current active server
+  ############################################################################
+  def GetUrl(self, path=''):
+    return self.url + path
 
