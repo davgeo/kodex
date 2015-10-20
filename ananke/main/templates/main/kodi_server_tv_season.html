@@ -24,9 +24,9 @@
   <hr>
 
   {% for episode in episodes %}
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 thumb">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 episode_wrapper">
       <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
-        <img src="{{ episode.thumbnail }}" class="img-responsive" width="297" height="210">
+        <img src="{{ episode.thumbnail }}" class="img-responsive episode_thumb">
         <a href="{{request.get_full_path}}_watched">
           {% if episode.lastplayed %}
             <i class="fa fa-check-square-o pull-right"></i>

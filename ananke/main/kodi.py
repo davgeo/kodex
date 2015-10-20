@@ -304,11 +304,15 @@ def VideoLibrary_SetTVShowDetails(server):
 @GetServer
 @GetActivePlayer
 def Player_GetItem(server, player_id):
-  params = {"playerid": player_id,
-            "properties": ["uniqueid"]}
-  response = server.Player.GetItem(params)
-  episodes = response['item']
-  return episodes
+  item = []
+
+  if player_id is not None:
+    params = {"playerid": player_id,
+              "properties": ["uniqueid"]}
+    response = server.Player.GetItem(params)
+    item = response['item']
+
+  return item
 
 @GetServer
 @GetActivePlayer

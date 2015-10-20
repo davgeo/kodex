@@ -5,7 +5,7 @@
 
   <div class="row">
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 thumb">
-      <img src="{{ tvshow.thumbnail }}" class="img-responsive" alt={{ movie.title }} width="210" height="297">
+      <img src="{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
     </div>
 
     <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7 text">
@@ -18,7 +18,7 @@
   {% for season in seasons %}
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
       <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
-        <img src="{{ season.thumbnail }}" class="img-responsive" alt="Season {{ season.season }}" width="210" height="297">
+        <img src="{{ season.thumbnail }}" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
         <p>Season {{ season.season }}</p>
       </a>
     </div>

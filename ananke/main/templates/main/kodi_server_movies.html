@@ -33,11 +33,11 @@
 
       <div class="row">
         {% for movie in movies %}
-          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
+          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
             <a href="{% url 'movie' server.id movie.movieid %}">
-              <img src="{{ movie.thumbnail }}" class="img-responsive" alt={{ movie.title }} width="210" height="297">
+              <img src="{{ movie.thumbnail }}" class="img-responsive poster_thumb" alt={{ movie.title }}>
               <p></p>
-              <!-- <p>{{ movie.title }} {{ movie.lastplayed }}</p> -->
+              <!-- <p>{{ movie.title }} {{ movie.lastplayed }}</p> width="210" height="297" -->
             </a>
           </div>
         {% endfor %}
