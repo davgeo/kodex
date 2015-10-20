@@ -37,7 +37,6 @@
         <a href="{% url 'addtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
         <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
         <p>{{ episode.title }}</p>
-        <!-- glyphicon glyphicon-play-circle glyphicon-ok-circle -->
       </a>
     </div>
   {% endfor %}

@@ -146,6 +146,10 @@ def VideoLibrary_GetEpisodes(server, show_id, season_id):
 
   response = server.VideoLibrary.GetEpisodes(params)
   episodes = response['episodes']
+
+  for item in episodes:
+    item['episode'] = int(item['episode'])
+
   ProcessThumbnails(server, episodes, tvEpisode=True)
   return episodes
 
@@ -300,7 +304,11 @@ def VideoLibrary_SetTVShowDetails(server):
 @GetServer
 @GetActivePlayer
 def Player_GetItem(server, player_id):
-  raise NotImplementedError
+  params = {"playerid": player_id,
+            "properties": ["uniqueid"]}
+  response = server.Player.GetItem(params)
+  episodes = response['item']
+  return episodes
 
 @GetServer
 @GetActivePlayer
@@ -445,7 +453,8 @@ def Playlist_GetItems(server, playlist_id):
                           'thumbnail',
                           'tvshowid',
                           'episode',
-                          'season']}
+                          'season',
+                          'uniqueid']}
 
   response = server.Playlist.GetItems(params)
 

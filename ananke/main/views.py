@@ -7,6 +7,8 @@ from .models import Server
 
 import main.kodi as KodiLookUp
 
+from operator import itemgetter
+
 # Todo: Implement status lookin in parallel
 #import threading
 #from queue import Queue
@@ -32,6 +34,7 @@ def GetServer(func):
 def GetPlaylist(func):
   @GetServer
   def wrapper(request, server, context, *args, **kwargs):
+    context['playing'] = KodiLookUp.Player_GetItem(*server)
     context['playlist'] = KodiLookUp.Playlist_GetItems(*server, playlistType='video')
     return func(request, server, context, *args, **kwargs)
   return wrapper
@@ -79,7 +82,8 @@ def tvshow(request, server, context, show_id):
 def tvseason(request, server, context, show_id, season_id):
   context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
   context['season'] = season_id
-  context['episodes'] = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  context['episodes'] = sorted(unsorted_episode_list, key=itemgetter('episode'))
   context['path'] = 'kodi / {0} / tv / {1} / {2}'.format(context['server'].name, context['tvshow']['title'], "Season {0}".format(season_id))
   return render(request, 'main/kodi_server_tv_season.html', context)
 
@@ -88,7 +92,9 @@ def tvepisode(request, server, context, show_id, season_id, episode_id):
   context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
   context['season'] = season_id
 
-  episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+
+  episode_list = sorted(unsorted_episode_list, key=itemgetter('episode'))
 
   for episode in episode_list:
     if int(episode['episodeid']) == int(episode_id):

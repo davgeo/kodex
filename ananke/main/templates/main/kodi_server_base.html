@@ -11,6 +11,9 @@
         <ul class="list-group">
           {% for episode in playlist %}
             <li class="list-group-item">
+              {% if episode.uniqueid == playing.uniqueid %}
+                <span class="glyphicon glyphicon-play"></span>
+              {% endif %}
               <a href="{% url 'tvseason' server.id episode.tvshowid episode.season %}">{{ episode.title }}</a>
               <a href="#remove"><span class="glyphicon glyphicon-remove pull-right"></span></a>
             </li>
