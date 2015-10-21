@@ -5,14 +5,15 @@
     <a href="{% url 'tvshow' server.id tvshow.tvshowid %}">{{ tvshow.title }}</a>
     <small><a href="{% url 'tvseason' server.id tvshow.tvshowid season %}">Season {{ season }}</a></small>
 
-    {% if number %}
-      <small>Episode {{ number }}</small>
+    {% if selection %}
+      <small>Episode {{ selection.episode }}</small>
     {% endif %}
   </h2>
 
   {% if episodeid %}
-    <h3>{{ subheading }}</h3>
-    <p>{{ subtext }}</p>
+    <h3>{{ selection.title }}</h3>
+    <p>{{ selection.plot }}</p>
+    <p>File: {{ selection.file }}</p>
     <a href="{% url 'playtv' server.id showid season episodeid %}" class="btn btn-primary" role="button">
       <span class="glyphicon glyphicon-play"></span> Play
     </a>
@@ -28,7 +29,7 @@
       <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
         <img src="{{ episode.thumbnail }}" class="img-responsive episode_thumb">
         <a href="{{request.get_full_path}}_watched">
-          {% if episode.lastplayed %}
+          {% if episode.playcount %}
             <i class="fa fa-check-square-o pull-right"></i>
           {% else %}
             <i class="fa fa-square-o pull-right"></i>
@@ -36,7 +37,7 @@
         </a>
         <a href="{% url 'addtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
         <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
-        <p>{{ episode.title }}</p>
+        <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}"><p>{{ episode.episode }}. {{ episode.title }}</p></a>
       </a>
     </div>
   {% endfor %}

@@ -19,6 +19,13 @@
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
       <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
         <img src="{{ season.thumbnail }}" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
+        <a href="{{request.get_full_path}}_watched">
+          {% if season.watchedepisodes == season.episode %}
+            <i class="fa fa-check-square-o pull-right"></i>
+          {% else %}
+            <i class="fa fa-square-o pull-right"></i>
+          {% endif %}
+        </a>
         <p>Season {{ season.season }}</p>
       </a>
     </div>

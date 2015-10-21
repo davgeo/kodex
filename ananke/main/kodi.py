@@ -141,8 +141,10 @@ def VideoLibrary_GetEpisodes(server, show_id, season_id):
                           'tvshowid',
                           'episode',
                           'season',
+                          'playcount',
                           'lastplayed',
-                          'resume']}
+                          'resume',
+                          'file']}
 
   response = server.VideoLibrary.GetEpisodes(params)
   episodes = response['episodes']
@@ -227,8 +229,15 @@ def VideoLibrary_GetSeasonDetails(server, season_id):
 def VideoLibrary_GetSeasons(server, show_id):
   params = {'tvshowid':int(show_id),
             'properties':['season',
+                          'showtitle',
+                          'playcount',
+                          'episode',
+                          'fanart',
+                          'thumbnail',
                           'tvshowid',
-                          'thumbnail']}
+                          'watchedepisodes',
+                          'art']}
+
   response = server.VideoLibrary.GetSeasons(params)
   seasons = response['seasons']
   ProcessThumbnails(server, seasons)
@@ -480,39 +489,14 @@ def Playlist_Insert(server):
   raise NotImplementedError
 
 @GetServer
-def Playlist_Remove(server):
-  raise NotImplementedError
+@GetPlaylists
+def Playlist_Remove(server, playlist_id, index):
+  params = {'playlistid':int(playlist_id),
+            'position':int(index)}
+  response = server.Playlist.Remove(params)
 
 @GetServer
 def Playlist_Swap(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_OnAdd(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_OnClear(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_OnRemove(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_Id(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_Item(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_Position(server):
-  raise NotImplementedError
-
-@GetServer
-def Playlist_Type(server):
   raise NotImplementedError
 
 #################################################

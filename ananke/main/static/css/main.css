@@ -82,6 +82,7 @@
 .episode_wrapper {
   height: 140px;
   width: 200px;
+  overflow: hidden;
 }
 
 /*.row {

@@ -13,9 +13,10 @@
             <li class="list-group-item">
               {% if episode.uniqueid == playing.uniqueid %}
                 <span class="glyphicon glyphicon-play"></span>
+              {% else %}
+                <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><span class="glyphicon glyphicon-remove pull-right"></span></a>
               {% endif %}
               <a href="{% url 'tvseason' server.id episode.tvshowid episode.season %}">{{ episode.title }}</a>
-              <a href="#remove"><span class="glyphicon glyphicon-remove pull-right"></span></a>
             </li>
           {% endfor %}
         </ul>
@@ -26,7 +27,11 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="row vertical-align">
           <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_backward"><span class="glyphicon glyphicon-backward fa-2x"></span></a></div>
-          <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-play fa-3x"></span></a></div>
+          {% if playing.uniqueid %}
+            <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-pause fa-3x"></span></a></div>
+          {% else %}
+            <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-play fa-3x"></span></a></div>
+          {% endif %}
           <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_forward"><span class="glyphicon glyphicon-forward fa-2x"></span></a></div>
         </div>
       </div>
@@ -42,15 +47,16 @@
       <a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-pause"></span></a>
       <span class="glyphicon glyphicon-film"></span>
       <span class="glyphicon glyphicon-off"></span>
+      <a href="{{request.get_full_path}}_clear"><i class="fa fa-ban"></i></a>
       <span class="glyphicon glyphicon-cog"></span>
       <span class="glyphicon glyphicon-option-horizontal"></span>
       <span class="glyphicon glyphicon-option-vertical"></span>
       <span class="glyphicon glyphicon-menu-hamburger"></span>
       <span class="glyphicon glyphicon-volume-down"></span>
       <a href="{{request.get_full_path}}_mute"><span class="glyphicon glyphicon-volume-off"></span></a>
-      <span class="glyphicon glyphicon-volume-up"></span>
+      <span class="glyphicon glyphicon-volume-up" />
       <a href="{{request.get_full_path}}_subtitles"><span class="glyphicon glyphicon-subtitles"></span></a>
-
+      <input type="range" min="0" max="50" value="25" step="1" />
     </div>
   </div>
 

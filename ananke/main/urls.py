@@ -24,4 +24,6 @@ urlpatterns = [
     url(r'^kodi/([0-9]+).*?_restart$', views.restart, name='restart'),
     url(r'^kodi/([0-9]+).*?_mute$', views.mute, name='mute'),
     url(r'^kodi/([0-9]+).*?_subtitles$', views.subtitles, name='subtitles'),
+    url(r'^kodi/([0-9]+).*?_remove_([0-9]+)$', views.remove, name='remove'),
+    url(r'^kodi/([0-9]+).*?_clear$', views.clear, name='clear'),
 ]

@@ -55,27 +55,27 @@ def kodi(request, context):
     serverStatusTable.append((server, KodiLookUp.Status(*server.conn())))
 
   context['kodi_server_list'] = serverStatusTable
-  context['path'] = 'kodi'
+  #context['path'] = 'kodi'
   return render(request, 'main/kodi_index.html', context)
 
 @GetPlaylist
 def server(request, server, context):
   context['episodes'] = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server)
   context['movies'] = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server)
-  context['path'] = 'kodi / {0}'.format(context['server'].name)
+  #context['path'] = 'kodi / {0}'.format(context['server'].name)
   return render(request, 'main/kodi_server_index.html', context)
 
 @GetPlaylist
 def tvindex(request, server, context):
   context['tvshows'] = KodiLookUp.VideoLibrary_GetTVShows(*server)
-  context['path'] = 'kodi / {0} / tv'.format(context['server'].name)
+  #context['path'] = 'kodi / {0} / tv'.format(context['server'].name)
   return render(request, 'main/kodi_server_tv.html', context)
 
 @GetPlaylist
 def tvshow(request, server, context, show_id):
   context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
   context['seasons'] = KodiLookUp.VideoLibrary_GetSeasons(*server, show_id=show_id)
-  context['path'] = 'kodi / {0} / tv / {1}'.format(context['server'].name, context['tvshow']['title'])
+  #context['path'] = 'kodi / {0} / tv / {1}'.format(context['server'].name, context['tvshow']['title'])
   return render(request, 'main/kodi_server_tv_show.html', context)
 
 @GetPlaylist
@@ -84,7 +84,7 @@ def tvseason(request, server, context, show_id, season_id):
   context['season'] = season_id
   unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
   context['episodes'] = sorted(unsorted_episode_list, key=itemgetter('episode'))
-  context['path'] = 'kodi / {0} / tv / {1} / {2}'.format(context['server'].name, context['tvshow']['title'], "Season {0}".format(season_id))
+  #context['path'] = 'kodi / {0} / tv / {1} / {2}'.format(context['server'].name, context['tvshow']['title'], "Season {0}".format(season_id))
   return render(request, 'main/kodi_server_tv_season.html', context)
 
 @GetPlaylist
@@ -98,19 +98,16 @@ def tvepisode(request, server, context, show_id, season_id, episode_id):
 
   for episode in episode_list:
     if int(episode['episodeid']) == int(episode_id):
-      name = episode['title']
-      plot = episode['plot']
-      number = episode['episode']
+      selection = {'title': episode['title'],
+                   'plot': episode['plot'],
+                   'episode': episode['episode'],
+                   'file': episode['file']}
 
   context.update({'episodes'  : episode_list,
                   'showid'    : show_id,
                   'season'    : season_id,
                   'episodeid' : episode_id,
-                  'number'    : number,
-                  'subheading': name,
-                  'subtext'   : plot})
-
-  context['path'] = 'kodi / {0} / tv / {1} / {2} / {3}'.format(context['server'].name, context['tvshow']['title'], "Season {0}".format(season_id), "Episode {0}".format(number))
+                  'selection' : selection})
 
   return render(request, 'main/kodi_server_tv_season.html', context)
 
@@ -214,4 +211,16 @@ def mute(request, server, context):
 def subtitles(request, server, context):
   url = request.get_full_path().replace('_subtitles', '')
   KodiLookUp.Player_SetSubtitle(*server)
+  return redirect(url)
+
+@GetServer
+def remove(request, server, context, index):
+  url = request.get_full_path().replace('_remove_{0}'.format(index), '')
+  KodiLookUp.Playlist_Remove(*server, playlistType='video', index=index)
+  return redirect(url)
+
+@GetServer
+def clear(request, server, context):
+  url = request.get_full_path().replace('_clear', '')
+  KodiLookUp.Playlist_Clear(*server,  playlistType='video')
   return redirect(url)
