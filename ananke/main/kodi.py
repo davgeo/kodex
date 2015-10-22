@@ -26,7 +26,7 @@ def GetActivePlayer(func):
       player_id = server.Player.GetActivePlayers()[0]['playerid']
     except:
       return []
-    finally:
+    else:
       return func(server, player_id, *args, **kwargs)
   return wrapper
 
