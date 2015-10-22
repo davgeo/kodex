@@ -13,13 +13,21 @@
   {% if episodeid %}
     <h3>{{ selection.title }}</h3>
     <p>{{ selection.plot }}</p>
-    <p>File: {{ selection.file }}</p>
+    <div id="file" class="collapse"><p>File: {{ selection.file }}</p></div>
     <a href="{% url 'playtv' server.id showid season episodeid %}" class="btn btn-primary" role="button">
       <span class="glyphicon glyphicon-play"></span> Play
     </a>
     <a href="{% url 'addtv' server.id showid season episodeid %}" class="btn btn-info" role="button">
       <span class="glyphicon glyphicon-plus"></span> Add
     </a>
+    <span class="dropdown pull-right">
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Misc <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a data-toggle="collapse" data-target="#file">Show File Path</a></li>
+        <li><a href="#">Remove Episode</a></li>
+        <li><a href="#">...</a></li>
+      </ul>
+    </span>
   {% endif %}
 
   <hr>

@@ -5,10 +5,6 @@
 import urllib
 import re
 
-# Third-party package imports
-#from django.core.validators import URLValidator
-#from django.core.exceptions import ValidationError
-
 # Local file imports
 from .kodijsonrpc import KodiJSONClient
 
@@ -29,7 +25,7 @@ def GetActivePlayer(func):
     try:
       player_id = server.Player.GetActivePlayers()[0]['playerid']
     except:
-      player_id = None
+      return []
     finally:
       return func(server, player_id, *args, **kwargs)
   return wrapper
@@ -47,24 +43,9 @@ def GetPlaylists(func):
   return wrapper
 
 #################################################
-# ProcessURL
-#################################################
-'''def ProcessURL(url):
-  url = urllib.parse.unquote(url).strip(r'/')
-  val = URLValidator()
-
-  try:
-    val(url)
-  except ValidationError:
-    return ''
-  else:
-    return url'''
-
-#################################################
 # ProcessThumbnail
 #################################################
 def ProcessThumbnail(server, thumbnail):
-  #url = ProcessURL(thumbnail.replace('image://', ''))
   url = server.GetUrl('image/') + urllib.parse.quote_plus(thumbnail)
 
   try:
@@ -313,23 +294,18 @@ def VideoLibrary_SetTVShowDetails(server):
 @GetServer
 @GetActivePlayer
 def Player_GetItem(server, player_id):
-  item = []
-
-  if player_id is not None:
-    params = {"playerid": player_id,
-              "properties": ["uniqueid"]}
-    response = server.Player.GetItem(params)
-    item = response['item']
-
-  return item
+  params = {"playerid": player_id,
+            "properties": ["uniqueid"]}
+  response = server.Player.GetItem(params)
+  return response['item']
 
 @GetServer
 @GetActivePlayer
 def Player_GetPlayers(server, player_id):
   raise NotImplementedError
 
-#@GetServer
-#@GetActivePlayer
+@GetServer
+@GetActivePlayer
 def Player_GetProperties(server, player_id):
   params = {"playerid": player_id,
             "properties": ["type",
@@ -355,8 +331,7 @@ def Player_GetProperties(server, player_id):
                            "currentsubtitle",
                            "subtitles",
                            "live"]}
-
-  response = server.Player.GetProperties(params)
+  return server.Player.GetProperties(params)
 
 @GetServer
 @GetActivePlayer
@@ -376,13 +351,8 @@ def Player_Open(server, player_id):
 @GetServer
 @GetActivePlayer
 def Player_PlayPause(server, player_id):
-  speed = 1
-
-  if player_id is not None:
-    response = server.Player.PlayPause({"playerid":player_id})
-    speed = response['speed']
-
-  return speed
+  response = server.Player.PlayPause({"playerid":player_id})
+  return response['speed']
 
 @GetServer
 @GetActivePlayer
@@ -426,7 +396,8 @@ def Player_SetSpeed(server, player_id, speed):
 @GetServer
 @GetActivePlayer
 def Player_SetSubtitle(server, player_id):
-  Player_GetProperties(server, player_id)
+  raise NotImplementedError
+  #Player_GetProperties(server, player_id)
   #params = {"playerid": player_id,
   #          "subtitle": "next",
   #          "enable": toggle}
