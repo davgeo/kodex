@@ -1,12 +1,14 @@
 {% extends "main/kodi_server_base.html" %}
 
+{% load staticfiles %}
+
 {% block center %}
   <h2>TV Shows</h2>
 
   {% for tvshow in tvshows %}
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
       <a href="{% url 'tvshow' server.id tvshow.tvshowid %}">
-        <img src="{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
+        <img src="{% static 'cache' %}/{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
         <p></p>
         <!-- <p>{{ tvshow.title }}</p> -->
       </a>

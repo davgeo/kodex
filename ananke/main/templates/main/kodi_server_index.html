@@ -1,5 +1,7 @@
 {% extends "main/kodi_server_base.html" %}
 
+{% load staticfiles %}
+
 {% block center %}
 <div class="col-sm-6">
   <h3>Recently Added Episodes</h3>
@@ -18,7 +20,7 @@
       <tr>
         <td>
           <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
-            <img src="{{ episode.thumbnail }}" class="img-responsive" alt={{ episode.title }} width="50" height="50">
+            <img src="{% static 'cache' %}/{{ episode.thumbnail }}" class="img-responsive" alt={{ episode.title }} width="50" height="50">
           </a>
         </td>
         <td>{{ episode.showtitle }}</td>
@@ -45,7 +47,7 @@
       <tr>
         <td>
           <a href="{% url 'movie' server.id movie.movieid %}">
-            <img src="{{ movie.thumbnail }}" class="img-responsive" alt={{ movie.title }} width="50" height="50">
+            <img src="{% static 'cache' %}/{{ movie.thumbnail }}" class="img-responsive" alt={{ movie.title }} width="50" height="50">
           </a>
         </td>
         <td>{{ movie.title }}</td>

@@ -1,5 +1,7 @@
 {% extends "main/kodi_server_base.html" %}
 
+{% load staticfiles %}
+
 {% block center %}
   <h2>
     <a href="{% url 'tvshow' server.id tvshow.tvshowid %}">{{ tvshow.title }}</a>
@@ -35,7 +37,7 @@
   {% for episode in episodes %}
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 episode_wrapper">
       <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
-        <img src="{{ episode.thumbnail }}" class="img-responsive episode_thumb">
+        <img src="{% static 'cache' %}/{{ episode.thumbnail }}" class="img-responsive episode_thumb">
         <a href="{{request.get_full_path}}_watched">
           {% if episode.playcount %}
             <i class="fa fa-check-square-o pull-right"></i>

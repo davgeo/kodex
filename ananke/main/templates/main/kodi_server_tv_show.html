@@ -1,11 +1,13 @@
 {% extends "main/kodi_server_base.html" %}
 
+{% load staticfiles %}
+
 {% block center %}
   <h2>{{ tvshow.title }}</h2>
 
   <div class="row">
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 thumb">
-      <img src="{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
+      <img src="{% static 'cache' %}/{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
     </div>
 
     <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7 text">
@@ -18,7 +20,7 @@
   {% for season in seasons %}
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
       <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
-        <img src="{{ season.thumbnail }}" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
+        <img src="{% static 'cache' %}/{{ season.thumbnail }}" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
         <a href="{{request.get_full_path}}_watched">
           {% if season.watchedepisodes == season.episode %}
             <i class="fa fa-check-square-o pull-right"></i>

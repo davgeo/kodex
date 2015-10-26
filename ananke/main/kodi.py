@@ -4,6 +4,10 @@
 # Python default package imports
 import urllib
 import re
+import requests
+import os
+import shutil
+import hashlib
 
 # Local file imports
 from .kodijsonrpc import KodiJSONClient
@@ -43,31 +47,52 @@ def GetPlaylists(func):
   return wrapper
 
 #################################################
-# ProcessThumbnail
+# GetThumbnail
+# TODO: Revisit dir paths
 #################################################
-def ProcessThumbnail(server, thumbnail):
-  url = server.GetUrl('image/') + urllib.parse.quote_plus(thumbnail)
-
+def GetThumbnail(server, thumbnail, staticDir='main/static', cacheDir='cache'):
   try:
-    re.findall(r'.jpg', url)[0]
+    re.findall(r'.jpg', thumbnail)[0]
   except IndexError:
     return ''
   else:
-    return url
+    fileDir = os.path.join(staticDir, cacheDir)
+
+    # Generate hash to avoid illegal characters in filepath (and give unique reference)
+    fileHash = hashlib.md5(thumbnail.encode())
+    imgPath = os.path.join(fileDir, fileHash.hexdigest())
+
+    if not os.path.exists(imgPath):
+      print("Downloading thumbnail from kodi server: {0}".format(thumbnail))
+
+      if not os.path.exists(fileDir):
+        os.mkdir(fileDir)
+
+      if not os.path.isdir(fileDir):
+        raise Exception("Image cache directory path exists but is not a directory")
+
+      url = server.GetUrl('image/') + urllib.parse.quote_plus(thumbnail)
+      response = requests.get(url, auth=('xbmc', 'xbmc'), stream=True)
+
+      with open(imgPath, 'wb') as f:
+        response.raw.decode_content = True
+        shutil.copyfileobj(response.raw, f)
+
+    return fileHash.hexdigest()
 
 #################################################
 # ProcessThumbnails
 #################################################
 def ProcessThumbnails(server, thumbnailList, tvEpisode=False):
   for item in thumbnailList:
-    thumbnail = ProcessThumbnail(server, item['thumbnail'])
+    thumbnail = GetThumbnail(server, item['thumbnail'])
 
     if tvEpisode and thumbnail == '':
       showDetails = server.VideoLibrary.GetTVShowDetails({'tvshowid': item['tvshowid'], 'properties':['thumbnail',]})['tvshowdetails']
-      thumbnail = ProcessThumbnail(server, showDetails['thumbnail'])
+      thumbnail = GetThumbnail(server, showDetails['thumbnail'])
 
     if thumbnail == '':
-      thumbnail = 'http://placekitten.com/g/50/50'
+      thumbnail = 'http://placekitten.com/g/50/50' # TODO: Replace with local image
 
     item['thumbnail'] = thumbnail
 

@@ -9,14 +9,18 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
       <div class="playlist-wrapper" data-spy="affix" data-offset-top="30" id="myPlaylistbar">
         <ul class="list-group">
-          {% for episode in playlist %}
+          {% for item in playlist %}
             <li class="list-group-item">
-              {% if episode.uniqueid == playing.uniqueid %}
+              {% if item.uniqueid == playing.uniqueid %}
                 <span class="glyphicon glyphicon-play"></span>
               {% else %}
                 <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><span class="glyphicon glyphicon-remove pull-right"></span></a>
               {% endif %}
-              <a href="{% url 'tvseason' server.id episode.tvshowid episode.season %}">{{ episode.title }}</a>
+              {% if item.showtitle %}
+                <a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a>
+              {% else %}
+                <a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a>
+              {% endif %}
             </li>
           {% endfor %}
         </ul>
