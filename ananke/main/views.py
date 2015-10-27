@@ -138,9 +138,9 @@ def movie(request, server, context, movie_id):
 @GetServer
 def playmovie(request, server, context, movie_id):
   url = request.get_full_path().replace('_play', '')
-  # KodiLookUp.Playlist_Clear(*server, playlistType='video')
-  # KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
-  # KodiLookUp.Player_Open(*server)
+  KodiLookUp.Playlist_Clear(*server, playlistType='video')
+  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
+  KodiLookUp.Player_Open(*server, playlistType='video')
   return redirect(url)
 
 @GetServer
@@ -152,9 +152,9 @@ def addmovie(request, server, context, movie_id):
 @GetServer
 def playtv(request, server, context, show_id, season_id, episode_id):
   url = request.get_full_path().replace('_play', '')
-  # KodiLookUp.Playlist_Clear(*server, playlistType='video')
-  # KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
-  # KodiLookUp.Player_Open(*server)
+  KodiLookUp.Playlist_Clear(*server, playlistType='video')
+  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'episodeid':int(episode_id)}})
+  KodiLookUp.Player_Open(*server, playlistType='video')
   return redirect(url)
 
 @GetServer
@@ -165,6 +165,7 @@ def addtv(request, server, context, show_id, season_id, episode_id):
 
 @GetServer
 def playpause(request, server, context):
+  # Revisit this, doesn't play if stopped
   url = request.get_full_path().replace('_playpause', '')
   KodiLookUp.Player_PlayPause(*server)
   return redirect(url)

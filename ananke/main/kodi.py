@@ -369,9 +369,10 @@ def Player_Move(server, player_id):
   raise NotImplementedError
 
 @GetServer
-@GetActivePlayer
-def Player_Open(server, player_id):
-  raise NotImplementedError
+@GetPlaylists
+def Player_Open(server, playlist_id):
+  params = {"item" : {"playlistid": playlist_id}}
+  return server.Player.Open(params)
 
 @GetServer
 @GetActivePlayer
