@@ -1,9 +1,4 @@
 
-/* body {
-  padding-right: 0;
-  padding-left: 0;
-} */
-
 .navbar-nav > li > a, .navbar-brand {
   padding-top: 5px;
   padding-bottom: 0;
@@ -24,18 +19,6 @@
 .navbar.affix + #myContent {
   padding-top: 30px;
 }
-
-/*.playlist-wrapper {
-  margin-right: 0px;
-}
-
-.playlist-wrapper.affix {
-  margin-right: 0px;
-}*/
-
-/*#myContent {
-  padding-right: 0;
-}*/
 
 .no-padding {
   padding-left: 0;
@@ -85,12 +68,117 @@
   overflow: hidden;
 }
 
-/*.row {
-  margin-left: 0;
-  margin-right: 0;
-}*/
+.playercontrol-wrapper {
+  height: 200px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+}
 
-/*#myContent {
-  padding-top: 30px;
-}*/
+.volumecontrol {
+    padding-top:0px;
+    /*vertical-align: middle; */
+    height: 50px;
+    border: 1px solid red;
+}
 
+.slider {
+    margin-left:auto;
+    margin-right:auto;
+    /*vertical-align: middle;*/
+    height: 50px;
+    border: 1px solid blue;
+}
+
+.center-icon {
+    /*display:inline-block;*/
+    line-height: 50px;
+    /*background-color:black;
+    color:white;*/
+    height: 50px;
+    text-align: center;
+    vertical-align: bottom;
+    border: 1px solid purple;
+}
+
+.playercontrol {
+    margin-left:auto;
+    margin-right:auto;
+    /*vertical-align: middle;*/
+    height: 50px;
+    border: 1px solid green;
+}
+
+.playlist-item-wrapper {
+  height: 32px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+  line-height: 30px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-top:0px;
+  margin-bottom:-1px;
+  overflow: hidden;
+}
+
+.playlist-item-icon {
+  line-height: 30px;
+  height: 32px;
+  text-align: center;
+  vertical-align: bottom;
+  margin-bottom:-1px;
+}
+
+.playlist-title {
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.playlist-subtext-ep {
+  font-size: 10px;
+  line-height: 10px;
+}
+
+.playlist-item-playing-wrapper-ep {
+  height: 52px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+  line-height: default;
+  margin-left:0px;
+  margin-right:0px;
+  margin-top:0px;
+  margin-bottom:-1px;
+}
+
+.playing-ep-thumb {
+  height: 50px;
+  width: 80px;
+}
+
+.playlist-item-playing-wrapper-mv {
+  height: 82px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+  line-height: 80px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-top:0px;
+  margin-bottom:-1px;
+  overflow: hidden;
+}
+
+.playing-mv-thumb {
+  height: 80px;
+}
+
+.playlist-title-mv {
+  font-size: 14px;
+  line-height: 80px;
+}

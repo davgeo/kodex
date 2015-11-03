@@ -1,5 +1,7 @@
 {% extends "main/kodi_base.html" %}
 
+{% load staticfiles %}
+
 {% block content %}
   <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
     {% block center %}{% endblock %}
@@ -9,59 +11,83 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
       <div class="playlist-wrapper" data-spy="affix" data-offset-top="30" id="myPlaylistbar">
         <ul class="list-group">
+          <li class="list-group-item playercontrol-wrapper">
+            <div class="volumecontrol">
+              <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-up fa-2x center-icon"></i></a></div>
+              <div class="col-xs-10"><input class="slider" type="range" id="myslider" min="0" max="50" value="25" step="1"></input></div>
+            </div>
+            <div class="playercontrol">
+              <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_restart"><i class="fa fa-fast-backward fa-2x center-icon"></i></a></div>
+              <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_backward"><i class="fa fa-backward fa-2x center-icon"></i></a></div>
+              <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_stop"><i class="fa fa-stop fa-2x center-icon"></i></a></div>
+              <div class="col-xs-2 center-icon">
+                {% if player and player.speed != 0 %}
+                  <a href="{{request.get_full_path}}_playpause"><i class="fa fa-pause fa-2x center-icon"></i></a>
+                {% else %}
+                  <a href="{{request.get_full_path}}_playpause"><i class="fa fa-play fa-2x center-icon"></i></a>
+                {% endif %}
+              </div>
+              <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_forward"><i class="fa fa-forward fa-2x center-icon"></i></a></div>
+              <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_skip"><i class="fa fa-fast-forward fa-2x center-icon"></i></a></div>
+            </div>
+            <div style="border: 1px solid yellow;">
+              <span class="glyphicon glyphicon-off"></span>
+              <a href="{{request.get_full_path}}_clear"><i class="fa fa-ban"></i></a>
+              <span class="glyphicon glyphicon-cog"></span>
+              <span class="glyphicon glyphicon-option-horizontal"></span>
+              <span class="glyphicon glyphicon-option-vertical"></span>
+              <span class="glyphicon glyphicon-menu-hamburger"></span>
+              <span class="glyphicon glyphicon-volume-down"></span>
+              <span class="glyphicon glyphicon-volume-up"></span>
+              <a href="{{request.get_full_path}}_subtitles"><span class="glyphicon glyphicon-subtitles"></span></a>
+            </div>
+          </li>
           {% for item in playlist %}
-            <li class="list-group-item">
-              {% if item.uniqueid == playing.uniqueid %}
-                <span class="glyphicon glyphicon-play"></span>
-              {% else %}
-                <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><span class="glyphicon glyphicon-remove pull-right"></span></a>
-              {% endif %}
               {% if item.showtitle %}
-                <a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a>
+                {% if item.uniqueid == playing.uniqueid %}
+                <li class="list-group-item playlist-item-playing-wrapper-ep">
+                  <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
+                  <div class="col-xs-9">
+                    <div class="playlist-title"><a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a></div>
+                    <div class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</div>
+                  </div>
+                </li>
+                {% else %}
+                <li class="list-group-item playlist-item-wrapper">
+                  <div class="col-xs-10">
+                    <i class="fa fa-television"></i>
+                    <a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a>
+                    <span class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</span>
+                  </div>
+                  <div class="col-xs-2 no-padding">
+                    <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
+                    <a href="#play_playlistitem"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
+                  </div>
+                </li>
+                {% endif %}
               {% else %}
-                <a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a>
+                {% if item.uniqueid == playing.uniqueid %}
+                <li class="list-group-item playlist-item-playing-wrapper-mv">
+                  <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
+                  <div class="col-xs-9">
+                    <div class="playlist-title-mv"><a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a></div>
+                  </div>
+                </li>
+                {% else %}
+                <li class="list-group-item playlist-item-wrapper">
+                  <div class="col-xs-10">
+                    <i class="fa fa-film"></i>
+                    <a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a>
+                  </div>
+                  <div class="col-xs-2 no-padding">
+                    <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
+                    <a href="#play_playlistitem"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
+                  </div>
+                </li>
+                {% endif %}
               {% endif %}
-            </li>
           {% endfor %}
         </ul>
       </div>
     </div>
-
-    <div class="play-control" data-spy="affix" data-offset-bottom="-15" id="myPlayerControl">
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="row vertical-align">
-          <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_backward"><span class="glyphicon glyphicon-backward fa-2x"></span></a></div>
-          {% if player and player.speed != 0 %}
-            <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-pause fa-3x"></span></a></div>
-          {% else %}
-            <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-play fa-3x"></span></a></div>
-          {% endif %}
-          <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_forward"><span class="glyphicon glyphicon-forward fa-2x"></span></a></div>
-        </div>
-      </div>
-
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="row vertical-align">
-          <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_restart"><span class="glyphicon glyphicon-fast-backward fa-2x"></span></a></div>
-          <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_stop"><span class="glyphicon glyphicon-stop fa-3x"></span></a></div>
-          <div class="col-sm-4 vertical-align"><a href="{{request.get_full_path}}_skip"><span class="glyphicon glyphicon-fast-forward fa-2x"></span></a></div>
-        </div>
-      </div>
-
-      <a href="{{request.get_full_path}}_playpause"><span class="glyphicon glyphicon-pause"></span></a>
-      <span class="glyphicon glyphicon-film"></span>
-      <span class="glyphicon glyphicon-off"></span>
-      <a href="{{request.get_full_path}}_clear"><i class="fa fa-ban"></i></a>
-      <span class="glyphicon glyphicon-cog"></span>
-      <span class="glyphicon glyphicon-option-horizontal"></span>
-      <span class="glyphicon glyphicon-option-vertical"></span>
-      <span class="glyphicon glyphicon-menu-hamburger"></span>
-      <span class="glyphicon glyphicon-volume-down"></span>
-      <a href="{{request.get_full_path}}_mute"><span class="glyphicon glyphicon-volume-off"></span></a>
-      <span class="glyphicon glyphicon-volume-up" />
-      <a href="{{request.get_full_path}}_subtitles"><span class="glyphicon glyphicon-subtitles"></span></a>
-      <input type="range" min="0" max="50" value="25" step="1" />
-    </div>
-  </div>
-
 {% endblock %}

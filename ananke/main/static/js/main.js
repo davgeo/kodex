@@ -4,3 +4,4 @@
     var $width = $parent.width();
     $affixElement.width($width);
 });*/
+
