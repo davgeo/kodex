@@ -16,7 +16,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for episode in episodes %}
+      {% for episode in recentepisodes %}
       <tr>
         <td>
           <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
@@ -43,7 +43,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for movie in movies %}
+      {% for movie in recentmovies %}
       <tr>
         <td>
           <a href="{% url 'movie' server.id movie.movieid %}">

@@ -69,7 +69,7 @@
 }
 
 .playercontrol-wrapper {
-  height: 200px;
+  height: 126px;
   padding-left: 0px;
   padding-right: 0px;
   padding-top:0px;
@@ -80,7 +80,7 @@
     padding-top:0px;
     /*vertical-align: middle; */
     height: 50px;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
 }
 
 .slider {
@@ -88,7 +88,7 @@
     margin-right:auto;
     /*vertical-align: middle;*/
     height: 50px;
-    border: 1px solid blue;
+    /*border: 1px solid blue;*/
 }
 
 .center-icon {
@@ -99,7 +99,7 @@
     height: 50px;
     text-align: center;
     vertical-align: bottom;
-    border: 1px solid purple;
+    /*border: 1px solid purple;*/
 }
 
 .playercontrol {
@@ -107,7 +107,13 @@
     margin-right:auto;
     /*vertical-align: middle;*/
     height: 50px;
-    border: 1px solid green;
+    /*border: 1px solid green;*/
+}
+
+.playercontrol-heading {
+  height: 25px;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .playlist-item-wrapper {

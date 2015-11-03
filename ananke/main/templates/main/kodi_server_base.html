@@ -12,6 +12,45 @@
       <div class="playlist-wrapper" data-spy="affix" data-offset-top="30" id="myPlaylistbar">
         <ul class="list-group">
           <li class="list-group-item playercontrol-wrapper">
+            <div class="playercontrol-heading">
+              <span class="dropdown">
+                <button class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  {% for altserver in kodi_servers %}
+                    {% if altserver != server %}
+                      <li>
+                        {% if episodeid and season and showid %}
+                          <a href="{% url 'tvepisode' altserver.id showid season episodeid %}">
+                        {% elif season and tvshow.tvshowid %}
+                          <a href="{% url 'tvseason' altserver.id tvshow.tvshowid season %}">
+                        {% elif tvshow.tvshowid %}
+                          <a href="{% url 'tvshow' altserver.id tvshow.tvshowid %}">
+                        {% elif tvshows %}
+                          <a href="{% url 'tvindex' altserver.id %}">
+                        {% elif movieid %}
+                          <a href="{% url 'movie' altserver.id movieid %}">
+                        {% elif movies %}
+                          <a href="{% url 'movies_index' altserver.id %}">
+                        {% else %}
+                          <a href="{% url 'server' altserver.id %}">
+                        {% endif %}
+                        {{ altserver }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </span>
+              <a href="{% url 'server' server.id %}">{{ server }}</a>
+              <span class="dropdown pull-right">
+                <button class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="{{request.get_full_path}}_clear"><i class="fa fa-ban"></i> Clear playlist</a>
+                    <a href="{{request.get_full_path}}_subtitles"><i class="fa fa-commenting"></i> Subtitles</a>
+                  </li>
+                </ul>
+              </span>
+            </div>
             <div class="volumecontrol">
               <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-up fa-2x center-icon"></i></a></div>
               <div class="col-xs-10"><input class="slider" type="range" id="myslider" min="0" max="50" value="25" step="1"></input></div>
@@ -29,17 +68,6 @@
               </div>
               <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_forward"><i class="fa fa-forward fa-2x center-icon"></i></a></div>
               <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_skip"><i class="fa fa-fast-forward fa-2x center-icon"></i></a></div>
-            </div>
-            <div style="border: 1px solid yellow;">
-              <span class="glyphicon glyphicon-off"></span>
-              <a href="{{request.get_full_path}}_clear"><i class="fa fa-ban"></i></a>
-              <span class="glyphicon glyphicon-cog"></span>
-              <span class="glyphicon glyphicon-option-horizontal"></span>
-              <span class="glyphicon glyphicon-option-vertical"></span>
-              <span class="glyphicon glyphicon-menu-hamburger"></span>
-              <span class="glyphicon glyphicon-volume-down"></span>
-              <span class="glyphicon glyphicon-volume-up"></span>
-              <a href="{{request.get_full_path}}_subtitles"><span class="glyphicon glyphicon-subtitles"></span></a>
             </div>
           </li>
           {% for item in playlist %}

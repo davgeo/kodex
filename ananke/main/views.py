@@ -61,8 +61,8 @@ def kodi(request, context):
 
 @GetPlaylist
 def server(request, server, context):
-  context['episodes'] = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server)
-  context['movies'] = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server)
+  context['recentepisodes'] = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server)
+  context['recentmovies'] = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server)
   #context['path'] = 'kodi / {0}'.format(context['server'].name)
   return render(request, 'main/kodi_server_index.html', context)
 
