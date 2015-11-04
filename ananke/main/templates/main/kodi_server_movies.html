@@ -35,11 +35,18 @@
 
       <div class="row">
         {% for movie in movies %}
-          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
+          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 movie-wrapper">
             <a href="{% url 'movie' server.id movie.movieid %}">
               <img src="{% static 'cache' %}/{{ movie.thumbnail }}" class="img-responsive poster_thumb" alt={{ movie.title }}>
-              <p></p>
-              <!-- <p>{{ movie.title }} {{ movie.lastplayed }}</p> width="210" height="297" -->
+            </a>
+            <a href="{% url 'addmovie' server.id movie.movieid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
+            <a href="{% url 'playmovie' server.id movie.movieid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
+            <a href="{{request.get_full_path}}_watched">
+              {% if movie.playcount %}
+                <i class="fa fa-check-square-o pull-right"></i>
+              {% else %}
+                <i class="fa fa-square-o pull-right"></i>
+              {% endif %}
             </a>
           </div>
         {% endfor %}

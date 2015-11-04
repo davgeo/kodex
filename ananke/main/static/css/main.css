@@ -194,3 +194,9 @@
   font-size: 14px;
   line-height: 80px;
 }
+
+.movie-wrapper {
+  height: 200px;
+  width: 150px;
+  overflow: hidden;
+}

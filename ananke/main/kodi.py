@@ -182,7 +182,8 @@ def VideoLibrary_GetMovies(server):
   params = {'properties':['title',
                           'lastplayed',
                           'thumbnail',
-                          'plot']}
+                          'plot',
+                          'playcount']}
   recentMovies = server.VideoLibrary.GetMovies(params)
   movies = recentMovies['movies']
   ProcessThumbnails(server, movies)
@@ -371,7 +372,8 @@ def Player_Move(server, player_id):
 @GetServer
 @GetPlaylists
 def Player_Open(server, playlist_id):
-  params = {"item" : {"playlistid": playlist_id}}
+  params = {"item" : {"playlistid": playlist_id},
+            "options" : {"resume" : True}}
   return server.Player.Open(params)
 
 @GetServer
