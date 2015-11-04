@@ -69,11 +69,15 @@
 }
 
 .playercontrol-wrapper {
-  height: 126px;
+  height: 130px;
   padding-left: 0px;
   padding-right: 0px;
   padding-top:0px;
   padding-bottom:0px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-top:0px;
+  margin-bottom:-1px;
 }
 
 .volumecontrol {
@@ -93,10 +97,10 @@
 
 .center-icon {
     /*display:inline-block;*/
-    line-height: 50px;
     /*background-color:black;
     color:white;*/
     height: 50px;
+    line-height: 50px;
     text-align: center;
     vertical-align: bottom;
     /*border: 1px solid purple;*/
@@ -131,8 +135,8 @@
 }
 
 .playlist-item-icon {
-  line-height: 30px;
   height: 32px;
+  line-height: 30px;
   text-align: center;
   vertical-align: bottom;
   margin-bottom:-1px;
@@ -141,11 +145,13 @@
 .playlist-title {
   font-size: 14px;
   line-height: 30px;
+  overflow: hidden;
 }
 
 .playlist-subtext-ep {
   font-size: 10px;
   line-height: 10px;
+  overflow: hidden;
 }
 
 .playlist-item-playing-wrapper-ep {
