@@ -57,15 +57,32 @@
   height: 180px;
 }
 
+.poster_thumb_large {
+  height: 297px;
+}
+
 .episode_thumb {
   height: 100px;
-  width: 200px;
+  width: 170px;
 }
 
 .episode_wrapper {
   height: 140px;
   width: 200px;
   overflow: hidden;
+}
+
+.active_episode_thumb {
+  height: 100px;
+  width: 170px;
+}
+
+.active_episode_thumb_wrapper {
+  width: 200px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top:15px;
+  padding-bottom:15px;
 }
 
 .playercontrol-wrapper {

@@ -7,29 +7,44 @@
     <a href="{% url 'tvshow' server.id tvshow.tvshowid %}">{{ tvshow.title }}</a>
     <small><a href="{% url 'tvseason' server.id tvshow.tvshowid season %}">Season {{ season }}</a></small>
 
-    {% if selection %}
+    {% if activeepisode %}
       <small>Episode {{ selection.episode }}</small>
     {% endif %}
   </h2>
 
-  {% if episodeid %}
-    <h3>{{ selection.title }}</h3>
-    <p>{{ selection.plot }}</p>
-    <div id="file" class="collapse"><p>File: {{ selection.file }}</p></div>
-    <a href="{% url 'playtv' server.id showid season episodeid %}" class="btn btn-primary" role="button">
-      <span class="glyphicon glyphicon-play"></span> Play
-    </a>
-    <a href="{% url 'addtv' server.id showid season episodeid %}" class="btn btn-info" role="button">
-      <span class="glyphicon glyphicon-plus"></span> Add
-    </a>
-    <span class="dropdown pull-right">
-      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Misc <span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <li><a data-toggle="collapse" data-target="#file">Show File Path</a></li>
-        <li><a href="#">Remove Episode</a></li>
-        <li><a href="#">...</a></li>
-      </ul>
-    </span>
+  {% if activeepisode %}
+    <div class="row">
+      <div class="col-lg-2 col-md-3 col-sm-6 col-xs-7 active_episode_thumb_wrapper">
+        <img src="{% static 'cache' %}/{{ activeepisode.thumbnail }}" class="img-responsive active_episode_thumb">
+        {% if activeepisode.resume.position < activeepisode.resume.total %}
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ activeepisode.resume.position }} " aria-valuemin="0" aria-valuemax="{{ activeepisode.resume.total }}" style="width:{{ activeepisode.resume.percentage }}%">
+              <span class="sr-only">Resume status</span>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="col-lg-8 col-md-7 col-sm-6 col-xs-5">
+        <h3>{{ activeepisode.title }}</h3>
+        <p>{{ activeepisode.plot }}</p>
+        <div id="file" class="collapse"><p>File: {{ activeepisode.file }}</p></div>
+        <a href="{% url 'playtv' server.id activeepisode.tvshowid activeepisode.season activeepisode.episodeid %}" class="btn btn-primary" role="button">
+          <span class="glyphicon glyphicon-play"></span> Play
+        </a>
+        <a href="{% url 'addtv' server.id activeepisode.tvshowid activeepisode.season activeepisode.episodeid %}" class="btn btn-info" role="button">
+          <span class="glyphicon glyphicon-plus"></span> Add
+        </a>
+        <span class="dropdown pull-right">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Misc <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li><a data-toggle="collapse" data-target="#file">Show File Path</a></li>
+            <li><a href="#">Remove Episode</a></li>
+            <li><a href="#">...</a></li>
+          </ul>
+        </span>
+      </div>
+    </div>
   {% endif %}
 
   <hr>

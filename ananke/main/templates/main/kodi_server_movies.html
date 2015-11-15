@@ -5,20 +5,27 @@
 {% block center %}
   <h2>Movies</h2>
 
-  {% if movieid %}
-    <h3>{{ subheading }}</h3>
+  {% if activemovie %}
+    <h3>{{ activemovie.name }}</h3>
 
     <div class="row">
-      <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 thumb">
-        <img src="{% static 'cache' %}/{{ thumbnail }}" class="img-responsive" width="210" height="297">
+      <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5">
+        <img src="{% static 'cache' %}/{{ activemovie.thumbnail }}" class="img-responsive" width="210" height="297">
+        {% if activemovie.resume.position < activemovie.resume.total %}
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ activemovie.resume.position }} " aria-valuemin="0" aria-valuemax="{{ activemovie.resume.total }}" style="width:{{ activemovie.resume.percentage }}%">
+              <span class="sr-only">Resume status</span>
+            </div>
+          </div>
+        {% endif %}
       </div>
 
-      <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7 text">
-        <p>{{ subtext }}</p>
-        <a href="{% url 'playmovie' server.id movieid %}" class="btn btn-primary" role="button">
+      <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7">
+        <p>{{ activemovie.plot }}</p>
+        <a href="{% url 'playmovie' server.id activemovie.movieid %}" class="btn btn-primary" role="button">
           <span class="glyphicon glyphicon-play"></span> Play
         </a>
-        <a href="{% url 'addmovie' server.id movieid %}" class="btn btn-info" role="button">
+        <a href="{% url 'addmovie' server.id activemovie.movieid %}" class="btn btn-info" role="button">
           <span class="glyphicon glyphicon-plus"></span> Add
         </a>
       </div>
@@ -27,7 +34,7 @@
 
   <hr>
 
-  {% if movieid %}
+  {% if activemovie %}
     <button type="button" data-toggle="collapse" data-target="#movies">Show All Movies</button>
     <div id="movies" class="collapse">
     <hr>
@@ -48,11 +55,18 @@
                 <i class="fa fa-square-o pull-right"></i>
               {% endif %}
             </a>
+            {% if movie.resume.position < movie.resume.total %}
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="{{ movie.resume.position }} " aria-valuemin="0" aria-valuemax="{{ movie.resume.total }}" style="width:{{ movie.resume.percentage }}%">
+                  <span class="sr-only">Resume status</span>
+                </div>
+              </div>
+            {% endif %}
           </div>
         {% endfor %}
       </div>
 
-  {% if movieid %}
+  {% if activemovie %}
     </div>
   {% endif %}
 {% endblock %}

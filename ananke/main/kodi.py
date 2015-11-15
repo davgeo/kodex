@@ -97,6 +97,21 @@ def ProcessThumbnails(server, thumbnailList, tvEpisode=False):
     item['thumbnail'] = thumbnail
 
 #################################################
+# GetResumePercent
+#################################################
+def GetResumePercent(resumeList):
+  for item in resumeList:
+    resume = item['resume']
+
+    if float(resume['total']) == 0:
+      resumePercent = 0
+    else:
+      resumePercent = 100.0 * float(resume['position'])/float(resume['total'])
+
+    resume['percentage'] = resumePercent
+
+
+#################################################
 # Status
 #################################################
 @GetServer
@@ -159,6 +174,7 @@ def VideoLibrary_GetEpisodes(server, show_id, season_id):
     item['episode'] = int(item['episode'])
 
   ProcessThumbnails(server, episodes, tvEpisode=True)
+  GetResumePercent(episodes)
   return episodes
 
 @GetServer
@@ -166,8 +182,19 @@ def VideoLibrary_GetGenres(server):
   raise NotImplementedError
 
 @GetServer
-def VideoLibrary_GetMovieDetails(server):
-  raise NotImplementedError
+def VideoLibrary_GetMovieDetails(server, movie_id):
+  params = {'movieid':int(movie_id),
+            'properties':['title',
+                          'lastplayed',
+                          'thumbnail',
+                          'plot',
+                          'playcount',
+                          'resume']}
+  movieDetails = server.VideoLibrary.GetMovieDetails(params)
+  movie = movieDetails['moviedetails']
+  ProcessThumbnails(server, (movie, ))
+  GetResumePercent((movie, ))
+  return movie
 
 @GetServer
 def VideoLibrary_GetMovieSetDetails(server):
@@ -183,10 +210,12 @@ def VideoLibrary_GetMovies(server):
                           'lastplayed',
                           'thumbnail',
                           'plot',
-                          'playcount']}
+                          'playcount',
+                          'resume']}
   recentMovies = server.VideoLibrary.GetMovies(params)
   movies = recentMovies['movies']
   ProcessThumbnails(server, movies)
+  GetResumePercent(movies)
   return movies
 
 @GetServer
@@ -326,9 +355,10 @@ def Player_GetItem(server, player_id):
   return response['item']
 
 @GetServer
-@GetActivePlayer
-def Player_GetPlayers(server, player_id):
-  raise NotImplementedError
+def Player_GetPlayers(server):
+  params = {"media": "video"}
+  response = server.Player.GetPlayers(params)
+  return response[0]['playercoreid']
 
 @GetServer
 @GetActivePlayer
@@ -369,11 +399,19 @@ def Player_GoTo(server, player_id):
 def Player_Move(server, player_id):
   raise NotImplementedError
 
+'''@GetServer
+# @GetPlaylists playlist_id
+def Player_Open(server, params):
+  #params.update({'playlistid':int(playlist_id)})
+  #params["item"].update({'playlistid':int(playlist_id), "position": 0})
+  #params = {"item" : {"movieid": 302}},
+  #          "options" : {"resume" : True}}
+  return server.Player.Open(params)'''
+
 @GetServer
 @GetPlaylists
 def Player_Open(server, playlist_id):
-  params = {"item" : {"playlistid": playlist_id},
-            "options" : {"resume" : True}}
+  params = {"item" : {"playlistid" : int(playlist_id)}}
   return server.Player.Open(params)
 
 @GetServer
