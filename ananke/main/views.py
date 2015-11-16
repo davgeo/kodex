@@ -131,9 +131,8 @@ def playmovie(request, server, context, movie_id):
   KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
   movieInfo = KodiLookUp.VideoLibrary_GetMovieDetails(*server, movie_id=movie_id)
   KodiLookUp.Player_Open(*server, playlistType='video')
-  #playercore_id = KodiLookUp.Player_GetPlayers(*server) # "playercoreid" : int(playercore_id)
+  KodiLookUp.Player_Seek(*server, position=movieInfo['resume']['percentage'])
   #KodiLookUp.Player_Open(*server, params={'item':{'movieid':int(movie_id)}, "options" : {"resume" : True}})
-  #KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
   return redirect(url)
 
 @GetServer
@@ -144,15 +143,13 @@ def addmovie(request, server, context, movie_id):
 
 @GetServer
 def playtv(request, server, context, show_id, season_id, episode_id):
-  #
-  # Open bypasses playlists - BAD
-  # To use playlists do ADD + PLAY + SEEK
-  #
   url = request.get_full_path().replace('_play', '')
-  #KodiLookUp.Playlist_Clear(*server, playlistType='video')
-  #KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'episodeid':int(episode_id)}})
-  #KodiLookUp.Player_Open(*server, playlistType='video')
-  KodiLookUp.Player_Open(*server, params={'item':{'episodeid':int(episode_id)}, "options" : {"resume" : True}})
+  KodiLookUp.Playlist_Clear(*server, playlistType='video')
+  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'episodeid':int(episode_id)}})
+  episodeInfo = KodiLookUp.VideoLibrary_GetEpisodeDetails(*server, episode_id=episode_id)
+  KodiLookUp.Player_Open(*server, playlistType='video')
+  KodiLookUp.Player_Seek(*server, position=episodeInfo['resume']['percentage'])
+  #KodiLookUp.Player_Open(*server, params={'item':{'episodeid':int(episode_id)}, "options" : {"resume" : True}})
   return redirect(url)
 
 @GetServer

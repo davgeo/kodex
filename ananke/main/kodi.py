@@ -136,8 +136,7 @@ def VideoLibrary_Export(server):
 
 @GetServer
 def VideoLibrary_GetEpisodeDetails(server, episode_id):
-  raise NotImplementedError
-  '''params = {'episodeid':int(episode_id),
+  params = {'episodeid':int(episode_id),
             'properties':['title',
                           'plot',
                           'showtitle',
@@ -145,11 +144,16 @@ def VideoLibrary_GetEpisodeDetails(server, episode_id):
                           'tvshowid',
                           'episode',
                           'season',
+                          'playcount',
                           'lastplayed',
-                          'resume']}
+                          'resume',
+                          'file']}
 
   response = server.VideoLibrary.GetEpisodeDetails(params)
-  return response'''
+  episode = response['episodedetails']
+  ProcessThumbnails(server, (episode, ))
+  GetResumePercent((episode, ))
+  return episode
 
 @GetServer
 def VideoLibrary_GetEpisodes(server, show_id, season_id):
@@ -190,8 +194,8 @@ def VideoLibrary_GetMovieDetails(server, movie_id):
                           'plot',
                           'playcount',
                           'resume']}
-  movieDetails = server.VideoLibrary.GetMovieDetails(params)
-  movie = movieDetails['moviedetails']
+  response = server.VideoLibrary.GetMovieDetails(params)
+  movie = response['moviedetails']
   ProcessThumbnails(server, (movie, ))
   GetResumePercent((movie, ))
   return movie
