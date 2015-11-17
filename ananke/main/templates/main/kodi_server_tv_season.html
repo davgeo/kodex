@@ -17,7 +17,7 @@
       <div class="col-lg-2 col-md-3 col-sm-6 col-xs-7 active_episode_thumb_wrapper">
         <img src="{% static 'cache' %}/{{ activeepisode.thumbnail }}" class="img-responsive active_episode_thumb">
         {% if activeepisode.resume.position < activeepisode.resume.total %}
-          <div class="progress">
+          <div class="progress active-ep-resume-bar">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{ activeepisode.resume.position }} " aria-valuemin="0" aria-valuemax="{{ activeepisode.resume.total }}" style="width:{{ activeepisode.resume.percentage }}%">
               <span class="sr-only">Resume status</span>
             </div>
@@ -53,17 +53,24 @@
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 episode_wrapper">
       <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
         <img src="{% static 'cache' %}/{{ episode.thumbnail }}" class="img-responsive episode_thumb">
-        <a href="{{request.get_full_path}}_watched">
-          {% if episode.playcount %}
-            <i class="fa fa-check-square-o pull-right"></i>
-          {% else %}
-            <i class="fa fa-square-o pull-right"></i>
-          {% endif %}
-        </a>
-        <a href="{% url 'addtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
-        <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
-        <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}"><p>{{ episode.episode }}. {{ episode.title }}</p></a>
       </a>
+      {% if episode.resume.position < episode.resume.total %}
+        <div class="progress ep-resume-bar">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{ episode.resume.position }} " aria-valuemin="0" aria-valuemax="{{ episode.resume.total }}" style="width:{{ episode.resume.percentage }}%">
+            <span class="sr-only">Resume status</span>
+          </div>
+        </div>
+      {% endif %}
+      <a href="{{request.get_full_path}}_watched">
+        {% if episode.playcount %}
+          <i class="fa fa-check-square-o pull-right"></i>
+        {% else %}
+          <i class="fa fa-square-o pull-right"></i>
+        {% endif %}
+      </a>
+      <a href="{% url 'addtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
+      <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
+      <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}"><p>{{ episode.episode }}. {{ episode.title }}</p></a>
     </div>
   {% endfor %}
 {% endblock %}

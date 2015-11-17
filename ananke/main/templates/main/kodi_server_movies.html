@@ -9,10 +9,10 @@
     <h3>{{ activemovie.name }}</h3>
 
     <div class="row">
-      <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5">
-        <img src="{% static 'cache' %}/{{ activemovie.thumbnail }}" class="img-responsive" width="210" height="297">
+      <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 active_movie_thumb_wrapper">
+        <img src="{% static 'cache' %}/{{ activemovie.thumbnail }}" class="img-responsive poster_thumb">
         {% if activemovie.resume.position < activemovie.resume.total %}
-          <div class="progress">
+          <div class="progress active-movie-resume-bar">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{ activemovie.resume.position }} " aria-valuemin="0" aria-valuemax="{{ activemovie.resume.total }}" style="width:{{ activemovie.resume.percentage }}%">
               <span class="sr-only">Resume status</span>
             </div>
@@ -56,7 +56,7 @@
               {% endif %}
             </a>
             {% if movie.resume.position < movie.resume.total %}
-              <div class="progress">
+              <div class="progress movie-resume-bar">
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{ movie.resume.position }} " aria-valuemin="0" aria-valuemax="{{ movie.resume.total }}" style="width:{{ movie.resume.percentage }}%">
                   <span class="sr-only">Resume status</span>
                 </div>

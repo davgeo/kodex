@@ -55,15 +55,13 @@
 
 .poster_thumb {
   height: 180px;
-}
-
-.poster_thumb_large {
-  height: 297px;
+  width: 120px;
 }
 
 .episode_thumb {
   height: 100px;
   width: 170px;
+  /*opacity:.5;*/
 }
 
 .episode_wrapper {
@@ -84,6 +82,16 @@
   padding-top:15px;
   padding-bottom:15px;
 }
+
+.active_movie_thumb_wrapper {
+  width: 150px;
+  height: 210px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top:15px;
+  padding-bottom:15px;
+}
+
 
 .playercontrol-wrapper {
   height: 130px;
@@ -216,4 +224,36 @@
   height: 200px;
   width: 150px;
   overflow: hidden;
+}
+
+.active-ep-resume-bar {
+  height: 10px;
+  border-radius: 0;
+}
+
+.ep-resume-bar {
+  position: absolute;
+  top: 90px;
+  left: 15px;
+  height: 10px;
+  width: 170px;
+  border-radius: 0;
+}
+
+.movie-resume-bar {
+  position: absolute;
+  top: 170px;
+  left: 15px;
+  height: 10px;
+  width: 120px;
+  border-radius: 0;
+}
+
+.active-movie-resume-bar {
+  position: absolute;
+  top: 195px;
+  left: 15px;
+  height: 10px;
+  width: 120px;
+  border-radius: 0;
 }
