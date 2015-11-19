@@ -83,7 +83,7 @@
   padding-bottom:15px;
 }
 
-.active_movie_thumb_wrapper {
+.active-poster-thumb-wrapper {
   width: 150px;
   height: 210px;
   padding-left: 15px;
@@ -220,8 +220,8 @@
   line-height: 80px;
 }
 
-.movie-wrapper {
-  height: 200px;
+.poster-wrapper {
+  height: 240px;
   width: 150px;
   overflow: hidden;
 }
@@ -240,7 +240,7 @@
   border-radius: 0;
 }
 
-.movie-resume-bar {
+.poster-resume-bar {
   position: absolute;
   top: 170px;
   left: 15px;

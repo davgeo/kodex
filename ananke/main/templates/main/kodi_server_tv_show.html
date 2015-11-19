@@ -6,7 +6,7 @@
   <h2>{{ tvshow.title }}</h2>
 
   <div class="row">
-    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 thumb">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 active-poster-thumb-wrapper">
       <img src="{% static 'cache' %}/{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
     </div>
 
@@ -18,7 +18,7 @@
   <hr>
 
   {% for season in seasons %}
-    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 thumb">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 poster-wrapper">
       <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
         <img src="{% static 'cache' %}/{{ season.thumbnail }}" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
         <a href="{{request.get_full_path}}_watched">
@@ -28,6 +28,13 @@
             <i class="fa fa-square-o pull-right"></i>
           {% endif %}
         </a>
+        {% if season.resume.percentage > 0 %}
+          <div class="progress poster-resume-bar">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ season.resume.percentage }} " aria-valuemin="0" aria-valuemax="100" style="width:{{ season.resume.percentage }}%">
+              <span class="sr-only">Resume status</span>
+            </div>
+          </div>
+        {% endif %}
         <p>Season {{ season.season }}</p>
       </a>
     </div>

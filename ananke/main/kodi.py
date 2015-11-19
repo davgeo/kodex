@@ -101,15 +101,27 @@ def ProcessThumbnails(server, thumbnailList, tvEpisode=False):
 #################################################
 def GetResumePercent(resumeList):
   for item in resumeList:
-    resume = item['resume']
-
-    if float(resume['total']) == 0:
-      resumePercent = 0
+    try:
+      resume = item['resume']
+    except KeyError:
+      try:
+        currentValue = item['watchedepisodes']
+        maxValue = item['episode']
+      except KeyError:
+        print("Unable to get values to calulate resume percentage")
+        maxValue = 0
+      finally:
+        item['resume'] = {}
     else:
-      resumePercent = 100.0 * float(resume['position'])/float(resume['total'])
+      maxValue = float(resume['total'])
+      currentValue = float(resume['position'])
+    finally:
+      if maxValue == 0:
+        resumePercent = 0
+      else:
+        resumePercent = 100.0 * currentValue/maxValue
 
-    resume['percentage'] = resumePercent
-
+      item['resume']['percentage'] = resumePercent
 
 #################################################
 # Status
@@ -281,6 +293,7 @@ def VideoLibrary_GetSeasons(server, show_id):
   response = server.VideoLibrary.GetSeasons(params)
   seasons = response['seasons']
   ProcessThumbnails(server, seasons)
+  GetResumePercent(seasons)
   return seasons
 
 @GetServer
@@ -297,10 +310,13 @@ def VideoLibrary_GetTVShowDetails(server, show_id):
 @GetServer
 def VideoLibrary_GetTVShows(server):
   params = {'properties':['title',
-                          'thumbnail']}
+                          'thumbnail',
+                          'episode',
+                          'watchedepisodes']}
   response = server.VideoLibrary.GetTVShows(params)
   tvshows = response['tvshows']
   ProcessThumbnails(server, tvshows)
+  GetResumePercent(tvshows)
   return tvshows
 
 @GetServer
