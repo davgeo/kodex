@@ -9,13 +9,11 @@
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 poster-wrapper">
       <a href="{% url 'tvshow' server.id tvshow.tvshowid %}">
         <img src="{% static 'cache' %}/{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
-        <a href="{{request.get_full_path}}_watched">
-          {% if tvshow.watchedepisodes == tvshow.episode %}
-            <i class="fa fa-check-square-o pull-right"></i>
-          {% else %}
-            <i class="fa fa-square-o pull-right"></i>
-          {% endif %}
-        </a>
+        {% if tvshow.watchedepisodes == tvshow.episode %}
+          <i class="fa fa-check-square-o pull-right"></i>
+        {% else %}
+          <i class="fa fa-square-o pull-right"></i>
+        {% endif %}
         {% if tvshow.resume.percentage > 0 %}
           <div class="progress poster-resume-bar">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{ tvshow.resume.percentage }} " aria-valuemin="0" aria-valuemax="100" style="width:{{ tvshow.resume.percentage }}%">

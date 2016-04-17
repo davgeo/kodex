@@ -168,12 +168,14 @@
 }
 
 .playlist-title {
+  height: 32px;
   font-size: 14px;
   line-height: 30px;
   overflow: hidden;
 }
 
 .playlist-subtext-ep {
+  height: 18px;
   font-size: 10px;
   line-height: 10px;
   overflow: hidden;
@@ -218,6 +220,7 @@
 .playlist-title-mv {
   font-size: 14px;
   line-height: 80px;
+  overflow: hidden;
 }
 
 .poster-wrapper {

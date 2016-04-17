@@ -72,7 +72,7 @@
           </li>
           {% for item in playlist %}
               {% if item.showtitle %}
-                {% if item.uniqueid == playing.uniqueid %}
+                {% if item.id == playing.id %}
                 <li class="list-group-item playlist-item-playing-wrapper-ep">
                   <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
                   <div class="col-xs-9">
@@ -89,12 +89,12 @@
                   </div>
                   <div class="col-xs-2 no-padding">
                     <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
-                    <a href="#play_playlistitem"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
+                    <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
                   </div>
                 </li>
                 {% endif %}
               {% else %}
-                {% if item.uniqueid == playing.uniqueid %}
+                {% if item.id == playing.id %}
                 <li class="list-group-item playlist-item-playing-wrapper-mv">
                   <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
                   <div class="col-xs-9">
@@ -109,7 +109,7 @@
                   </div>
                   <div class="col-xs-2 no-padding">
                     <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
-                    <a href="#play_playlistitem"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
+                    <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
                   </div>
                 </li>
                 {% endif %}

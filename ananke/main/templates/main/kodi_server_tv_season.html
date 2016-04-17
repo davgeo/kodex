@@ -61,7 +61,7 @@
           </div>
         </div>
       {% endif %}
-      <a href="{{request.get_full_path}}_watched">
+      <a href="{% url 'watchedtv' server.id episode.tvshowid episode.season episode.episodeid %}">
         {% if episode.playcount %}
           <i class="fa fa-check-square-o pull-right"></i>
         {% else %}

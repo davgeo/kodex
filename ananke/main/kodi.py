@@ -340,8 +340,13 @@ def VideoLibrary_Scan(server):
   raise NotImplementedError
 
 @GetServer
-def VideoLibrary_SetEpisodeDetails(server):
-  raise NotImplementedError
+def VideoLibrary_SetEpisodeDetails(server, episode_id, playcount=None):
+  params = {'episodeid':int(episode_id)}
+
+  if playcount is not None:
+    params.update({'playcount' : playcount})
+
+  response = server.VideoLibrary.SetEpisodeDetails(params)
 
 @GetServer
 def VideoLibrary_SetMovieDetails(server):
@@ -411,8 +416,10 @@ def Player_GetProperties(server, player_id):
 
 @GetServer
 @GetActivePlayer
-def Player_GoTo(server, player_id):
-  raise NotImplementedError
+def Player_GoTo(server, player_id, index):
+  params = {'playerid':int(player_id),
+            'to':int(index)}
+  response = server.Player.GoTo(params)
 
 @GetServer
 @GetActivePlayer

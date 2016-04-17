@@ -159,6 +159,42 @@ def addtv(request, server, context, show_id, season_id, episode_id):
   return redirect(url)
 
 @GetServer
+def watchedtv(request, server, context, show_id, season_id, episode_id):
+  url = request.get_full_path().replace('_watched', '')
+  episodeInfo = KodiLookUp.VideoLibrary_GetEpisodeDetails(*server, episode_id=episode_id)
+
+  if episodeInfo['playcount'] > 0:
+    playcount = 0
+  else:
+    playcount = 1
+
+  KodiLookUp.VideoLibrary_SetEpisodeDetails(*server, episode_id=episode_id, playcount=playcount)
+  return redirect(url)
+
+@GetServer
+def watchedtvseason(request, server, context, show_id, season_id):
+  url = request.get_full_path().replace('/{}_watched'.format(season_id), '')
+
+  seasons = KodiLookUp.VideoLibrary_GetSeasons(*server, show_id=show_id)
+
+  for season in seasons:
+    if int(season['season']) == int(season_id):
+      active_season = season
+
+  if active_season['playcount'] > 0:
+    playcount = 0
+  else:
+    playcount = 1
+
+  unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  episode_list = sorted(unsorted_episode_list, key=itemgetter('episode'))
+
+  for episode in episode_list:
+    KodiLookUp.VideoLibrary_SetEpisodeDetails(*server, episode_id=episode['episodeid'], playcount=playcount)
+
+  return redirect(url)
+
+@GetServer
 def playpause(request, server, context):
   # Revisit this, doesn't play if stopped
   url = request.get_full_path().replace('_playpause', '')
@@ -217,7 +253,14 @@ def remove(request, server, context, index):
   return redirect(url)
 
 @GetServer
+def playlistplay(request, server, context, index):
+  url = request.get_full_path().replace('_playlistplay_{0}'.format(index), '')
+  KodiLookUp.Player_GoTo(*server, index=index)
+  return redirect(url)
+
+@GetServer
 def clear(request, server, context):
   url = request.get_full_path().replace('_clear', '')
   KodiLookUp.Playlist_Clear(*server,  playlistType='video')
   return redirect(url)
+
