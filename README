@@ -31,3 +31,12 @@ To install this on Synology NAS the pip package must be installed first:
 * Execute get-pip script: python3 get-pip.py
 * Proceed with package install as before (e.g. python3 -m pip install jsonrpcclient)
 
+-----------------------------------------------------
+
+Further Synology Diskstation set-up:
+
+This needs a django supporting web server.
+* Python Gunicorn package (Suggested)
+
+Add start-on-boot script:
+* Copy ananke.sh to /usr/local/etc/rc.d
