@@ -16,6 +16,7 @@ This package requires:
 * Python Requests package
 * Python jsonrpcclient package
 * Python Django package
+* Python dj_static package
 
 -----------------------------------------------------
 

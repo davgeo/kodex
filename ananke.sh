@@ -12,7 +12,7 @@ BIND_IP='0.0.0.0:8000'
 start_daemon()
 {
   cd ${EXEC_DIR}
-  ${GUNICORN_EXEC} ${WSGI_EXEC} --bind ${BIND_IP} --pid ${PID_FILE} --daemon
+  ${GUNICORN_EXEC} ${WSGI_EXEC} -w 2 --bind ${BIND_IP} --pid ${PID_FILE} --reload --daemon
 }
 
 stop_daemon()
