@@ -50,7 +50,7 @@ def GetPlaylists(func):
 # GetThumbnail
 # TODO: Revisit dir paths
 #################################################
-def GetThumbnail(server, thumbnail, staticDir='main/static', cacheDir='cache'):
+def GetThumbnail(server, thumbnail, staticDir='static', cacheDir='cache'):
   try:
     re.findall(r'.jpg', thumbnail)[0]
   except IndexError:
