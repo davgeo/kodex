@@ -41,3 +41,15 @@ This needs a django supporting web server.
 
 Add start-on-boot script:
 * Copy ananke.sh to /usr/local/etc/rc.d
+
+-----------------------------------------------------
+
+After fresh install the django database must be setup using:
+
+python3 manage.py migrate
+
+To access admin page navigate to <IP>/admin. Login details will need to be created:
+
+python manage.py createsuperuser ("admin"/"super" - blank - "password")
+
+
