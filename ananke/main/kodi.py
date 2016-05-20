@@ -375,7 +375,8 @@ def VideoLibrary_SetTVShowDetails(server):
 @GetActivePlayer
 def Player_GetItem(server, player_id):
   params = {"playerid": player_id,
-            "properties": ["uniqueid"]}
+            "properties": ["title",
+                           "uniqueid"]}
   response = server.Player.GetItem(params)
   return response['item']
 
