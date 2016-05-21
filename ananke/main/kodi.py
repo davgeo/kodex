@@ -569,7 +569,9 @@ def Playlist_Swap(server):
 #################################################
 @GetServer
 def Application_GetProperties(server):
-  raise NotImplementedError
+  params = {"properties": ["volume"]}
+  response = server.Application.GetProperties(params)
+  return response
 
 @GetServer
 def Application_Quit(server):

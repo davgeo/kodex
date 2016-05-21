@@ -34,9 +34,10 @@ def GetServer(func):
 def GetPlaylist(func):
   @GetServer
   def wrapper(request, server, context, *args, **kwargs):
-    context['playing'] = KodiLookUp.Player_GetItem(*server)
-    context['player'] = KodiLookUp.Player_GetProperties(*server)
+    context['playing']  = KodiLookUp.Player_GetItem(*server)
+    context['player']   = KodiLookUp.Player_GetProperties(*server)
     context['playlist'] = KodiLookUp.Playlist_GetItems(*server, playlistType='video')
+    context['properties']   = KodiLookUp.Application_GetProperties(*server)
     return func(request, server, context, *args, **kwargs)
   return wrapper
 
