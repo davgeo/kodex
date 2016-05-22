@@ -52,8 +52,12 @@
               </span>
             </div>
             <div class="volumecontrol">
-              <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-up fa-2x center-icon"></i></a></div>
-              <div class="col-xs-10"><input class="slider" type="range" id="myslider" min="0" max="100" value={{ properties.volume }} step="1"></input></div>
+              {% if properties.muted %}
+                <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-off fa-2x center-icon"></i></a></div>
+              {% else %}
+                <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-up fa-2x center-icon"></i></a></div>
+              {% endif %}
+              <div class="col-xs-10"><input class="slider" type="range" id="volslider" min="0" max="100" value={{ properties.volume }} step="1" onchange="volumeControl()"></input></div>
             </div>
             <div class="playercontrol">
               <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_restart"><i class="fa fa-fast-backward fa-2x center-icon"></i></a></div>

@@ -265,3 +265,8 @@ def clear(request, server, context):
   KodiLookUp.Playlist_Clear(*server,  playlistType='video')
   return redirect(url)
 
+@GetServer
+def setvolume(request, server, context, volume):
+  KodiLookUp.Application_SetVolume(*server, volume=volume)
+  return HttpResponse(status=200)
+

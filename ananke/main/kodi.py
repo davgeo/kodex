@@ -569,7 +569,7 @@ def Playlist_Swap(server):
 #################################################
 @GetServer
 def Application_GetProperties(server):
-  params = {"properties": ["volume"]}
+  params = {"properties": ["volume", "muted"]}
   response = server.Application.GetProperties(params)
   return response
 
@@ -583,5 +583,6 @@ def Application_SetMute(server):
   response = server.Application.SetMute(params)
 
 @GetServer
-def Application_SetVolume(server):
-  raise NotImplementedError
+def Application_SetVolume(server, volume):
+  params = {"volume": int(volume)}
+  response = server.Application.SetVolume(params)

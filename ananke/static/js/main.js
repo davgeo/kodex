@@ -1,7 +1,10 @@
-/*$(function() {
-    var $affixElement = $('div[data-spy="affix"]');
-    var $parent = $affixElement.parent();
-    var $width = $parent.width();
-    $affixElement.width($width);
-});*/
+/* Javascript */
 
+function volumeControl() {
+  var x = document.getElementById("myslider").value;
+  var url = document.URL + "_setvolume_" + x.toString()
+  console.log(x);
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("GET", url, true);
+  xhttp.send();
+}
