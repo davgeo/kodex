@@ -69,7 +69,8 @@ def server(request, server, context):
 
 @GetPlaylist
 def tvindex(request, server, context):
-  context['tvshows'] = KodiLookUp.VideoLibrary_GetTVShows(*server)
+  unsorted_tvshow = KodiLookUp.VideoLibrary_GetTVShows(*server)
+  context['tvshows'] = sorted(unsorted_tvshow, key=itemgetter('title'))
   #context['path'] = 'kodi / {0} / tv'.format(context['server'].name)
   return render(request, 'main/kodi_server_tv.html', context)
 
@@ -109,16 +110,19 @@ def tvepisode(request, server, context, show_id, season_id, episode_id):
 
 @GetPlaylist
 def movies_index(request, server, context):
-  context['movies'] = KodiLookUp.VideoLibrary_GetMovies(*server)
+  unsorted_movie_list = KodiLookUp.VideoLibrary_GetMovies(*server)
+  context['movies'] = sorted(unsorted_movie_list, key=itemgetter('title'))
   return render(request, 'main/kodi_server_movies.html', context)
 
 @GetPlaylist
 def movie(request, server, context, movie_id):
-  movie_list = KodiLookUp.VideoLibrary_GetMovies(*server)
+  unsorted_movie_list = KodiLookUp.VideoLibrary_GetMovies(*server)
 
-  for movie in movie_list:
+  for movie in unsorted_movie_list:
     if int(movie['movieid']) == int(movie_id):
       active_movie = movie
+
+  movie_list = sorted(unsorted_movie_list, key=itemgetter('title'))
 
   context.update({'activemovie': active_movie,
                   'movies'     : movie_list})
