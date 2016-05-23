@@ -282,6 +282,12 @@ def clear(request, server, context):
   return redirect(url)
 
 @GetServer
+def videoscan(request, server, context):
+  url = request.get_full_path().replace('_videoscan', '')
+  KodiLookUp.VideoLibrary_Scan(*server, show_dialog=True)
+  return redirect(url)
+
+@GetServer
 def setvolume(request, server, context, volume):
   KodiLookUp.Application_SetVolume(*server, volume=volume)
   return HttpResponse(status=200)

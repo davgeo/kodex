@@ -31,5 +31,6 @@ urlpatterns = [
     url(r'^kodi/([0-9]+).*?_remove_([0-9]+)$', views.remove, name='remove'),
     url(r'^kodi/([0-9]+).*?_playlistplay_([0-9]+)$', views.playlistplay, name='playlistplay'),
     url(r'^kodi/([0-9]+).*?_clear$', views.clear, name='clear'),
+    url(r'^kodi/([0-9]+).*?_videoscan$', views.videoscan, name='videoscan'),
     url(r'^kodi/([0-9]+).*?_setvolume_([0-9]+)$', views.setvolume, name='setvolume'),
 ]

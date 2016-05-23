@@ -338,8 +338,9 @@ def VideoLibrary_RemoveTVShow(server, show_id):
   response = server.VideoLibrary.RemoveTVShow(params)
 
 @GetServer
-def VideoLibrary_Scan(server):
-  raise NotImplementedError
+def VideoLibrary_Scan(server, show_dialog=False):
+  params = {'showdialogs':show_dialog}
+  response = server.VideoLibrary.Scan(params)
 
 @GetServer
 def VideoLibrary_SetEpisodeDetails(server, episode_id, playcount=None):
