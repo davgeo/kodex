@@ -333,8 +333,9 @@ def VideoLibrary_RemoveMusicVideo(server):
   raise NotImplementedError
 
 @GetServer
-def VideoLibrary_RemoveTVShow(server):
-  raise NotImplementedError
+def VideoLibrary_RemoveTVShow(server, show_id):
+  params = {'tvshowid':int(show_id)}
+  response = server.VideoLibrary.RemoveTVShow(params)
 
 @GetServer
 def VideoLibrary_Scan(server):

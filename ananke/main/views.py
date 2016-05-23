@@ -177,9 +177,15 @@ def watchedtv(request, server, context, show_id, season_id, episode_id):
   return redirect(url)
 
 @GetServer
-def removetv(request, server, context, show_id, season_id, episode_id):
+def removetvepisode(request, server, context, show_id, season_id, episode_id):
   url = request.get_full_path().replace('/{}_remove'.format(episode_id), '')
   KodiLookUp.VideoLibrary_RemoveEpisode(*server, episode_id=episode_id)
+  return redirect(url)
+
+@GetServer
+def removetvshow(request, server, context, show_id):
+  url = request.get_full_path().replace('/{}_remove'.format(show_id), '')
+  KodiLookUp.VideoLibrary_RemoveTVShow(*server, show_id=show_id)
   return redirect(url)
 
 @GetServer
