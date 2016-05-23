@@ -320,8 +320,9 @@ def VideoLibrary_GetTVShows(server):
   return tvshows
 
 @GetServer
-def VideoLibrary_RemoveEpisode(server):
-  raise NotImplementedError
+def VideoLibrary_RemoveEpisode(server, episode_id):
+  params = {'episodeid':int(episode_id)}
+  response = server.VideoLibrary.RemoveEpisode(params)
 
 @GetServer
 def VideoLibrary_RemoveMovie(server):

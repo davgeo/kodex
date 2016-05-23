@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^kodi/([0-9]+)/tv/([0-9]+)/([0-9]+)/([0-9]+)_play$', views.playtv, name='playtv'),
     url(r'^kodi/([0-9]+)/tv/([0-9]+)/([0-9]+)/([0-9]+)_add$', views.addtv, name='addtv'),
     url(r'^kodi/([0-9]+)/tv/([0-9]+)/([0-9]+)/([0-9]+)_watched$', views.watchedtv, name='watchedtv'),
+    url(r'^kodi/([0-9]+)/tv/([0-9]+)/([0-9]+)/([0-9]+)_remove$', views.removetv, name='removetv'),
     url(r'^kodi/([0-9]+)/movies$', views.movies_index, name='movies_index'),
     url(r'^kodi/([0-9]+)/movies/([0-9]+)$', views.movie, name='movie'),
     url(r'^kodi/([0-9]+)/movies/([0-9]+)_play$', views.playmovie, name='playmovie'),

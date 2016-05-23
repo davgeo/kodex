@@ -39,7 +39,7 @@
           <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Misc <span class="caret"></span></button>
           <ul class="dropdown-menu">
             <li><a data-toggle="collapse" data-target="#file">Show File Path</a></li>
-            <li><a href="#">Remove Episode</a></li>
+            <li><a href={% url 'removetv' server.id activeepisode.tvshowid activeepisode.season activeepisode.episodeid %}>Remove Episode</a></li>
             <li><a href="#">...</a></li>
           </ul>
         </span>
