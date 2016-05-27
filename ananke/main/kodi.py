@@ -29,7 +29,7 @@ def GetActivePlayer(func):
     try:
       player_id = server.Player.GetActivePlayers()[0]['playerid']
     except:
-      return []
+      return {}
     else:
       return func(server, player_id, *args, **kwargs)
   return wrapper
@@ -378,10 +378,18 @@ def VideoLibrary_SetTVShowDetails(server):
 @GetActivePlayer
 def Player_GetItem(server, player_id):
   params = {"playerid": player_id,
-            "properties": ["title",
-                           "uniqueid"]}
+            'properties':['title',
+                          'showtitle',
+                          'thumbnail',
+                          'tvshowid',
+                          'episode',
+                          'season',
+                          'uniqueid']}
   response = server.Player.GetItem(params)
-  return response['item']
+
+  item = response['item']
+  ProcessThumbnails(server, (item, ), tvEpisode=True)
+  return item
 
 @GetServer
 def Player_GetPlayers(server):
@@ -578,7 +586,7 @@ def Application_GetProperties(server):
 
 @GetServer
 def Application_Quit(server):
-  raise NotImplementedError
+  response = server.Application.Quit()
 
 @GetServer
 def Application_SetMute(server):
@@ -589,3 +597,30 @@ def Application_SetMute(server):
 def Application_SetVolume(server, volume):
   params = {"volume": int(volume)}
   response = server.Application.SetVolume(params)
+
+#################################################
+# System
+#################################################
+@GetServer
+def System_EjectOpticalDrive(server):
+  raise NotImplementedError
+
+@GetServer
+def System_GetProperties(server):
+  raise NotImplementedError
+
+@GetServer
+def System_Hibernate(server):
+  response = server.System.Hibernate()
+
+@GetServer
+def System_Reboot(server):
+  response = server.System.Reboot()
+
+@GetServer
+def System_Shutdown(server):
+  response = server.System.Shutdown()
+
+@GetServer
+def System_Suspend(server):
+  response = server.System.Suspend()

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.views.generic import TemplateView
+from django.core.urlresolvers import reverse
 
 from .models import Server
 
@@ -9,6 +10,7 @@ import main.kodi as KodiLookUp
 
 from operator import itemgetter
 
+import logging
 # Todo: Implement status lookin in parallel
 #import threading
 #from queue import Queue
@@ -34,10 +36,22 @@ def GetServer(func):
 def GetPlaylist(func):
   @GetServer
   def wrapper(request, server, context, *args, **kwargs):
-    context['playing']  = KodiLookUp.Player_GetItem(*server)
-    context['player']   = KodiLookUp.Player_GetProperties(*server)
-    context['playlist'] = KodiLookUp.Playlist_GetItems(*server, playlistType='video')
-    context['properties']   = KodiLookUp.Application_GetProperties(*server)
+    context['playing']    = KodiLookUp.Player_GetItem(*server)
+    context['player']     = KodiLookUp.Player_GetProperties(*server)
+    context['playlist']   = KodiLookUp.Playlist_GetItems(*server, playlistType='video')
+    context['properties'] = KodiLookUp.Application_GetProperties(*server)
+
+    context['special_play'] = False
+
+    try:
+      playing_id = context['playing']['id']
+    except KeyError:
+      pass
+    else:
+      playlist_id_list = [item['id'] for item in context['playlist']]
+      if playing_id not in playlist_id_list:
+        context['special_play'] = True
+
     return func(request, server, context, *args, **kwargs)
   return wrapper
 
@@ -286,6 +300,11 @@ def videoscan(request, server, context):
   url = request.get_full_path().replace('_videoscan', '')
   KodiLookUp.VideoLibrary_Scan(*server, show_dialog=True)
   return redirect(url)
+
+@GetServer
+def quit(request, server, context):
+  KodiLookUp.System_Shutdown(*server)
+  return HttpResponseRedirect(reverse('kodi'))
 
 @GetServer
 def setvolume(request, server, context, volume):

@@ -194,6 +194,21 @@
   margin-bottom:-1px;
 }
 
+.playlist-item-playing-special-wrapper-ep {
+  height: 52px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+  line-height: default;
+  margin-left:0px;
+  margin-right:0px;
+  margin-top:0px;
+  margin-bottom:0px;
+  border-color: blue;
+}
+
+
 .playing-ep-thumb {
   height: 50px;
   width: 80px;
