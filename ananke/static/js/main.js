@@ -87,24 +87,40 @@ $(document).on("keypress", function (e) {
   }
 });
 
+// Progress bar slider control
 function progressControl() {
   var x = $("#playerprogressbar").slider("value");
   var url = document.URL + "_setprogress_" + x.toString()
-  console.log("Progress%: ".concat(x));
+  console.log("Progress (Slide) %: ".concat(x));
   $.get(url);
 }
 
-// Player progress bar
+// Get progress bar value
+function getProgress() {
+  var url = document.URL + "_getprogress"
+  $.get(url, function(data){
+    console.log("Progress (Sync) %: ".concat(data['percentage']));
+    $("#playerprogressbar").slider({value: data['percentage']});
+  });
+}
+
+// Poll for player properties
+function doPoll() {
+  getProgress()
+  setTimeout(doPoll, 10000);
+}
+
+/* Execute processes after page DOM is ready */
 $(function() {
-  var x = parseFloat(document.getElementById("playerprogressbarvalue").value);
-  console.log("ProgressBarVal: ".concat((document.getElementById("playerprogressbarvalue").value)));
-  console.log("Progress%: ".concat(x));
+
+  // Initialise player progress bar
   $("#playerprogressbar").slider({
     orientation: "horizontal",
-    value: x,
     max: 100,
     min: 0,
-    //slide: progressControl,
-    change: progressControl
+    stop: progressControl
   });
+
+  // Recursive poll for updated status
+  doPoll();
 });

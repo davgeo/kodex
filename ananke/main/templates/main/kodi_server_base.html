@@ -75,15 +75,7 @@
               <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_forward"><i class="fa fa-forward fa-2x center-icon"></i></a></div>
               <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_skip"><i class="fa fa-fast-forward fa-2x center-icon"></i></a></div>
             </div>
-            <div class="playerprogressbar" id="playerprogressbar">
-              <input type="hidden" id="playerprogressbarvalue" name="value"
-                {% if player.percentage %}
-                  value={{ player.percentage }}
-                {% else %}
-                  value=0
-                {% endif %}
-              >
-            </div>
+            <div class="playerprogressbar" id="playerprogressbar"></div>
           </li>
           {% if special_play %}
             <li class="list-group-item playlist-item-playing-special-wrapper-ep">

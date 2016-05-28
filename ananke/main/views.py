@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
@@ -315,3 +315,8 @@ def setvolume(request, server, context, volume):
 def setprogress(request, server, context, percentage):
   KodiLookUp.Player_Seek(*server, position=percentage)
   return HttpResponse(status=200)
+
+@GetServer
+def getprogress(request, server, context):
+  data = KodiLookUp.Player_GetProperties(*server)
+  return JsonResponse(data)
