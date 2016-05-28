@@ -311,3 +311,7 @@ def setvolume(request, server, context, volume):
   KodiLookUp.Application_SetVolume(*server, volume=volume)
   return HttpResponse(status=200)
 
+@GetServer
+def setprogress(request, server, context, percentage):
+  KodiLookUp.Player_Seek(*server, position=percentage)
+  return HttpResponse(status=200)

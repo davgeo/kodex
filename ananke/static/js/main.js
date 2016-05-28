@@ -86,3 +86,25 @@ $(document).on("keypress", function (e) {
     return false;
   }
 });
+
+function progressControl() {
+  var x = $("#playerprogressbar").slider("value");
+  var url = document.URL + "_setprogress_" + x.toString()
+  console.log("Progress%: ".concat(x));
+  $.get(url);
+}
+
+// Player progress bar
+$(function() {
+  var x = parseFloat(document.getElementById("playerprogressbarvalue").value);
+  console.log("ProgressBarVal: ".concat((document.getElementById("playerprogressbarvalue").value)));
+  console.log("Progress%: ".concat(x));
+  $("#playerprogressbar").slider({
+    orientation: "horizontal",
+    value: x,
+    max: 100,
+    min: 0,
+    //slide: progressControl,
+    change: progressControl
+  });
+});

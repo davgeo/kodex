@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^kodi/([0-9]+).*?_videoscan$', views.videoscan, name='videoscan'),
     url(r'^kodi/([0-9]+).*?_quit$', views.quit, name='quit'),
     url(r'^kodi/([0-9]+).*?_setvolume_([0-9]+)$', views.setvolume, name='setvolume'),
+    url(r'^kodi/([0-9]+).*?_setprogress_([0-9]+)$', views.setprogress, name='setprogress'),
 ]

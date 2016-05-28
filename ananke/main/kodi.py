@@ -468,7 +468,7 @@ def Player_Rotate(server, player_id):
 @GetActivePlayer
 def Player_Seek(server, player_id, position):
   params = {"playerid": player_id}
-  params['value'] = {'percentage': position}
+  params['value'] = {'percentage': float(position)}
   response = server.Player.Seek(params)
 
 @GetServer
