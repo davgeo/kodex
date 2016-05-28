@@ -95,19 +95,32 @@ function progressControl() {
   $.get(url);
 }
 
-// Get progress bar value
-function getProgress() {
-  var url = document.URL + "_getprogress"
+// Recursively poll for status
+function getStatus() {
+  var url = document.URL + "_getstatus"
   $.get(url, function(data){
-    console.log("Progress (Sync) %: ".concat(data['percentage']));
+    // Progress bar
+    console.log(data)
     $("#playerprogressbar").slider({value: data['percentage']});
-  });
-}
 
-// Poll for player properties
-function doPoll() {
-  getProgress()
-  setTimeout(doPoll, 10000);
+    // Volume slider
+    updateVolSlider(data['volume'])
+
+    // Muted icon
+    if(((data['muted']) && ($("#mute").hasClass('fa-volume-up'))) ||
+       ((!data['muted']) && ($("#mute").hasClass('fa-volume-off')))) {
+      toggleIcon("mute", 'fa-volume-up', 'fa-volume-off');
+    }
+
+    // Play/pause icon
+    if(((data['speed'] == 0) && ($("#playpause").hasClass('fa-pause'))) ||
+       ((data['speed'] != 0) && ($("#playpause").hasClass('fa-play')))) {
+      toggleIcon("playpause", 'fa-play', 'fa-pause');
+    }
+
+    // Recusive call every 10s
+    setTimeout(getStatus, 10000);
+  });
 }
 
 /* Execute processes after page DOM is ready */
@@ -122,5 +135,5 @@ $(function() {
   });
 
   // Recursive poll for updated status
-  doPoll();
+  getStatus();
 });

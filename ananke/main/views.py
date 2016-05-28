@@ -317,6 +317,13 @@ def setprogress(request, server, context, percentage):
   return HttpResponse(status=200)
 
 @GetServer
-def getprogress(request, server, context):
-  data = KodiLookUp.Player_GetProperties(*server)
+def getstatus(request, server, context):
+  player_properties = KodiLookUp.Player_GetProperties(*server)
+  application_properties = KodiLookUp.Application_GetProperties(*server)
+
+  data = {}
+  data['percentage'] = player_properties['percentage']
+  data['speed'] = player_properties['speed']
+  data['volume'] = application_properties['volume']
+  data['muted'] = application_properties['muted']
   return JsonResponse(data)
