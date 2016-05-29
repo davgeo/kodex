@@ -98,6 +98,16 @@ function progressControl() {
 // Recursively poll for status
 function getStatus() {
   var url = document.URL + "_getstatus"
+
+  // Update status button with spinning refresh
+  if($("#statusicon").hasClass('fa-exclamation-circle')) {
+    toggleIcon("statusicon", 'fa-exclamation-circle', 'fa-refresh fa-spin')
+  }
+
+  if($("#statusbutton").hasClass('btn-danger')) {
+    toggleIcon("statusbutton", 'btn-danger', 'btn-warning')
+  }
+
   $.get(url, function(data){
     // Progress bar
     console.log(data)
@@ -118,8 +128,30 @@ function getStatus() {
       toggleIcon("playpause", 'fa-play', 'fa-pause');
     }
 
+    // Status button
+    if($("#statusicon").hasClass('fa-refresh fa-spin')) {
+      toggleIcon("statusicon", 'fa-refresh fa-spin', 'fa-check')
+    }
+
+    if($("#statusbutton").hasClass('btn-warning')) {
+      toggleIcon("statusbutton", 'btn-warning', 'btn-success')
+    }
+
     // Recusive call every 10s
     setTimeout(getStatus, 10000);
+  }).fail(function() {
+    // If getstatus failed update status button
+    if($("#statusicon").hasClass('fa-check')) {
+      toggleIcon("statusicon", 'fa-exclamation-circle', 'fa-check')
+    } else if ($("#statusicon").hasClass('fa-refresh fa-spin')) {
+      toggleIcon("statusicon", 'fa-refresh fa-spin', 'fa-exclamation-circle')
+    }
+
+    if($("#statusbutton").hasClass('btn-success')) {
+      toggleIcon("statusbutton", 'btn-danger', 'btn-success')
+    } else if ($("#statusbutton").hasClass('btn-warning')) {
+      toggleIcon("statusbutton", 'btn-warning', 'btn-danger')
+    }
   });
 }
 
@@ -132,6 +164,13 @@ $(function() {
     max: 100,
     min: 0,
     stop: progressControl
+  });
+
+  // Status button onclick control
+  $("#statusbutton").click(function() {
+    if($("#statusicon").hasClass('fa-exclamation-circle')) {
+      getStatus();
+    }
   });
 
   // Recursive poll for updated status

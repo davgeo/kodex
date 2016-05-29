@@ -322,8 +322,14 @@ def getstatus(request, server, context):
   application_properties = KodiLookUp.Application_GetProperties(*server)
 
   data = {}
-  data['percentage'] = player_properties['percentage']
-  data['speed'] = player_properties['speed']
+
+  try:
+    data['percentage'] = player_properties['percentage']
+    data['speed'] = player_properties['speed']
+  except KeyError:
+    data['percentage'] = 0
+    data['speed'] = 0
+
   data['volume'] = application_properties['volume']
   data['muted'] = application_properties['muted']
   return JsonResponse(data)
