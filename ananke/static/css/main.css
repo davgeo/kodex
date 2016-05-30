@@ -272,6 +272,15 @@
   border-radius: 0;
 }
 
+.small-movie-poster {
+  height: 90px;
+  width: 60px;
+  margin-top:1px;
+  margin-bottom:4px;
+  margin-left:2px;
+  margin-right:2px;
+}
+
 /*
  * Configurations for screen size
  * 992px corresponds to switched between
