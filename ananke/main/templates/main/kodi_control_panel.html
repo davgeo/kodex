@@ -1,5 +1,4 @@
 {% load staticfiles %}
-
 <div class="control-panel-wrapper">
   <ul class="list-group">
     <li class="list-group-item playercontrol-wrapper">
@@ -36,112 +35,118 @@
         <span class="dropdown pull-right">
           <button class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
           <ul class="dropdown-menu">
-            <li>
-              <a href="{{request.get_full_path}}_quit"><i class="fa fa-close"></i> Close Kodi</a>
-              <a href="{{request.get_full_path}}_clear"><i class="fa fa-ban"></i> Clear playlist</a>
-              <a href="{{request.get_full_path}}_subtitles"><i class="fa fa-commenting"></i> Subtitles</a>
-              <a href="{{request.get_full_path}}_videoscan"><i class="fa fa-file-video-o"></i> Video Library Scan</a>
-            </li>
+            <li><a data-toggle="collapse" data-target="#playercontrols" id="toggleplayercontrols"><i id="toggleplayercontrolsicon" class="fa fa-chevron-up"></i> Toggle player controls</a></li>
+            <li><a data-toggle="collapse" data-target="#playlist" id="toggleplaylist"><i id="toggleplaylisticon" class="fa fa-chevron-up"></i> Toggle playlist</a></li>
+            <hr class="hr-list">
+            <li><a href="{{request.get_full_path}}_subtitles"><i class="fa fa-commenting"></i> Subtitles</a></li>
+            <li><a href="{{request.get_full_path}}_videoscan"><i class="fa fa-file-video-o"></i> Video Library Scan</a></li>
+            <li><a href="{{request.get_full_path}}_clear"><i class="fa fa-eraser"></i> Clear playlist</a></li>
+            <hr class="hr-list">
+            <li><a href="{{request.get_full_path}}_quit"><i class="fa fa-warning"></i> Close Kodi</a></li>
           </ul>
         </span>
       </div>
-      <div class="volumecontrol">
-        {% if properties.muted %}
-          <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-off fa-2x center-icon" id="mute"></i></a></div>
-        {% else %}
-          <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-up fa-2x center-icon" id="mute"></i></a></div>
-        {% endif %}
-        <div class="col-xs-10"><input class="slider" type="range" id="volslider" min="0" max="100" value={{ properties.volume }} step="1" onchange="volumeControl()"></input></div>
-      </div>
-      <div class="playercontrol">
-        <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_restart"><i class="fa fa-fast-backward fa-2x center-icon"></i></a></div>
-        <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_backward"><i class="fa fa-backward fa-2x center-icon"></i></a></div>
-        <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_stop"><i class="fa fa-stop fa-2x center-icon"></i></a></div>
-        <div class="col-xs-2 center-icon">
-          {% if player and player.speed != 0 %}
-            <a href="{{request.get_full_path}}_playpause"><i class="fa fa-pause fa-2x center-icon" id="playpause"></i></a>
+      <div id="playercontrols" class="collapse in">
+        <div class="volumecontrol">
+          {% if properties.muted %}
+            <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-off fa-2x center-icon" id="mute"></i></a></div>
           {% else %}
-            <a href="{{request.get_full_path}}_playpause"><i class="fa fa-play fa-2x center-icon" id="playpause"></i></a>
+            <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-up fa-2x center-icon" id="mute"></i></a></div>
           {% endif %}
+          <div class="col-xs-10"><input class="slider" type="range" id="volslider" min="0" max="100" value={{ properties.volume }} step="1" onchange="volumeControl()"></input></div>
         </div>
-        <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_forward"><i class="fa fa-forward fa-2x center-icon"></i></a></div>
-        <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_skip"><i class="fa fa-fast-forward fa-2x center-icon"></i></a></div>
+        <div class="playercontrol">
+          <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_restart"><i class="fa fa-fast-backward fa-2x center-icon"></i></a></div>
+          <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_backward"><i class="fa fa-backward fa-2x center-icon"></i></a></div>
+          <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_stop"><i class="fa fa-stop fa-2x center-icon"></i></a></div>
+          <div class="col-xs-2 center-icon">
+            {% if player and player.speed != 0 %}
+              <a href="{{request.get_full_path}}_playpause"><i class="fa fa-pause fa-2x center-icon" id="playpause"></i></a>
+            {% else %}
+              <a href="{{request.get_full_path}}_playpause"><i class="fa fa-play fa-2x center-icon" id="playpause"></i></a>
+            {% endif %}
+          </div>
+          <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_forward"><i class="fa fa-forward fa-2x center-icon"></i></a></div>
+          <div class="col-xs-2 center-icon"><a href="{{request.get_full_path}}_skip"><i class="fa fa-fast-forward fa-2x center-icon"></i></a></div>
+        </div>
+        <div class="playerprogressbar" id="playerprogressbar"></div>
       </div>
-      <div class="playerprogressbar" id="playerprogressbar"></div>
     </li>
-    {% if special_play %}
-      <li class="list-group-item playlist-item-playing-special-wrapper-ep">
-        <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ playing.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
-        <div class="col-xs-9">
-          <div class="playlist-title"><a href="{% url 'tvepisode' server.id playing.tvshowid playing.season playing.id %}">{{ playing.title }}</a></div>
-          <div class="playlist-subtext-ep">{{ playing.showtitle }} {{ playing.season }}.{{ playing.episode }}</div>
-        </div>
-      </li>
-    {% endif %}
-    {% for item in playlist %}
-      {% if item.id and item.showtitle %}
-        {% if item.id == playing.id %}
-        <li class="list-group-item playlist-item-playing-wrapper-ep">
-          <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
+    <div id="playlist" class="collapse in">
+      {% if special_play %}
+        <li class="list-group-item playlist-item-playing-special-wrapper-ep">
+          <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ playing.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
           <div class="col-xs-9">
-            <div class="playlist-title"><a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a></div>
-            <div class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</div>
+            <div class="playlist-title"><a href="{% url 'tvepisode' server.id playing.tvshowid playing.season playing.id %}">{{ playing.title }}</a></div>
+            <div class="playlist-subtext-ep">{{ playing.showtitle }} {{ playing.season }}.{{ playing.episode }}</div>
           </div>
         </li>
-        {% else %}
-        <li class="list-group-item playlist-item-wrapper">
-          <div class="col-xs-10">
-            <i class="fa fa-television"></i>
-            <a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a>
-            <span class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</span>
-          </div>
-          <div class="col-xs-2 no-padding">
-            <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
-            <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
-          </div>
-        </li>
-        {% endif %}
-      {% elif item.id %}
-        {% if item.id == playing.id %}
-        <li class="list-group-item playlist-item-playing-wrapper-mv">
-          <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
-          <div class="col-xs-9">
-            <div class="playlist-title-mv"><a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a></div>
-          </div>
-        </li>
-        {% else %}
-        <li class="list-group-item playlist-item-wrapper">
-          <div class="col-xs-10">
-            <i class="fa fa-film"></i>
-            <a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a>
-          </div>
-          <div class="col-xs-2 no-padding">
-            <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
-            <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
-          </div>
-        </li>
-        {% endif %}
-      {% else %}
-        {% if item.label == playing.label %}
-        <li class="list-group-item playlist-item-playing-wrapper-mv">
-          <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
-          <div class="col-xs-9">
-            <div class="playlist-title-mv">{{ item.title }}</div>
-          </div>
-        </li>
-        {% else %}
-        <li class="list-group-item playlist-item-wrapper">
-          <div class="col-xs-10">
-            <i class="fa fa-shield"></i>
-            {{ item.title }}
-          </div>
-          <div class="col-xs-2 no-padding">
-            <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
-            <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
-          </div>
-        </li>
-        {% endif %}
       {% endif %}
-    {% endfor %}
+      {% for item in playlist %}
+        {% if item.id and item.showtitle %}
+          {% if item.id == playing.id %}
+          <li class="list-group-item playlist-item-playing-wrapper-ep">
+            <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
+            <div class="col-xs-9">
+              <div class="playlist-title"><a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a></div>
+              <div class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</div>
+            </div>
+          </li>
+          {% else %}
+          <li class="list-group-item playlist-item-wrapper">
+            <div class="col-xs-10">
+              <i class="fa fa-television"></i>
+              <a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a>
+              <span class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</span>
+            </div>
+            <div class="col-xs-2 no-padding">
+              <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
+              <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
+            </div>
+          </li>
+          {% endif %}
+        {% elif item.id %}
+          {% if item.id == playing.id %}
+          <li class="list-group-item playlist-item-playing-wrapper-mv">
+            <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
+            <div class="col-xs-9">
+              <div class="playlist-title-mv"><a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a></div>
+            </div>
+          </li>
+          {% else %}
+          <li class="list-group-item playlist-item-wrapper">
+            <div class="col-xs-10">
+              <i class="fa fa-film"></i>
+              <a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a>
+            </div>
+            <div class="col-xs-2 no-padding">
+              <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
+              <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
+            </div>
+          </li>
+          {% endif %}
+        {% else %}
+          {% if item.label == playing.label %}
+          <li class="list-group-item playlist-item-playing-wrapper-mv">
+            <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
+            <div class="col-xs-9">
+              <div class="playlist-title-mv">{{ item.title }}</div>
+            </div>
+          </li>
+          {% else %}
+          <li class="list-group-item playlist-item-wrapper">
+            <div class="col-xs-10">
+              <i class="fa fa-shield"></i>
+              {{ item.title }}
+            </div>
+            <div class="col-xs-2 no-padding">
+              <a href="{{request.get_full_path}}_remove_{{forloop.counter0}}"><i class="fa fa-times pull-right playlist-item-icon"></i></a>
+              <a href="{{request.get_full_path}}_playlistplay_{{forloop.counter0}}"><i class="fa fa-play-circle-o pull-right playlist-item-icon"></i></a>
+            </div>
+          </li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
   </ul>
 </div>

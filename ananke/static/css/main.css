@@ -281,6 +281,11 @@
   margin-right:2px;
 }
 
+.hr-list {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
 /*
  * Configurations for screen size
  * 992px corresponds to switched between

@@ -173,6 +173,15 @@ $(function() {
     }
   });
 
+  // Toggle playlist button onclick control
+  $("#toggleplaylist").click(function() {
+    toggleIcon("toggleplaylisticon", 'fa-chevron-up', 'fa-chevron-down');
+  });
+
+  $("#toggleplayercontrols").click(function() {
+    toggleIcon("toggleplayercontrolsicon", 'fa-chevron-up', 'fa-chevron-down');
+  });
+
   // Recursive poll for updated status
   getStatus();
 });

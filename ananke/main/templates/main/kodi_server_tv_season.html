@@ -8,13 +8,13 @@
     <small><a href="{% url 'tvseason' server.id tvshow.tvshowid season %}">Season {{ season }}</a></small>
 
     {% if activeepisode %}
-      <small>Episode {{ selection.episode }}</small>
+      <small>Episode {{ activeepisode.episode }}</small>
     {% endif %}
   </h2>
 
   {% if activeepisode %}
     <div class="row">
-      <div class="col-lg-2 col-md-3 col-sm-6 col-xs-7 active_episode_thumb_wrapper">
+      <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 active_episode_thumb_wrapper">
         <img src="{% static 'cache' %}/{{ activeepisode.thumbnail }}" class="img-responsive active_episode_thumb">
         {% if activeepisode.resume.position < activeepisode.resume.total %}
           <div class="progress active-ep-resume-bar">
@@ -25,7 +25,7 @@
         {% endif %}
       </div>
 
-      <div class="col-lg-8 col-md-7 col-sm-6 col-xs-5">
+      <div class="col-lg-8 col-md-7 col-sm-6 col-xs-12">
         <h3>{{ activeepisode.title }}</h3>
         <p>{{ activeepisode.plot }}</p>
         <div id="file" class="collapse"><p>File: {{ activeepisode.file }}</p></div>
