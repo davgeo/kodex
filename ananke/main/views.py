@@ -11,9 +11,7 @@ import main.kodi as KodiLookUp
 from operator import itemgetter
 
 import logging
-# Todo: Implement status lookin in parallel
-#import threading
-#from queue import Queue
+import threading
 
 #################################################
 # Decorators
@@ -36,23 +34,27 @@ def GetServer(func):
 def GetPlaylist(func):
   @GetServer
   def wrapper(request, server, context, *args, **kwargs):
-    context['playing']    = KodiLookUp.Player_GetItem(*server)
-    context['player']     = KodiLookUp.Player_GetProperties(*server)
-    context['playlist']   = KodiLookUp.Playlist_GetItems(*server, playlistType='video')
-    context['properties'] = KodiLookUp.Application_GetProperties(*server)
-
-    context['special_play'] = False
-
     try:
-      playing_id = context['playing']['id']
-    except KeyError:
-      pass
+      context['playing']    = KodiLookUp.Player_GetItem(*server)
+      context['player']     = KodiLookUp.Player_GetProperties(*server)
+      context['playlist']   = KodiLookUp.Playlist_GetItems(*server, playlistType='video')
+      context['properties'] = KodiLookUp.Application_GetProperties(*server)
+    except Exception as e:
+      logging.info(e)
+      return kodi(request)
     else:
-      playlist_id_list = [item['id'] for item in context['playlist']]
-      if playing_id not in playlist_id_list:
-        context['special_play'] = True
+      context['special_play'] = False
 
-    return func(request, server, context, *args, **kwargs)
+      try:
+        playing_id = context['playing']['id']
+      except KeyError:
+        pass
+      else:
+        playlist_id_list = [item['id'] for item in context['playlist']]
+        if playing_id not in playlist_id_list:
+          context['special_play'] = True
+
+      return func(request, server, context, *args, **kwargs)
   return wrapper
 
 #################################################
@@ -64,35 +66,39 @@ def index(request, context):
 
 @GetServerList
 def kodi(request, context):
-  serverList = Server.objects.all()
+  def ThreadWrapper(result, index, func, *args, **kwargs):
+    result[index] = func(*args, **kwargs)
 
-  serverStatusTable = []
-  for server in serverList:
-    serverStatusTable.append((server, KodiLookUp.Status(*server.conn())))
+  statusList = ['X']*len(context['kodi_servers'])
+  activeThreads = []
+  for i, server in enumerate(context['kodi_servers']):
+    args = [statusList, i, KodiLookUp.Status] + list(server.conn())
+    t = threading.Thread(target=ThreadWrapper, args=args)
+    t.start()
+    activeThreads.append(t)
 
-  context['kodi_server_list'] = serverStatusTable
-  #context['path'] = 'kodi'
+  for thread in activeThreads:
+    thread.join()
+
+  context['kodi_server_list'] = [(s, statusList[i]) for i, s in enumerate(context['kodi_servers'])]
   return render(request, 'main/kodi_index.html', context)
 
 @GetPlaylist
 def server(request, server, context):
   context['recentepisodes'] = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server)
   context['recentmovies'] = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server)
-  #context['path'] = 'kodi / {0}'.format(context['server'].name)
   return render(request, 'main/kodi_server_index.html', context)
 
 @GetPlaylist
 def tvindex(request, server, context):
   unsorted_tvshow = KodiLookUp.VideoLibrary_GetTVShows(*server)
   context['tvshows'] = sorted(unsorted_tvshow, key=itemgetter('title'))
-  #context['path'] = 'kodi / {0} / tv'.format(context['server'].name)
   return render(request, 'main/kodi_server_tv.html', context)
 
 @GetPlaylist
 def tvshow(request, server, context, show_id):
   context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
   context['seasons'] = KodiLookUp.VideoLibrary_GetSeasons(*server, show_id=show_id)
-  #context['path'] = 'kodi / {0} / tv / {1}'.format(context['server'].name, context['tvshow']['title'])
   return render(request, 'main/kodi_server_tv_show.html', context)
 
 @GetPlaylist
@@ -101,7 +107,6 @@ def tvseason(request, server, context, show_id, season_id):
   context['season'] = season_id
   unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
   context['episodes'] = sorted(unsorted_episode_list, key=itemgetter('episode'))
-  #context['path'] = 'kodi / {0} / tv / {1} / {2}'.format(context['server'].name, context['tvshow']['title'], "Season {0}".format(season_id))
   return render(request, 'main/kodi_server_tv_season.html', context)
 
 @GetPlaylist

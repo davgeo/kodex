@@ -13,7 +13,8 @@
     <script src={% static 'jquery/jquery-1.11.3.min.js' %}></script>
     <script src={% static 'jquery/jquery-ui.min.js' %}></script>
     <script src={% static 'bootstrap/js/bootstrap.min.js' %}></script>
-    <script src={% static 'js/main.js' %}></script>
+
+    {% block extraheader %}{% endblock %}
 
     <title>{% block title %}Ananke{% endblock %}</title>
   </head>
@@ -48,7 +49,6 @@
           </div>
         </nav>
 
-        {% block picbar %}{% endblock %}
         {% block appnav %}{% endblock %}
       </div>
 

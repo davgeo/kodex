@@ -50,16 +50,14 @@ class KodiNamespace(object):
     className = self.__class__.__name__
 
     if self.server is None:
-      print("No server instantiated in {0}".format(className))
+      logging.error("No server instantiated in {0}".format(className))
       return None
 
     method = name
     kodiMethod = "{0}.{1}".format(className, method)
 
     def func(*args, **kwargs):
-      print(className, method, kodiMethod, *args, **kwargs)
       resp = self.server.request(kodiMethod, *args, **kwargs)
-      #print(resp)
       return resp
     return func
 

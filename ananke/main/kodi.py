@@ -12,6 +12,8 @@ import hashlib
 # Local file imports
 from .kodijsonrpc import KodiJSONClient
 
+import logging
+
 #################################################
 # GetServer
 #################################################
@@ -28,7 +30,8 @@ def GetActivePlayer(func):
   def wrapper(server, *args, **kwargs):
     try:
       player_id = server.Player.GetActivePlayers()[0]['playerid']
-    except:
+    except Exception as e:
+      logging.info(e)
       return {}
     else:
       return func(server, player_id, *args, **kwargs)
@@ -63,7 +66,7 @@ def GetThumbnail(server, thumbnail, staticDir='static', cacheDir='cache'):
     imgPath = os.path.join(fileDir, fileHash.hexdigest())
 
     if not os.path.exists(imgPath):
-      print("Downloading thumbnail from kodi server: {0}".format(thumbnail))
+      logging.info("Downloading thumbnail from kodi server: {0}".format(thumbnail))
 
       if not os.path.exists(fileDir):
         os.mkdir(fileDir)
@@ -108,7 +111,7 @@ def GetResumePercent(resumeList):
         currentValue = item['watchedepisodes']
         maxValue = item['episode']
       except KeyError:
-        print("Unable to get values to calulate resume percentage")
+        logging.info("Unable to get values to calulate resume percentage")
         maxValue = 0
       finally:
         item['resume'] = {}
@@ -130,7 +133,8 @@ def GetResumePercent(resumeList):
 def Status(server):
   try:
     server.JSONRPC.Ping()
-  except:
+  except Exception as e:
+    logging.info(e)
     return 'Offline'
   else:
     return 'Online'
