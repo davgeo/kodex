@@ -36,4 +36,5 @@ urlpatterns = [
     url(r'^kodi/([0-9]+).*?_setvolume_([0-9]+)$', views.setvolume, name='setvolume'),
     url(r'^kodi/([0-9]+).*?_setprogress_([0-9]+)$', views.setprogress, name='setprogress'),
     url(r'^kodi/([0-9]+).*?_getstatus$', views.getstatus, name='getstatus'),
+    url(r'^kodi/([0-9]+).*?_getplaylist$', views.getplaylist, name='getplaylist'),
 ]

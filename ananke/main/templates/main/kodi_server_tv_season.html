@@ -29,12 +29,16 @@
         <h3>{{ activeepisode.title }}</h3>
         <p>{{ activeepisode.plot }}</p>
         <div id="file" class="collapse"><p>File: {{ activeepisode.file }}</p></div>
-        <a href="{% url 'playtv' server.id activeepisode.tvshowid activeepisode.season activeepisode.episodeid %}" class="btn btn-primary" role="button">
-          <span class="glyphicon glyphicon-play"></span> Play
-        </a>
-        <a href="{% url 'addtv' server.id activeepisode.tvshowid activeepisode.season activeepisode.episodeid %}" class="btn btn-info" role="button">
-          <span class="glyphicon glyphicon-plus"></span> Add
-        </a>
+        <span class="playplaylist">
+          <a href="{% url 'playtv' server.id activeepisode.tvshowid activeepisode.season activeepisode.episodeid %}" class="btn btn-primary" role="button">
+            <span class="glyphicon glyphicon-play"></span> Play
+          </a>
+        </span>
+        <span class="addplaylist">
+          <a href="{% url 'addtv' server.id activeepisode.tvshowid activeepisode.season activeepisode.episodeid %}" class="btn btn-info" role="button">
+            <span class="glyphicon glyphicon-plus"></span> Add
+          </a>
+        </span>
         <span class="dropdown pull-right">
           <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Misc <span class="caret"></span></button>
           <ul class="dropdown-menu">
@@ -61,15 +65,21 @@
           </div>
         </div>
       {% endif %}
-      <a href="{% url 'watchedtv' server.id episode.tvshowid episode.season episode.episodeid %}">
-        {% if episode.playcount %}
-          <i class="fa fa-check-square-o pull-right"></i>
-        {% else %}
-          <i class="fa fa-square-o pull-right"></i>
-        {% endif %}
-      </a>
-      <a href="{% url 'addtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
-      <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
+      <div class="watched">
+        <a href="{% url 'watchedtv' server.id episode.tvshowid episode.season episode.episodeid %}">
+          {% if episode.playcount %}
+            <i class="watchedtvicon fa fa-check-square-o pull-right"></i>
+          {% else %}
+            <i class="watchedtvicon fa fa-square-o pull-right"></i>
+          {% endif %}
+        </a>
+      </div>
+      <div class="addplaylist">
+        <a href="{% url 'addtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-plus-circle pull-right"></i></a>
+      </div>
+      <div class="playplaylist">
+        <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
+      </div>
       <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}"><p>{{ episode.episode }}. {{ episode.title }}</p></a>
     </div>
   {% endfor %}

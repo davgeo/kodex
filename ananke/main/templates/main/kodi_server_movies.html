@@ -21,12 +21,16 @@
       <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7">
         <h3>{{ activemovie.title }}</h3>
         <p>{{ activemovie.plot }}</p>
-        <a href="{% url 'playmovie' server.id activemovie.movieid %}" class="btn btn-primary" role="button">
-          <span class="glyphicon glyphicon-play"></span> Play
-        </a>
-        <a href="{% url 'addmovie' server.id activemovie.movieid %}" class="btn btn-info" role="button">
-          <span class="glyphicon glyphicon-plus"></span> Add
-        </a>
+        <span class="playplaylist">
+          <a href="{% url 'playmovie' server.id activemovie.movieid %}" class="btn btn-primary" role="button">
+            <span class="glyphicon glyphicon-play"></span> Play
+          </a>
+        </span>
+        <span class="addplaylist">
+          <a href="{% url 'addmovie' server.id activemovie.movieid %}" class="btn btn-info" role="button">
+            <span class="glyphicon glyphicon-plus"></span> Add
+          </a>
+        </span>
       </div>
     </div>
   {% endif %}
@@ -45,15 +49,21 @@
             <a href="{% url 'movie' server.id movie.movieid %}">
               <img src="{% static 'cache' %}/{{ movie.thumbnail }}" class="img-responsive poster_thumb" alt={{ movie.title }}>
             </a>
-            <a href="{% url 'addmovie' server.id movie.movieid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
-            <a href="{% url 'playmovie' server.id movie.movieid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
-            <a href="{{request.get_full_path}}_watched">
-              {% if movie.playcount %}
-                <i class="fa fa-check-square-o pull-right"></i>
-              {% else %}
-                <i class="fa fa-square-o pull-right"></i>
-              {% endif %}
-            </a>
+            <div class="addplaylist">
+              <a href="{% url 'addmovie' server.id movie.movieid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
+            </div>
+            <span class="playplaylist">
+              <a href="{% url 'playmovie' server.id movie.movieid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
+            </span>
+            <div class="watched">
+              <a href="{{request.get_full_path}}_watched">
+                {% if movie.playcount %}
+                  <i class="fa fa-check-square-o pull-right"></i>
+                {% else %}
+                  <i class="fa fa-square-o pull-right"></i>
+                {% endif %}
+              </a>
+            </div>
             {% if movie.resume.position < movie.resume.total %}
               <div class="progress poster-resume-bar">
                 <div class="progress-bar" role="progressbar" aria-valuenow="{{ movie.resume.position }} " aria-valuemin="0" aria-valuemax="{{ movie.resume.total }}" style="width:{{ movie.resume.percentage }}%">
