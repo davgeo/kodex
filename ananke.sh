@@ -9,10 +9,12 @@ PID_FILE="/var/run/${PACKAGE}.pid"
 GUNICORN_EXEC="/volume1/@appstore/py3k/usr/local/bin/gunicorn"
 BIND_IP='0.0.0.0:8000'
 
+TIMEOUT="300"
+
 start_daemon()
 {
   cd ${EXEC_DIR}
-  ${GUNICORN_EXEC} ${WSGI_EXEC} -w 2 --bind ${BIND_IP} --pid ${PID_FILE} --reload --daemon
+  ${GUNICORN_EXEC} ${WSGI_EXEC} -w 2 --bind ${BIND_IP} --pid ${PID_FILE} --timeout ${TIMEOUT} --reload --daemon
 }
 
 stop_daemon()
