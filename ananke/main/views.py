@@ -34,6 +34,8 @@ def GetServer(func):
 def GetPlaylist(func):
   @GetServer
   def wrapper(request, server, context, *args, **kwargs):
+    server_down = True
+
     try:
       context['playing']    = KodiLookUp.Player_GetItem(*server)
       context['player']     = KodiLookUp.Player_GetProperties(*server)
@@ -41,7 +43,6 @@ def GetPlaylist(func):
       context['properties'] = KodiLookUp.Application_GetProperties(*server)
     except Exception as e:
       logging.info(e)
-      server_down = True
     else:
       server_down = False
       context['special_play'] = False
@@ -54,8 +55,8 @@ def GetPlaylist(func):
         playlist_id_list = [item['id'] for item in context['playlist']]
         if playing_id not in playlist_id_list:
           context['special_play'] = True
-    finally:
-      return func(request, server, context, server_down, *args, **kwargs)
+
+    return func(request, server, context, server_down, *args, **kwargs)
   return wrapper
 
 def ServerDownRedirect(func):
