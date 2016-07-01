@@ -164,8 +164,11 @@ function updatePlaylist(data) {
   buttonControlPlaylist(".playlistplay a"); // Playlist Play
 }
 
+var getPlaylist_running = false;
+
 // Recursively poll for playlist updates
 function getPlaylist() {
+  getPlaylist_running = true;
   var url = document.URL + "_getplaylist"
 
   $.get(url, function(data){
@@ -173,7 +176,17 @@ function getPlaylist() {
 
     // Recusive call every 60s
     setTimeout(getPlaylist, 60000);
+  }).fail(function() {
+    getPlaylist_running = false;
   })
+}
+
+function getPlaylistWrapper() {
+  if(!getPlaylist_running) {
+    getPlaylist();
+  } else {
+    console.log("getPlaylist is already running");
+  }
 }
 
 /* Common click control configurations */
@@ -268,6 +281,7 @@ $(function() {
   $("#statusbutton").click(function() {
     if($("#statusicon").hasClass('fa-exclamation-circle')) {
       getStatus();
+      getPlaylistWrapper();
     }
   });
 
@@ -307,5 +321,5 @@ $(function() {
   getStatus();
 
   // Recursive poll for updated playlist
-  getPlaylist();
+  getPlaylistWrapper();
 });
