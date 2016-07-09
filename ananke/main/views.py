@@ -296,8 +296,19 @@ def mute(request, server, context):
   return HttpResponse(status=200)
 
 @GetServer
-def subtitles(request, server, context):
-  KodiLookUp.Player_SetSubtitle(*server)
+def togglesubtitles(request, server, context):
+  properties = KodiLookUp.Player_GetProperties(*server)
+  if properties['subtitleenabled']:
+    mode = 'off'
+  else:
+    mode = 'on'
+  KodiLookUp.Player_SetSubtitle(*server, mode=mode)
+  return HttpResponse(status=200)
+
+@GetServer
+def cyclesubtitles(request, server, context):
+  mode = 'next'
+  KodiLookUp.Player_SetSubtitle(*server, mode=mode)
   return HttpResponse(status=200)
 
 @GetServer

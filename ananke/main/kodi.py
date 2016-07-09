@@ -504,13 +504,11 @@ def Player_SetSpeed(server, player_id, speed):
 
 @GetServer
 @GetActivePlayer
-def Player_SetSubtitle(server, player_id):
-  raise NotImplementedError
-  #Player_GetProperties(server, player_id)
-  #params = {"playerid": player_id,
-  #          "subtitle": "next",
-  #          "enable": toggle}
-  #response = server.Player.SetSubtitle(params)
+def Player_SetSubtitle(server, player_id, mode):
+  # mode can be: on, off, next, previous
+  params = {"playerid": player_id,
+            "subtitle": mode}
+  response = server.Player.SetSubtitle(params)
 
 @GetServer
 @GetActivePlayer

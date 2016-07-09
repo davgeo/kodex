@@ -302,7 +302,7 @@ $(function() {
   /* Control panel */
   dropdownControlPlaylist(".playlistclear a"); // Clear playlist
   dropdownControlBasic(".videolibscan a"); // Video library scan
-  dropdownControlBasic(".subtitles a"); // Video library scan
+  dropdownControlBasic(".subtitles a"); // Subtitles
 
   buttonControlToggle(".mute a", 'fa-volume-up', 'fa-volume-off'); // Mute
 
