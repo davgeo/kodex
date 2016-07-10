@@ -209,7 +209,8 @@ def VideoLibrary_GetMovieDetails(server, movie_id):
                           'thumbnail',
                           'plot',
                           'playcount',
-                          'resume']}
+                          'resume',
+                          'file']}
   response = server.VideoLibrary.GetMovieDetails(params)
   movie = response['moviedetails']
   ProcessThumbnails(server, (movie, ))
@@ -231,7 +232,8 @@ def VideoLibrary_GetMovies(server):
                           'thumbnail',
                           'plot',
                           'playcount',
-                          'resume']}
+                          'resume',
+                          'file']}
   recentMovies = server.VideoLibrary.GetMovies(params)
   movies = recentMovies['movies']
   ProcessThumbnails(server, movies)
@@ -329,8 +331,9 @@ def VideoLibrary_RemoveEpisode(server, episode_id):
   response = server.VideoLibrary.RemoveEpisode(params)
 
 @GetServer
-def VideoLibrary_RemoveMovie(server):
-  raise NotImplementedError
+def VideoLibrary_RemoveMovie(server, movie_id):
+  params = {'movieid':int(movie_id)}
+  response = server.VideoLibrary.RemoveMovie(params)
 
 @GetServer
 def VideoLibrary_RemoveMusicVideo(server):
@@ -356,8 +359,13 @@ def VideoLibrary_SetEpisodeDetails(server, episode_id, playcount=None):
   response = server.VideoLibrary.SetEpisodeDetails(params)
 
 @GetServer
-def VideoLibrary_SetMovieDetails(server):
-  raise NotImplementedError
+def VideoLibrary_SetMovieDetails(server, movie_id, playcount=None):
+  params = {'movieid':int(movie_id)}
+
+  if playcount is not None:
+    params.update({'playcount' : playcount})
+
+  response = server.VideoLibrary.SetMovieDetails(params)
 
 @GetServer
 def VideoLibrary_SetMovieSetDetails(server):

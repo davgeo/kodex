@@ -194,6 +194,25 @@ def addmovie(request, server, context, movie_id):
   return getplaylist(request, context['server'].id)
 
 @GetServer
+def watchedmovie(request, server, context, movie_id):
+  url = request.get_full_path().replace('_watched', '')
+  movieInfo = KodiLookUp.VideoLibrary_GetMovieDetails(*server, movie_id=movie_id)
+
+  if movieInfo['playcount'] > 0:
+    playcount = 0
+  else:
+    playcount = 1
+
+  KodiLookUp.VideoLibrary_SetMovieDetails(*server, movie_id=movie_id, playcount=playcount)
+  return HttpResponse(status=200)
+
+@GetServer
+def removemovie(request, server, context, movie_id):
+  url = request.get_full_path().replace('/{}_remove'.format(movie_id), '')
+  KodiLookUp.VideoLibrary_RemoveMovie(*server, movie_id=movie_id)
+  return redirect(url)
+
+@GetServer
 def playtv(request, server, context, show_id, season_id, episode_id):
   KodiLookUp.Playlist_Clear(*server, playlistType='video')
   KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'episodeid':int(episode_id)}})

@@ -21,6 +21,7 @@
       <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7">
         <h3>{{ activemovie.title }}</h3>
         <p>{{ activemovie.plot }}</p>
+        <div id="file" class="collapse"><p>File: {{ activemovie.file }}</p></div>
         <span class="playplaylist">
           <a href="{% url 'playmovie' server.id activemovie.movieid %}" class="btn btn-primary" role="button">
             <span class="glyphicon glyphicon-play"></span> Play
@@ -30,6 +31,13 @@
           <a href="{% url 'addmovie' server.id activemovie.movieid %}" class="btn btn-info" role="button">
             <span class="glyphicon glyphicon-plus"></span> Add
           </a>
+        </span>
+        <span class="dropdown pull-right">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Misc <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li><a data-toggle="collapse" data-target="#file">Show File Path</a></li>
+            <li><a href="{% url 'removemovie' server.id activemovie.movieid %}">Remove Movie</a></li>
+          </ul>
         </span>
       </div>
     </div>
@@ -56,11 +64,11 @@
               <a href="{% url 'playmovie' server.id movie.movieid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
             </span>
             <div class="watched">
-              <a href="{{request.get_full_path}}_watched">
+              <a href="{% url 'watchedmovie' server.id movie.movieid %}">
                 {% if movie.playcount %}
-                  <i class="fa fa-check-square-o pull-right"></i>
+                  <i class="watchedtvicon fa fa-check-square-o pull-right"></i>
                 {% else %}
-                  <i class="fa fa-square-o pull-right"></i>
+                  <i class="watchedtvicon fa fa-square-o pull-right"></i>
                 {% endif %}
               </a>
             </div>
