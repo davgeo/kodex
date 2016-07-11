@@ -11,7 +11,7 @@
   {% endif %}
   {% for item in playlist %}
     {% if item.id and item.showtitle %}
-      {% if item.id == playing.id %}
+      {% if item.id == playing.id and forloop.counter0 == player.position %}
       <li class="list-group-item playlist-item-playing-wrapper-ep">
         <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
         <div class="col-xs-9">
@@ -33,7 +33,7 @@
       </li>
       {% endif %}
     {% elif item.id %}
-      {% if item.id == playing.id %}
+      {% if item.id == playing.id and forloop.counter0 == player.position %}
       <li class="list-group-item playlist-item-playing-wrapper-mv">
         <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
         <div class="col-xs-9">
@@ -53,7 +53,7 @@
       </li>
       {% endif %}
     {% else %}
-      {% if item.label == playing.label %}
+      {% if item.label == playing.label and forloop.counter0 == player.position %}
       <li class="list-group-item playlist-item-playing-wrapper-mv">
         <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
         <div class="col-xs-9">
