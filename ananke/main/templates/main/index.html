@@ -5,16 +5,8 @@
 {% block indexActive %}class="active"{% endblock %}
 
 {% block content %}
-  <h1>Overview</h1>
-  <p>.col-sm-10</p>
-
-  <div class="row container-fluid">
-    <div class="col-sm-2">.col-sm-2</div>
-    <div class="col-sm-8">.col-sm-8
-      <div class="row container-fluid">
-        <div class="col-sm-6">.col-sm-6</div>
-        <div class="col-sm-2">.col-sm-2</div>
-      </div>
-    </div>
+  <div class="col-xs-12">
+    <h1>Installed Applications</h1>
+    <h2><a href="{% url 'kodi' %}">Kodi</a><h2>
   </div>
 {% endblock %}
