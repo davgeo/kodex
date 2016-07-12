@@ -83,6 +83,10 @@ def index(request, context):
   return render(request, 'main/index.html', context)
 
 @GetServerList
+def config(request, context):
+  return render(request, 'main/kodi_config.html', context)
+
+@GetServerList
 def kodi(request, context):
   def ThreadWrapper(result, index, func, *args, **kwargs):
     result[index] = func(*args, **kwargs)
