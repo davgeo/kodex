@@ -235,9 +235,15 @@ def VideoLibrary_GetMovies(server):
                           'resume',
                           'file']}
   recentMovies = server.VideoLibrary.GetMovies(params)
-  movies = recentMovies['movies']
-  ProcessThumbnails(server, movies)
-  GetResumePercent(movies)
+
+  try:
+    movies = recentMovies['movies']
+  except KeyError:
+    movies = []
+  else:
+    ProcessThumbnails(server, movies)
+    GetResumePercent(movies)
+
   return movies
 
 @GetServer
@@ -267,8 +273,14 @@ def VideoLibrary_GetRecentlyAddedMovies(server):
   params = {'properties':['title',
                           'thumbnail']}
   recentMovies = server.VideoLibrary.GetRecentlyAddedMovies(params)
-  movies = recentMovies['movies']
-  ProcessThumbnails(server, movies)
+
+  try:
+    movies = recentMovies['movies']
+  except KeyError:
+    movies = []
+  else:
+    ProcessThumbnails(server, movies)
+
   return movies
 
 @GetServer
