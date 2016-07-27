@@ -85,6 +85,12 @@ $(document).on("keypress", function (e) {
     toggleIcon("#mute", 'fa-volume-up', 'fa-volume-off');
     return false;
   }
+  else if(e.which == 115) {
+    // m
+    var url = document.URL + "_togglesubtitles";
+    $.get(url);
+    return false;
+  }
 });
 
 // Progress bar slider control
