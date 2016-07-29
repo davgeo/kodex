@@ -601,6 +601,31 @@ def Playlist_Swap(server):
 # Application
 #################################################
 @GetServer
+def Favourites_AddFavourite(server):
+  raise NotImplementedError
+
+@GetServer
+def Favourites_GetFavourites(server):
+  params = {'properties': ["path",
+                           "thumbnail",
+                           "window",
+                           "windowparameter"]}
+  response = server.Favourites.GetFavourites(params)
+
+  try:
+    favourites = response['favourites']
+  except KeyError:
+    favourites = []
+  else:
+    ProcessThumbnails(server, favourites, tvEpisode=False)
+
+  return favourites
+
+
+#################################################
+# Application
+#################################################
+@GetServer
 def Application_GetProperties(server):
   params = {"properties": ["volume", "muted"]}
   response = server.Application.GetProperties(params)

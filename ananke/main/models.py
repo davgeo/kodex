@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+
+# Server settings
 class Server(models.Model):
   name = models.CharField(max_length=200)
   host = models.CharField(max_length=200)
@@ -14,6 +16,26 @@ class Server(models.Model):
   def conn(self):
     return (self.host, self.port, self.user, self.pwd)
 
+# Starred items
+class StarredBase(models.Model):
+  starred_id = models.IntegerField(primary_key=True)
+
+  class Meta:
+    abstract = True
+
+  def __str__(self):
+    return 'ID: {}'.format(self.starred_id)
+
+  def get_id(self):
+    return self.starred_id
+
+class StarredTV(StarredBase):
+  pass
+
+class StarredMovie(StarredBase):
+  pass
+
+# Configuration
 class Config(models.Model):
   activeServer = models.ForeignKey('Server')
   thumbnails = models.BooleanField()

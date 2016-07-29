@@ -4,12 +4,13 @@ from django.template import loader
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 
-from .models import Server
+from .models import Server, StarredTV, StarredMovie
 
 import main.kodi as KodiLookUp
 
 from operator import itemgetter
 
+import re
 import logging
 import threading
 
@@ -76,6 +77,84 @@ def ServerDownNoRedirect(func):
   return wrapper
 
 #################################################
+# Database Functions
+#################################################
+def AddServer(name, host, port, user, pwd):
+  servers = Server.objects.create(name=name, host=host, port=port, user=user, pwd=pwd)
+  servers.save()
+
+def AddStarredTV(show_id):
+  starredtvdb = StarredTV.objects.create(starred_id=show_id)
+  starredtvdb.save()
+
+def AddStarredMovie(movie_id):
+  starredmoviedb = StarredMovie.objects.create(starred_id=movie_id)
+  starredmoviedb.save()
+
+def RemoveStarredTV(show_id):
+  db_entry = StarredTV.objects.get(starred_id=show_id)
+  db_entry.delete()
+
+def RemoveStarredMovie(movie_id):
+  db_entry = StarredMovie.objects.get(starred_id=movie_id)
+  db_entry.delete()
+
+def GetStarredTV():
+  starred_tvshow_db_list = StarredTV.objects.all()
+  starred_tvshow_id_list = [tvshow.get_id() for tvshow in starred_tvshow_db_list]
+  return starred_tvshow_id_list
+
+def GetStarredMovie():
+  starred_movie_db_list = StarredMovie.objects.all()
+  starred_movie_id_list = [movie.get_id() for movie in starred_movie_db_list]
+  return starred_movie_id_list
+
+#################################################
+# Other Functions
+#################################################
+def GetMovieList(server, context, movie_id=None):
+  unsorted_movie_list = KodiLookUp.VideoLibrary_GetMovies(*server)
+
+  starred_movie_id_list = GetStarredMovie()
+
+  starred_movie_list = []
+  unstarred_movie_list = []
+
+  for movie in unsorted_movie_list:
+    if int(movie['movieid']) in starred_movie_id_list:
+      movie['starred'] = True
+      starred_movie_list.append(movie)
+    else:
+      movie['starred'] = False
+      unstarred_movie_list.append(movie)
+
+    if movie_id is not None:
+      if int(movie['movieid']) == int(movie_id):
+        context['activemovie'] = movie
+
+  context['starred_movies'] = sorted(starred_movie_list, key=itemgetter('title'))
+  context['movies'] = sorted(unstarred_movie_list, key=itemgetter('title'))
+
+def GetTVShowList(server, context):
+  unsorted_tvshow_list = KodiLookUp.VideoLibrary_GetTVShows(*server)
+
+  starred_tv_id_list = GetStarredTV()
+
+  starred_tv_list = []
+  unstarred_tv_list = []
+
+  for tvshow in unsorted_tvshow_list:
+    if int(tvshow['tvshowid']) in starred_tv_id_list:
+      tvshow['starred'] = True
+      starred_tv_list.append(tvshow)
+    else:
+      tvshow['starred'] = False
+      unstarred_tv_list.append(tvshow)
+
+  context['starred_tvshows'] = sorted(starred_tv_list, key=itemgetter('title'))
+  context['tvshows'] = sorted(unstarred_tv_list, key=itemgetter('title'))
+
+#################################################
 # Views
 #################################################
 @GetServerList
@@ -108,6 +187,8 @@ def kodi(request, context):
 @GetPlaylist
 @ServerDownRedirect
 def server(request, server, context):
+  GetMovieList(server, context)
+  GetTVShowList(server, context)
   context['recentepisodes'] = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server)
   context['recentmovies'] = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server)
   return render(request, 'main/kodi_server_index.html', context)
@@ -115,8 +196,7 @@ def server(request, server, context):
 @GetPlaylist
 @ServerDownRedirect
 def tvindex(request, server, context):
-  unsorted_tvshow = KodiLookUp.VideoLibrary_GetTVShows(*server)
-  context['tvshows'] = sorted(unsorted_tvshow, key=itemgetter('title'))
+  GetTVShowList(server, context)
   return render(request, 'main/kodi_server_tv.html', context)
 
 @GetPlaylist
@@ -157,24 +237,13 @@ def tvepisode(request, server, context, show_id, season_id, episode_id):
 @GetPlaylist
 @ServerDownRedirect
 def movies_index(request, server, context):
-  unsorted_movie_list = KodiLookUp.VideoLibrary_GetMovies(*server)
-  context['movies'] = sorted(unsorted_movie_list, key=itemgetter('title'))
+  GetMovieList(server, context)
   return render(request, 'main/kodi_server_movies.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
 def movie(request, server, context, movie_id):
-  unsorted_movie_list = KodiLookUp.VideoLibrary_GetMovies(*server)
-
-  for movie in unsorted_movie_list:
-    if int(movie['movieid']) == int(movie_id):
-      active_movie = movie
-
-  movie_list = sorted(unsorted_movie_list, key=itemgetter('title'))
-
-  context.update({'activemovie': active_movie,
-                  'movies'     : movie_list})
-
+  GetMovieList(server, context, movie_id)
   return render(request, 'main/kodi_server_movies.html', context)
 
 @GetPlaylist
@@ -209,6 +278,19 @@ def watchedmovie(request, server, context, movie_id):
 
   KodiLookUp.VideoLibrary_SetMovieDetails(*server, movie_id=movie_id, playcount=playcount)
   return HttpResponse(status=200)
+
+@GetServer
+def starredmovie(request, server, context, movie_id):
+  url = request.get_full_path().replace('/{}_starred'.format(movie_id), '')
+
+  starred_movie_id_list = GetStarredMovie()
+
+  if int(movie_id) in starred_movie_id_list:
+    RemoveStarredMovie(movie_id)
+  else:
+    AddStarredMovie(movie_id)
+
+  return redirect(url)
 
 @GetServer
 def removemovie(request, server, context, movie_id):
@@ -254,6 +336,19 @@ def removetvepisode(request, server, context, show_id, season_id, episode_id):
 def removetvshow(request, server, context, show_id):
   url = request.get_full_path().replace('/{}_remove'.format(show_id), '')
   KodiLookUp.VideoLibrary_RemoveTVShow(*server, show_id=show_id)
+  return redirect(url)
+
+@GetServer
+def starredtvshow(request, server, context, show_id):
+  url = request.get_full_path().replace('/{}_starred'.format(show_id), '')
+
+  starred_tv_id_list = GetStarredTV()
+
+  if int(show_id) in starred_tv_id_list:
+    RemoveStarredTV(show_id)
+  else:
+    AddStarredTV(show_id)
+
   return redirect(url)
 
 @GetServer

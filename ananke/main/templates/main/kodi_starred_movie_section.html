@@ -1,0 +1,46 @@
+{% load staticfiles %}
+
+<h4>Starred Movies</h4>
+
+<div class="row">
+  {% for movie in starred_movies %}
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 poster-wrapper">
+      <a href="{% url 'movie' server.id movie.movieid %}">
+        <img src="{% static 'cache' %}/{{ movie.thumbnail }}" class="img-responsive poster_thumb" alt={{ movie.title }}>
+      </a>
+      <div class="addplaylist">
+        <a href="{% url 'addmovie' server.id movie.movieid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>
+      </div>
+      <span class="playplaylist">
+        <a href="{% url 'playmovie' server.id movie.movieid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
+      </span>
+      <div class="watched">
+        <a href="{% url 'watchedmovie' server.id movie.movieid %}">
+          {% if movie.playcount %}
+            <i class="watchedtvicon fa fa-check-square-o pull-right"></i>
+          {% else %}
+            <i class="watchedtvicon fa fa-square-o pull-right"></i>
+          {% endif %}
+        </a>
+      </div>
+      <div class="starred">
+        <a href="{% url 'starredmovie' server.id movie.movieid %}">
+          {% if movie.starred %}
+            <i class="fa fa-star pull-right"></i>
+          {% else %}
+            <i class="fa fa-star-o pull-right"></i>
+          {% endif %}
+        </a>
+      </div>
+      {% if movie.resume.position < movie.resume.total %}
+        <div class="progress poster-resume-bar">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{ movie.resume.position }} " aria-valuemin="0" aria-valuemax="{{ movie.resume.total }}" style="width:{{ movie.resume.percentage }}%">
+            <span class="sr-only">Resume status</span>
+          </div>
+        </div>
+      {% endif %}
+      <p>{{ movie.title }}</p>
+    </div>
+  {% endfor %}
+</div>
+

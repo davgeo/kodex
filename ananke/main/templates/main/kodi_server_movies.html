@@ -51,6 +51,8 @@
     <hr>
   {% endif %}
 
+      {% include "main/kodi_starred_movie_section.html" %}
+      <hr>
       <div class="row">
         {% for movie in movies %}
           <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 poster-wrapper">
@@ -69,6 +71,15 @@
                   <i class="watchedtvicon fa fa-check-square-o pull-right"></i>
                 {% else %}
                   <i class="watchedtvicon fa fa-square-o pull-right"></i>
+                {% endif %}
+              </a>
+            </div>
+            <div class="starred">
+              <a href="{% url 'starredmovie' server.id movie.movieid %}">
+                {% if movie.starred %}
+                  <i class="fa fa-star pull-right"></i>
+                {% else %}
+                  <i class="fa fa-star-o pull-right"></i>
                 {% endif %}
               </a>
             </div>
