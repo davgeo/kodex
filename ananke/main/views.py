@@ -83,6 +83,10 @@ def AddServer(name, host, port, user, pwd):
   servers = Server.objects.create(name=name, host=host, port=port, user=user, pwd=pwd)
   servers.save()
 
+def RemoveServer(server_id):
+  db_entry = Server.objects.get(id=server_id)
+  db_entry.delete()
+
 def AddStarredTV(show_id):
   starredtvdb = StarredTV.objects.create(starred_id=show_id)
   starredtvdb.save()
@@ -164,6 +168,23 @@ def index(request, context):
 @GetServerList
 def config(request, context):
   return render(request, 'main/kodi_config.html', context)
+
+def addserver(request):
+  try:
+    server_name = request.POST['server_name']
+    server_host = request.POST['server_host']
+    server_port = request.POST['server_port']
+    server_username = request.POST['server_username']
+    server_password = request.POST['server_password']
+  except KeyError:
+    pass
+  else:
+    AddServer(server_name,server_host,server_port,server_username,server_password)
+  return redirect(reverse('config'))
+
+def removeserver(request, server_id):
+  RemoveServer(server_id)
+  return redirect(reverse('config'))
 
 @GetServerList
 def kodi(request, context):

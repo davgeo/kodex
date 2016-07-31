@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^kodi$', views.kodi, name='kodi'),
+    url(r'^kodi/addserver$', views.addserver, name='addserver'),
+    url(r'^kodi/removeserver_([0-9]+)$', views.removeserver, name='removeserver'),
     url(r'^kodi/config$', views.config, name='config'),
     url(r'^kodi/([0-9]+)$', views.server, name='server'),
     url(r'^kodi/([0-9]+)/tv$', views.tvindex, name='tvindex'),
