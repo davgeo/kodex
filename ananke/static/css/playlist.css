@@ -1,0 +1,84 @@
+/* Playlist CSS */
+
+.playlist-item-wrapper {
+  height: 32px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+  line-height: 30px;
+  margin-left:0px;
+  margin-right:0px;
+  margin-top:0px;
+  margin-bottom:-1px;
+  overflow: hidden;
+  border-color: rgba(150,150,150,0.7);
+  background-color: rgba(215,215,215,0.7);
+}
+
+.playlist-item-wrapper.playlist-item-playing {
+  height: 52px;
+  line-height: default;
+  border-color: rgba(150,150,150,0.7);
+  background-color: rgba(225,225,225,0.7);
+}
+
+.playlist-item-wrapper.playlist-item-playing.playlist-item-special {
+  border-color: rgba(0,0,75,0.7);
+}
+
+.playlist-item-wrapper.playlist-item-playing.playlist-item-movie {
+  height: 82px;
+}
+
+.playlist-playing-title {
+  height: 32px;
+  font-size: 1em;
+  line-height: 30px;
+  overflow: hidden;
+}
+
+.playlist-playing-title-mv {
+  height: 82px;
+  font-size: 1em;
+  line-height: 80px;
+  overflow: hidden;
+}
+
+.playlist-title {
+  height: 32px;
+  font-size: 0.8em;
+  line-height: 30px;
+  overflow: hidden;
+}
+
+.playlist-playing-subtext {
+  height: 18px;
+  font-size: 0.8em;
+  line-height: 10px;
+  overflow: hidden;
+}
+
+.playlist-subtext {
+  height: 18px;
+  font-size: 0.7em;
+  line-height: 10px;
+  overflow: hidden;
+}
+
+.playlist-item-icon {
+  height: 32px;
+  line-height: 30px;
+  text-align: center;
+  vertical-align: bottom;
+  margin-bottom:-1px;
+}
+
+.playing-ep-thumb {
+  height: 50px;
+  width: 80px;
+}
+
+.playing-mv-thumb {
+  height: 80px;
+}

@@ -1,52 +1,22 @@
 /* CSS content */
 
-.navbar-nav > li > a, .navbar-brand {
-  padding-top: 5px;
-  padding-bottom: 0;
-  height: 30px;
+body {
+  background-color: #ECECEA;
 }
 
-.navbar {
-  min-height:30px;
-  margin-bottom: 0;
+.content {
+  padding-top: 32px;
 }
 
-.navbar.affix {
-  top: 0px;
+.control-panel-wrapper.affix {
+  top: 32px;
   width: 100%;
-  z-index:9999;
-}
-
-.navbar.affix + #myContent {
-  padding-top: 30px;
+  z-index:9998;
 }
 
 .no-padding {
   padding-left: 0;
   padding-right: 0;
-}
-
-.center-align {
-  display: inline-block;
-  vertical-align: middle;
-  float: none;
-}
-
-.vertical-align {
-  display: flex;
-  flex-direction: row;
-}
-
-.vertical-align > [class^="col-"],
-.vertical-align > [class*=" col-"] {
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Optional, to align inner items
-                              horizontally inside the column */
-}
-
-.play-control.affix {
-  bottom: 0px;
 }
 
 .poster_thumb {
@@ -57,7 +27,6 @@
 .episode_thumb {
   height: 100px;
   width: 170px;
-  /*opacity:.5;*/
 }
 
 .episode_wrapper {
@@ -99,139 +68,37 @@
   margin-right:0px;
   margin-top:0px;
   margin-bottom:-1px;
+  background-color: rgba(225,225,225,0.7);
 }
 
 .volumecontrol {
-    padding-top:0px;
-    /*vertical-align: middle; */
-    height: 50px;
-    /*border: 1px solid red;*/
+  padding-top:0px;
+  height: 50px;
 }
 
 .slider {
-    margin-left:auto;
-    margin-right:auto;
-    /*vertical-align: middle;*/
-    height: 50px;
-    /*border: 1px solid blue;*/
+  margin-left:auto;
+  margin-right:auto;
+  height: 50px;
 }
 
 .center-icon {
-    /*display:inline-block;*/
-    /*background-color:black;
-    color:white;*/
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-    vertical-align: bottom;
-    /*border: 1px solid purple;*/
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  vertical-align: bottom;
 }
 
 .playercontrol {
-    margin-left:auto;
-    margin-right:auto;
-    /*vertical-align: middle;*/
-    height: 50px;
-    /*border: 1px solid green;*/
+  margin-left:auto;
+  margin-right:auto;
+  height: 50px;
 }
 
 .playercontrol-heading {
   height: 25px;
   font-size: 14px;
   line-height: 20px;
-}
-
-.playlist-item-wrapper {
-  height: 32px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top:0px;
-  padding-bottom:0px;
-  line-height: 30px;
-  margin-left:0px;
-  margin-right:0px;
-  margin-top:0px;
-  margin-bottom:-1px;
-  overflow: hidden;
-}
-
-.playlist-item-icon {
-  height: 32px;
-  line-height: 30px;
-  text-align: center;
-  vertical-align: bottom;
-  margin-bottom:-1px;
-}
-
-.playlist-title {
-  height: 32px;
-  font-size: 14px;
-  line-height: 30px;
-  overflow: hidden;
-}
-
-.playlist-subtext-ep {
-  height: 18px;
-  font-size: 10px;
-  line-height: 10px;
-  overflow: hidden;
-}
-
-.playlist-item-playing-wrapper-ep {
-  height: 52px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top:0px;
-  padding-bottom:0px;
-  line-height: default;
-  margin-left:0px;
-  margin-right:0px;
-  margin-top:0px;
-  margin-bottom:-1px;
-}
-
-.playlist-item-playing-special-wrapper-ep {
-  height: 52px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top:0px;
-  padding-bottom:0px;
-  line-height: default;
-  margin-left:0px;
-  margin-right:0px;
-  margin-top:0px;
-  margin-bottom:0px;
-  border-color: blue;
-}
-
-
-.playing-ep-thumb {
-  height: 50px;
-  width: 80px;
-}
-
-.playlist-item-playing-wrapper-mv {
-  height: 82px;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top:0px;
-  padding-bottom:0px;
-  line-height: 80px;
-  margin-left:0px;
-  margin-right:0px;
-  margin-top:0px;
-  margin-bottom:-1px;
-  overflow: hidden;
-}
-
-.playing-mv-thumb {
-  height: 80px;
-}
-
-.playlist-title-mv {
-  font-size: 14px;
-  line-height: 80px;
-  overflow: hidden;
 }
 
 .poster-wrapper {
@@ -294,6 +161,9 @@
 @media (min-width: 992px) {
   .control-panel-wrapper {
     position: fixed;
+    width: 25%;
+  }
+  .control-panel-wrapper.affix {
     width: 25%;
   }
 }

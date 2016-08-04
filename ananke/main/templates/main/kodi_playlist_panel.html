@@ -1,30 +1,30 @@
 {% load staticfiles %}
 <div class="playlist-wrapper" id="playlist" class="collapse in">
   {% if special_play %}
-    <li class="list-group-item playlist-item-playing-special-wrapper-ep">
+    <li class="list-group-item playlist-item-wrapper playlist-item-playing playlist-item-special">
       <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ playing.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
       <div class="col-xs-9">
-        <div class="playlist-title"><a href="{% url 'tvepisode' server.id playing.tvshowid playing.season playing.id %}">{{ playing.title }}</a></div>
-        <div class="playlist-subtext-ep">{{ playing.showtitle }} {{ playing.season }}.{{ playing.episode }}</div>
+        <div class="playlist-playing-title"><a href="{% url 'tvepisode' server.id playing.tvshowid playing.season playing.id %}">{{ playing.title }}</a></div>
+        <div class="playlist-playing-subtext">{{ playing.showtitle }} {{ playing.season }}.{{ playing.episode }}</div>
       </div>
     </li>
   {% endif %}
   {% for item in playlist %}
     {% if item.id and item.showtitle %}
       {% if item.id == playing.id and forloop.counter0 == player.position %}
-      <li class="list-group-item playlist-item-playing-wrapper-ep">
+      <li class="list-group-item playlist-item-wrapper playlist-item-playing">
         <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-ep-thumb"></div>
         <div class="col-xs-9">
-          <div class="playlist-title"><a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a></div>
-          <div class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</div>
+          <div class="playlist-playing-title"><a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a></div>
+          <div class="playlist-playing-subtext">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</div>
         </div>
       </li>
       {% else %}
       <li class="list-group-item playlist-item-wrapper">
         <div class="col-xs-10">
           <i class="fa fa-television"></i>
-          <a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a>
-          <span class="playlist-subtext-ep">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</span>
+          <span class="playlist-title"><a href="{% url 'tvepisode' server.id item.tvshowid item.season item.id %}">{{ item.title }}</a></span>
+          <span class="playlist-subtext">{{ item.showtitle }} {{ item.season }}.{{ item.episode }}</span>
         </div>
         <div class="col-xs-2 no-padding">
           <span class="playlistremove"><a href="{% url 'remove' server.id forloop.counter0 %}"><i class="fa fa-times pull-right playlist-item-icon"></i></a></span>
@@ -34,17 +34,17 @@
       {% endif %}
     {% elif item.id %}
       {% if item.id == playing.id and forloop.counter0 == player.position %}
-      <li class="list-group-item playlist-item-playing-wrapper-mv">
+      <li class="list-group-item playlist-item-wrapper playlist-item-playing playlist-item-movie">
         <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
         <div class="col-xs-9">
-          <div class="playlist-title-mv"><a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a></div>
+          <div class="playlist-playing-title-mv"><a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a></div>
         </div>
       </li>
       {% else %}
       <li class="list-group-item playlist-item-wrapper">
         <div class="col-xs-10">
           <i class="fa fa-film"></i>
-          <a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a>
+          <span class="playlist-title"><a href="{% url 'movie' server.id item.id %}">{{ item.title }}</a></span>
         </div>
         <div class="col-xs-2 no-padding">
           <span class="playlistremove"><a href="{% url 'remove' server.id forloop.counter0 %}"><i class="fa fa-times pull-right playlist-item-icon"></i></a></span>
@@ -54,17 +54,17 @@
       {% endif %}
     {% else %}
       {% if item.label == playing.label and forloop.counter0 == player.position %}
-      <li class="list-group-item playlist-item-playing-wrapper-mv">
+      <li class="list-group-item playlist-item-wrapper playlist-item-playing playlist-item-movie">
         <div class="col-xs-3 no-padding"><img src="{% static 'cache' %}/{{ item.thumbnail }}" class="img-responsive playing-mv-thumb"></div>
         <div class="col-xs-9">
-          <div class="playlist-title-mv">{{ item.title }}</div>
+          <div class="playlist-playing-title-mv">{{ item.title }}</div>
         </div>
       </li>
       {% else %}
       <li class="list-group-item playlist-item-wrapper">
         <div class="col-xs-10">
           <i class="fa fa-shield"></i>
-          {{ item.title }}
+          <span class="playlist-title">{{ item.title }}</span>
         </div>
         <div class="col-xs-2 no-padding">
           <span class="playlistremove"><a href="{% url 'remove' server.id forloop.counter0 %}"><i class="fa fa-times pull-right playlist-item-icon"></i></a></span>

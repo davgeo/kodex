@@ -1,13 +1,15 @@
 {% load staticfiles %}
 
-<nav class="navbar navbar-default" data-spy="affix" data-offset-top="30">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myAppNavbar">
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href={% url 'kodi' %}>Kodi</a>
+    <a class="navbar-brand" href="{% url 'kodi' %}">
+      <img src="{% static 'images' %}/kodex_logo.png">
+    </a>
   </div>
   <div class="collapse navbar-collapse" id="myAppNavbar">
     <ul class="nav navbar-nav">

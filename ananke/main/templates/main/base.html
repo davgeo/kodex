@@ -9,6 +9,8 @@
     <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.min.css' %}>
     <link rel="stylesheet" href={% static 'font-awesome/css/font-awesome.min.css' %}>
     <link rel="stylesheet" href={% static 'jquery/jquery-ui.min.css' %}>
+    <link rel="stylesheet" href={% static 'css/navbar.css' %}>
+    <link rel="stylesheet" href={% static 'css/playlist.css' %}>
     <link rel="stylesheet" href={% static 'css/main.css' %}>
     <script src={% static 'jquery/jquery-1.11.3.min.js' %}></script>
     <script src={% static 'jquery/jquery-ui.min.js' %}></script>
@@ -16,44 +18,18 @@
 
     {% block extraheader %}{% endblock %}
 
-    <title>{% block title %}Ananke{% endblock %}</title>
+    <title>Kodex</title>
+
+    <link rel="icon" href="{% static 'images' %}/kodex_favicon.png">
   </head>
 
   <body>
     <div class="container-fluid">
       <div class="row">
-        <nav class="navbar navbar-default">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href={% url 'index' %}>Ananke</a>
-          </div>
-          <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav">
-                <li {% block indexActive %}{% endblock %}><a href="{% url 'index' %}">Home</a></li>
-                <li {% block kodiActive %}{% endblock %} class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Kodi <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="{% url 'kodi' %}">Overview</a></li>
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Servers</li>
-                    {% for server in kodi_servers %}
-                      <li><a href="{% url 'server' server.id %}">{{ server }}</a></li>
-                    {% endfor %}
-                  </ul>
-                </li>
-            </ul>
-          </div>
-        </nav>
-
         {% block appnav %}{% endblock %}
-      </div>
-
-      <div class="row" id="myContent">
-        {% block content %}{% endblock %}
+        <div class ="content">
+          {% block content %}{% endblock %}
+        </div>
       </div>
     <div>
   </body>
