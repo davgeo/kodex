@@ -1,49 +1,91 @@
 {% extends "main/kodi_base.html" %}
 
+{% load staticfiles %}
+
+{% block extraheader %}
+  <script src={% static 'js/kodi_config.js' %}></script>
+{% endblock %}
+
 {% block content %}
   <div class="col-lg-12">
     <h2>Kodi Configuration</h2>
     <h3>Server List</h3>
-    {% for server in kodi_servers %}
-      <p><a href="{% url 'removeserver' server.id %}"><i class="fa fa-times"></i></a> {{ server }}</p>
-    {% endfor %}
+      {% if kodi_servers %}
+        <table class="table table-condensed table-striped" style="width:30%">
+          <thead>
+            <tr>
+              <th>Server</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for server in kodi_servers %}
+              <tr>
+                <td><a href="{% url 'server' server.id %}">{{ server }}</a></td>
+                <td><button class="btn btn-primary btn-xs serverstatusbutton" value="{% url 'pingserver' server.id %}"><i class="fa fa-question-circle serverstatusicon"></i></button></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No kodi servers are available.</p>
+      {% endif %}
 
-    <h3>Add Server</h3>
-    <form class="form-horizontal" role="form" action="{% url 'addserver' %}" method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <label class="control-label col-sm-1" for="server_name">Name:</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" name="server_name" id="server_name" placeholder="Enter server name (e.g. MainTV)">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label col-sm-1" for="server_host">Host:</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" name="server_host" id="server_host" placeholder="Enter host (e.g. 192.168.1.70)">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label col-sm-1" for="server_port">Port:</label>
-        <div class="col-sm-4">
-          <input type="number" class="form-control" name="server_port" id="server_port" placeholder="Enter port (e.g. 8080)">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label col-sm-1" for="server_username">Username:</label>
-        <div class="col-sm-4">
-          <input type="text" class="form-control" name="server_username" id="server_username" placeholder="Enter server username">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label col-sm-1" for="server_password">Password:</label>
-        <div class="col-sm-4">
-          <input type="password" class="form-control" name="server_password" id="server_password" placeholder="Enter server password">
-        </div>
-      </div>
-      <button type="submit" class="btn btn-default">Submit</button>
-    </form>
+    <div><a data-toggle="collapse" data-target="#addserver"><i class="fa fa-plus-circle"></i> Add Server</a></td></div>
+    <div><a data-toggle="collapse" data-target="#removeserver"><i class="fa fa-minus-circle"></i> Remove Server</a></td></div>
 
+    <div id="addserver" class="collapse">
+      <h3>Add Server</h3>
+      <form class="form-horizontal" role="form" action="{% url 'addserver' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="control-label col-sm-1" for="server_name">Name:</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="server_name" id="server_name" placeholder="Enter server name (e.g. MainTV)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-1" for="server_host">Host:</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="server_host" id="server_host" placeholder="Enter host (e.g. 192.168.1.70)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-1" for="server_port">Port:</label>
+          <div class="col-sm-4">
+            <input type="number" class="form-control" name="server_port" id="server_port" placeholder="Enter port (e.g. 8080)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-1" for="server_username">Username:</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" name="server_username" id="server_username" placeholder="Enter server username">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-sm-1" for="server_password">Password:</label>
+          <div class="col-sm-4">
+            <input type="password" class="form-control" name="server_password" id="server_password" placeholder="Enter server password">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
+
+    <div id="removeserver" class="collapse">
+      <h3>Remove Server</h3>
+      <form class="form-horizontal" role="form" action="{% url 'removeserver' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group col-sm-4">
+          <select class="form-control" name="server_id">
+            {% for server in kodi_servers %}
+              <option value={{ server.id }}>{{ server }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-default">Remove</button>
+      </form>
+    </div>
 
   </div>
 {% endblock %}

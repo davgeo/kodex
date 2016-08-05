@@ -165,9 +165,21 @@ def GetTVShowList(server, context):
 def index(request, context):
   return render(request, 'main/index.html', context)
 
+def kodi(request):
+  return redirect(reverse('config'))
+
 @GetServerList
 def config(request, context):
   return render(request, 'main/kodi_config.html', context)
+
+@GetServer
+def pingserver(request, server, context):
+  status = KodiLookUp.Status(*server)
+
+  if status is 'Offline':
+    return HttpResponse(status=500)
+  else:
+    return HttpResponse(status=200)
 
 def addserver(request):
   try:
@@ -182,28 +194,14 @@ def addserver(request):
     AddServer(server_name,server_host,server_port,server_username,server_password)
   return redirect(reverse('config'))
 
-def removeserver(request, server_id):
-  RemoveServer(server_id)
+def removeserver(request):
+  try:
+    server_id = request.POST['server_id']
+  except KeyError:
+    pass
+  else:
+    RemoveServer(server_id)
   return redirect(reverse('config'))
-
-@GetServerList
-def kodi(request, context):
-  def ThreadWrapper(result, index, func, *args, **kwargs):
-    result[index] = func(*args, **kwargs)
-
-  statusList = ['X']*len(context['kodi_servers'])
-  activeThreads = []
-  for i, server in enumerate(context['kodi_servers']):
-    args = [statusList, i, KodiLookUp.Status] + list(server.conn())
-    t = threading.Thread(target=ThreadWrapper, args=args)
-    t.start()
-    activeThreads.append(t)
-
-  for thread in activeThreads:
-    thread.join()
-
-  context['kodi_server_list'] = [(s, statusList[i]) for i, s in enumerate(context['kodi_servers'])]
-  return render(request, 'main/kodi_index.html', context)
 
 @GetPlaylist
 @ServerDownRedirect

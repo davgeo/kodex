@@ -116,7 +116,7 @@ function getStatus() {
 
   $.get(url, function(data){
     // Progress bar
-    console.log(data)
+    console.log(data);
     $("#playerprogressbar").slider({value: data['percentage']});
 
     // Volume slider
