@@ -153,6 +153,11 @@ body {
   margin-bottom: 0.1em;
 }
 
+.hidden-link {
+  visibility:hidden;
+  display:none;
+}
+
 /*
  * Configurations for screen size
  * 992px corresponds to switched between

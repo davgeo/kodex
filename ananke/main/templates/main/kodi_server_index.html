@@ -2,6 +2,8 @@
 
 {% load staticfiles %}
 
+{% block overviewActive %}class="active"{% endblock %}
+
 {% block center %}
 <h2>{{ server }}</h2>
 {% if starred_movies %}{% include "main/kodi_starred_movie_section.html" %}{% endif %}

@@ -172,6 +172,11 @@ def kodi(request):
 def config(request, context):
   return render(request, 'main/kodi_config.html', context)
 
+@GetPlaylist
+@ServerDownNoRedirect
+def setserver(request, server, context):
+  return render(request, 'main/kodi_control_panel.html', context)
+
 @GetServer
 def pingserver(request, server, context):
   status = KodiLookUp.Status(*server)
@@ -474,9 +479,15 @@ def quit(request, server, context):
   return HttpResponseRedirect(reverse('kodi'))
 
 @GetServer
-def setvolume(request, server, context, volume):
-  KodiLookUp.Application_SetVolume(*server, volume=volume)
-  return HttpResponse(status=200)
+def setvolume(request, server, context):
+  try:
+    volume = request.GET['volume']
+  except:
+    pass
+  else:
+    KodiLookUp.Application_SetVolume(*server, volume=volume)
+  finally:
+    return HttpResponse(status=200)
 
 @GetServer
 def setprogress(request, server, context, percentage):

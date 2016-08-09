@@ -2,6 +2,13 @@
 
 {% load staticfiles %}
 
+{% block extraheader %}
+  <script src={% static 'js/kodi_base.js' %}></script>
+  <script src={% static 'js/kodi_control_panel.js' %}></script>
+  <script src={% static 'js/kodi_server.js' %}></script>
+  {% block kodiextraheader %}{% endblock %}
+{% endblock %}
+
 {% block appnav %}
   <nav class="navbar navbar-default navbar-fixed-top">
     <div class="navbar-header">
@@ -15,8 +22,7 @@
       </a>
     </div>
     <div class="collapse navbar-collapse" id="myAppNavbar">
-      <ul class="nav navbar-nav">
-        <li {% block overviewActive %}{% endblock %}><a href="{% url 'kodi' %}">Overview</a></li>
+      <ul class="nav navbar-nav navbar-left">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Servers <b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -26,14 +32,38 @@
           </ul>
         </li>
         {% if server %}
+          <li {% block overviewActive %}{% endblock %}><a href="{% url 'server' server.id %}">Overview</a></li>
           <li {% block tvActive %}{% endblock %}><a href="{% url 'tvindex' server.id %}"><i class="fa fa-television"></i> TV</a></li>
           <li {% block movieActive %}{% endblock %}><a href="{% url 'movies_index' server.id %}"><i class="fa fa-film"></i> Movies</a></li>
         {% else %}
+          <li class="disabled"><a>Overview</a></li>
           <li class="disabled"><a><i class="fa fa-television"></i> TV</a></li>
           <li class="disabled"><a><i class="fa fa-film"></i> Movies</a></li>
         {% endif %}
-        <li {% block configActive %}{% endblock %}><a href="{% url 'config' %}">Configure</a></li>
       </ul>
+      <ul class="nav navbar-nav navbar-right end-of-navbar">
+        <li {% block configActive %}{% endblock %}><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i></a></li>
+      </ul>
+      <button class="nav navbar-nav navbar-right btn btn-primary btn-xs" id="navbar-serverstatus-button"><i class="fa fa-question-circle" id="navbar-serverstatus-icon"></i></button>
+      <form class="navbar-form navbar-right" role="form" action="#" method="post">
+        {% csrf_token %}
+        <select class="form-control navbar-server-select" name="server_id">
+          <option disabled selected value>Select server</option>
+          {% for server in kodi_servers %}
+            <option value={{ server.id }}>{{ server }}</option>
+          {% endfor %}
+        </select>
+      </form>
     </div>
   </nav>
+{% endblock %}
+
+{% block content %}
+  <div class="col-lg-3 col-lg-push-9 col-md-3 col-md-push-9 col-sm-12 col-xs-12 no-padding">
+    {% include "main/kodi_control_panel.html" %}
+  </div>
+
+  <div class="col-lg-9 col-lg-pull-3 col-md-9 col-md-pull-3 col-sm-12 col-xs-12">
+    {% block center %}{% endblock %}
+  </div>
 {% endblock %}

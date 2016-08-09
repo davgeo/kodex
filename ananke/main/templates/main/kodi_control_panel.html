@@ -1,80 +1,59 @@
 {% load staticfiles %}
+
 <div class="control-panel-wrapper" data-spy="affix" data-offset-top="1">
-  <ul class="list-group">
-    <li class="list-group-item playercontrol-wrapper">
-      <div class="playercontrol-heading">
-        <span class="dropdown">
-          <button class="dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-          <ul class="dropdown-menu">
-            {% for altserver in kodi_servers %}
-              {% if altserver != server %}
-                <li>
-                  {% if episodeid and season and showid %}
-                    <a href="{% url 'tvepisode' altserver.id showid season episodeid %}">
-                  {% elif season and tvshow.tvshowid %}
-                    <a href="{% url 'tvseason' altserver.id tvshow.tvshowid season %}">
-                  {% elif tvshow.tvshowid %}
-                    <a href="{% url 'tvshow' altserver.id tvshow.tvshowid %}">
-                  {% elif tvshows %}
-                    <a href="{% url 'tvindex' altserver.id %}">
-                  {% elif movieid %}
-                    <a href="{% url 'movie' altserver.id movieid %}">
-                  {% elif movies %}
-                    <a href="{% url 'movies_index' altserver.id %}">
-                  {% else %}
-                    <a href="{% url 'server' altserver.id %}">
-                  {% endif %}
-                  {{ altserver }}</a>
-                </li>
+  {% if server %}
+    <a href="{% url 'getstatus' server.id %}" id="server-status-link" class="hidden-link"></a>
+    <a href="{% url 'getplaylist' server.id %}" id="server-playlist-link" class="hidden-link"></a>
+    <ul class="list-group">
+      <li class="list-group-item playercontrol-wrapper">
+        <div class="playercontrol-heading">
+          <span class="dropdown pull-right">
+            <button id='playercontrol_dropdown' class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+            <ul class="dropdown-menu">
+              <li><a data-toggle="collapse" data-target="#playercontrols" id="toggleplayercontrols"><i id="toggleplayercontrolsicon" class="fa fa-chevron-up"></i> Toggle player controls</a></li>
+              <li><a data-toggle="collapse" data-target="#playlist" id="toggleplaylist"><i id="toggleplaylisticon" class="fa fa-chevron-up"></i> Toggle playlist</a></li>
+              <hr class="hr-list">
+              <li class='subtitles'><a href="{% url 'togglesubtitles' server.id %}" id="toggle-subtitles-link"><i class="fa fa-commenting"></i> Toggle Subtitles</a></li>
+              <li class='subtitles'><a href="{% url 'cyclesubtitles' server.id %}"><i class="fa fa-commenting"></i> Cycle Subtitles</a></li>
+              <li class='videolibscan'><a href="{% url 'videoscan' server.id %}"><i class="fa fa-file-video-o"></i> Video Library Scan</a></li>
+              <li class='playlistclear'><a href="{% url 'clear' server.id %}"><i class="fa fa-eraser"></i> Clear playlist</a></li>
+              <hr class="hr-list">
+              <li><a href="{% url 'quit' server.id %}"><i class="fa fa-warning"></i> Close Kodi</a></li>
+            </ul>
+          </span>
+        </div>
+        <div id="playercontrols" class="collapse in">
+          <div class="volumecontrol">
+            <div class="col-xs-2 center-icon mute">
+              {% if properties.muted %}
+                <a href="{% url 'mute' server.id %}" id="mute-link"><i class="fa fa-volume-off fa-2x center-icon" id="mute"></i></a>
+              {% else %}
+                <a href="{% url 'mute' server.id %}" id="mute-link"><i class="fa fa-volume-up fa-2x center-icon" id="mute"></i></a>
               {% endif %}
-            {% endfor %}
-          </ul>
-        </span>
-        <button><a href="{% url 'server' server.id %}">{{ server }}</a></button>
-        <button id="statusbutton" class="btn btn-success btn-xs"><i id="statusicon" class="fa fa-check"></i></button>
-        <span class="dropdown pull-right">
-          <button id='playercontrol_dropdown' class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-          <ul class="dropdown-menu">
-            <li><a data-toggle="collapse" data-target="#playercontrols" id="toggleplayercontrols"><i id="toggleplayercontrolsicon" class="fa fa-chevron-up"></i> Toggle player controls</a></li>
-            <li><a data-toggle="collapse" data-target="#playlist" id="toggleplaylist"><i id="toggleplaylisticon" class="fa fa-chevron-up"></i> Toggle playlist</a></li>
-            <hr class="hr-list">
-            <li class='subtitles'><a href="{{request.get_full_path}}_togglesubtitles"><i class="fa fa-commenting"></i> Toggle Subtitles</a></li>
-            <li class='subtitles'><a href="{{request.get_full_path}}_cyclesubtitles"><i class="fa fa-commenting"></i> Cycle Subtitles</a></li>
-            <li class='videolibscan'><a href="{{request.get_full_path}}_videoscan"><i class="fa fa-file-video-o"></i> Video Library Scan</a></li>
-            <li class='playlistclear'><a href="{{request.get_full_path}}_clear"><i class="fa fa-eraser"></i> Clear playlist</a></li>
-            <hr class="hr-list">
-            <li><a href="{{request.get_full_path}}_quit"><i class="fa fa-warning"></i> Close Kodi</a></li>
-          </ul>
-        </span>
-      </div>
-      <div id="playercontrols" class="collapse in">
-        <div class="volumecontrol">
-          <div class="col-xs-2 center-icon mute">
-            {% if properties.muted %}
-              <a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-off fa-2x center-icon" id="mute"></i></a>
-            {% else %}
-              <a href="{{request.get_full_path}}_mute"><i class="fa fa-volume-up fa-2x center-icon" id="mute"></i></a>
-            {% endif %}
+            </div>
+            <div class="col-xs-10">
+              <input class="slider" type="range" id="volslider" min="0" max="100" value={{ properties.volume }} step="1"></input>
+              <a href="{% url 'setvolume' server.id %}" id="volslider-link" class="hidden-link"></a>
+            </div>
           </div>
-          <div class="col-xs-10"><input class="slider" type="range" id="volslider" min="0" max="100" value={{ properties.volume }} step="1" onchange="volumeControl()"></input></div>
-        </div>
-        <div class="playercontrol">
-          <div class="col-xs-2 center-icon restart"><a href="{{request.get_full_path}}_restart"><i class="fa fa-fast-backward fa-2x center-icon"></i></a></div>
-          <div class="col-xs-2 center-icon backward"><a href="{{request.get_full_path}}_backward"><i class="fa fa-backward fa-2x center-icon"></i></a></div>
-          <div class="col-xs-2 center-icon stop"><a href="{{request.get_full_path}}_stop"><i class="fa fa-stop fa-2x center-icon"></i></a></div>
-          <div class="col-xs-2 center-icon playpause">
-            {% if player and player.speed != 0 %}
-              <a href="{{request.get_full_path}}_playpause"><i class="fa fa-pause fa-2x center-icon" id="playpause"></i></a>
-            {% else %}
-              <a href="{{request.get_full_path}}_playpause"><i class="fa fa-play fa-2x center-icon" id="playpause"></i></a>
-            {% endif %}
+          <div class="playercontrol">
+            <div class="col-xs-2 center-icon restart"><a href="{% url 'restart' server.id %}"><i class="fa fa-fast-backward fa-2x center-icon"></i></a></div>
+            <div class="col-xs-2 center-icon backward"><a href="{% url 'backward' server.id %}"><i class="fa fa-backward fa-2x center-icon"></i></a></div>
+            <div class="col-xs-2 center-icon stop"><a href="{% url 'stop' server.id %}"><i class="fa fa-stop fa-2x center-icon"></i></a></div>
+            <div class="col-xs-2 center-icon playpause">
+              {% if player and player.speed != 0 %}
+                <a href="{% url 'playpause' server.id %}" id="playpause-link"><i class="fa fa-pause fa-2x center-icon" id="playpause"></i></a>
+              {% else %}
+                <a href="{% url 'playpause' server.id %}" id="playpause-link"><i class="fa fa-play fa-2x center-icon" id="playpause"></i></a>
+              {% endif %}
+            </div>
+            <div class="col-xs-2 center-icon forward"><a href="{% url 'forward' server.id %}"><i class="fa fa-forward fa-2x center-icon"></i></a></div>
+            <div class="col-xs-2 center-icon skip"><a href="{% url 'skip' server.id %}"><i class="fa fa-fast-forward fa-2x center-icon"></i></a></div>
           </div>
-          <div class="col-xs-2 center-icon forward"><a href="{{request.get_full_path}}_forward"><i class="fa fa-forward fa-2x center-icon"></i></a></div>
-          <div class="col-xs-2 center-icon skip"><a href="{{request.get_full_path}}_skip"><i class="fa fa-fast-forward fa-2x center-icon"></i></a></div>
+          <div class="playerprogressbar" id="playerprogressbar"></div>
         </div>
-        <div class="playerprogressbar" id="playerprogressbar"></div>
-      </div>
-    </li>
-    {% include "main/kodi_playlist_panel.html" %}
-  </ul>
+      </li>
+      {% include "main/kodi_playlist_panel.html" %}
+    </ul>
+  {% endif %}
 </div>

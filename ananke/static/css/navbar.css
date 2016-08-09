@@ -19,6 +19,34 @@
   height: 30px;
 }
 
+.end-of-navbar {
+  padding-right: 15px;
+}
+
+.navbar-form {
+  height: 30px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.navbar-form > .form-control {
+  height: 28px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  font-size: 0.8em;
+}
+
+#navbar-serverstatus-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
 /* Colour scheme */
 
 .navbar-default {
