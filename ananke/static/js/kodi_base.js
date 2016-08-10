@@ -11,8 +11,13 @@ function updateNavURL(id, prev_server, server) {
 /* ------ */
 /* Execute processes after page DOM is ready */
 $(function() {
+  var current_server_select;
 
-  var current_server_select = '0'
+  if($(".navbar-server-select").val() == null) {
+    current_server_select = '0'
+  } else {
+    current_server_select = $(".navbar-server-select").val().toString();
+  }
 
   $(".navbar-server-select").change(function() {
     var server = $(".navbar-server-select").val().toString();
