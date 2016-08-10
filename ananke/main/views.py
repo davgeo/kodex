@@ -173,8 +173,9 @@ def config(request, context):
   return render(request, 'main/kodi_config.html', context)
 
 @GetPlaylist
-@ServerDownNoRedirect
-def setserver(request, server, context):
+def setserver(request, server, context, server_down):
+  if server_down:
+    context = {}
   return render(request, 'main/kodi_control_panel.html', context)
 
 @GetServer

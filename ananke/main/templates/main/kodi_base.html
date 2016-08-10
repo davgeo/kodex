@@ -23,22 +23,14 @@
     </div>
     <div class="collapse navbar-collapse" id="myAppNavbar">
       <ul class="nav navbar-nav navbar-left">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Servers <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            {% for server in kodi_servers %}
-              <li><a href="{% url 'server' server.id %}">{{ server }}</a></li>
-            {% endfor %}
-          </ul>
-        </li>
         {% if server %}
           <li {% block overviewActive %}{% endblock %}><a href="{% url 'server' server.id %}">Overview</a></li>
           <li {% block tvActive %}{% endblock %}><a href="{% url 'tvindex' server.id %}"><i class="fa fa-television"></i> TV</a></li>
           <li {% block movieActive %}{% endblock %}><a href="{% url 'movies_index' server.id %}"><i class="fa fa-film"></i> Movies</a></li>
         {% else %}
-          <li class="disabled"><a>Overview</a></li>
-          <li class="disabled"><a><i class="fa fa-television"></i> TV</a></li>
-          <li class="disabled"><a><i class="fa fa-film"></i> Movies</a></li>
+          <li class="kodi-navbar-button disabled"><a id="kodi-navbar-overview-link" href="{% url 'server' 0 %}">Overview</a></li>
+          <li class="kodi-navbar-button disabled"><a id="kodi-navbar-tv-link" href="{% url 'tvindex' 0 %}"><i class="fa fa-television"></i> TV</a></li>
+          <li class="kodi-navbar-button disabled"><a id="kodi-navbar-movie-link" href="{% url 'movies_index' 0 %}"><i class="fa fa-film"></i> Movies</a></li>
         {% endif %}
       </ul>
       <ul class="nav navbar-nav navbar-right end-of-navbar">

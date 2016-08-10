@@ -78,6 +78,8 @@ function getPlaylist() {
     }).fail(function() {
       getPlaylist_running = false;
     });
+  } else {
+    getPlaylist_running = false;
   }
 }
 
@@ -183,9 +185,17 @@ function getStatus() {
     }).fail(function() {
       // If getstatus failed update status button
       statusButtonToggle(3, icon, button);
+      getStatus_running = false;
     });
   } else {
-    statusButtonToggle(0, icon, button);
+    var server = $(".navbar-server-select").val();
+    console.log(server);
+    if($(".navbar-server-select").val() == null) {
+      statusButtonToggle(0, icon, button);
+    } else {
+      statusButtonToggle(3, icon, button);
+    }
+    getStatus_running = false;
   }
 }
 
