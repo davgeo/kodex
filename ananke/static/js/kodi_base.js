@@ -20,24 +20,30 @@ $(function() {
   }
 
   $(".navbar-server-select").change(function() {
-    var server = $(".navbar-server-select").val().toString();
-    var url = document.URL + "_setserver_" + server;
+    if($(".kodi-navbar-server-url").length) {
+      var url = $(this, ".kodi-navbar-server-url").val().toString();
+      console.log(url);
+      window.location.replace(url);
+    } else {
+      var server = $(".navbar-server-select").val().toString();
+      var url = document.URL + "_setserver_" + server;
 
-    // Update navbar links
-    updateNavURL("#kodi-navbar-overview-link", current_server_select, server);
-    updateNavURL("#kodi-navbar-tv-link", current_server_select, server);
-    updateNavURL("#kodi-navbar-movie-link", current_server_select, server);
+      // Update navbar links
+      updateNavURL("#kodi-navbar-overview-link", current_server_select, server);
+      updateNavURL("#kodi-navbar-tv-link", current_server_select, server);
+      updateNavURL("#kodi-navbar-movie-link", current_server_select, server);
 
-    // Enable navbar links
-    $(".kodi-navbar-button").removeClass("disabled");
+      // Enable navbar links
+      $(".kodi-navbar-button").removeClass("disabled");
 
-    // Load control panel
-    console.log(url);
-    $.get(url, function(data){
-      $(".control-panel-wrapper").replaceWith(data);
-      InitialiseControlPanel();
-    })
+      // Load control panel
+      console.log(url);
+      $.get(url, function(data){
+        $(".control-panel-wrapper").replaceWith(data);
+        InitialiseControlPanel();
+      })
 
-    current_server_select = server;
+      current_server_select = server;
+    }
   });
 });

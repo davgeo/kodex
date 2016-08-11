@@ -46,10 +46,30 @@
             <option disabled selected>Select server</option>
           {% endif %}
           {% for s in kodi_servers %}
-            {% if server == s %}
-              <option selected value={{ s.id }}>{{ s }}</option>
+            {% if server %}
+              {% if server == s %}
+                <option selected value={{ s.id }}>{{ s }}
+              {% else %}
+                <option class="kodi-navbar-server-url" value=
+                  {% if activeepisode.episodeid and activeepisode.season and activeepisode.tvshowid %}
+                    "{% url 'tvepisode' s.id tvshow.tvshowid season activeepisode.episodeid %}"
+                  {% elif season and tvshow.tvshowid %}
+                    "{% url 'tvseason' s.id tvshow.tvshowid season %}"
+                  {% elif tvshow.tvshowid %}
+                    "{% url 'tvshow' s.id tvshow.tvshowid %}"
+                  {% elif tvshows %}
+                    "{% url 'tvindex' s.id %}"
+                  {% elif movieid %}
+                    "{% url 'movie' s.id movieid %}"
+                  {% elif movies %}
+                    "{% url 'movies_index' s.id %}"
+                  {% else %}
+                    "{% url 'server' s.id %}"
+                  {% endif %}
+                >{{ s }}</option>
+              {% endif %}
             {% else %}
-              <option value={{ s.id }}>{{ s }}</option>
+              <option value={{ s.id }}>{{ s }}
             {% endif %}
           {% endfor %}
         </select>

@@ -189,7 +189,6 @@ function getStatus() {
     });
   } else {
     var server = $(".navbar-server-select").val();
-    console.log(server);
     if($(".navbar-server-select").val() == null) {
       statusButtonToggle(0, icon, button);
     } else {
