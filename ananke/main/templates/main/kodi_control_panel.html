@@ -6,22 +6,6 @@
     <a href="{% url 'getplaylist' server.id %}" id="server-playlist-link" class="hidden-link"></a>
     <ul class="list-group">
       <li class="list-group-item playercontrol-wrapper">
-        <div class="playercontrol-heading">
-          <span class="dropdown pull-right">
-            <button id='playercontrol_dropdown' class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-            <ul class="dropdown-menu">
-              <li><a data-toggle="collapse" data-target="#playercontrols" id="toggleplayercontrols"><i id="toggleplayercontrolsicon" class="fa fa-chevron-up"></i> Toggle player controls</a></li>
-              <li><a data-toggle="collapse" data-target="#playlist" id="toggleplaylist"><i id="toggleplaylisticon" class="fa fa-chevron-up"></i> Toggle playlist</a></li>
-              <hr class="hr-list">
-              <li class='subtitles'><a href="{% url 'togglesubtitles' server.id %}" id="toggle-subtitles-link"><i class="fa fa-commenting"></i> Toggle Subtitles</a></li>
-              <li class='subtitles'><a href="{% url 'cyclesubtitles' server.id %}"><i class="fa fa-commenting"></i> Cycle Subtitles</a></li>
-              <li class='videolibscan'><a href="{% url 'videoscan' server.id %}"><i class="fa fa-file-video-o"></i> Video Library Scan</a></li>
-              <li class='playlistclear'><a href="{% url 'clear' server.id %}"><i class="fa fa-eraser"></i> Clear playlist</a></li>
-              <hr class="hr-list">
-              <li><a href="{% url 'quit' server.id %}"><i class="fa fa-warning"></i> Close Kodi</a></li>
-            </ul>
-          </span>
-        </div>
         <div id="playercontrols" class="collapse in">
           <div class="volumecontrol">
             <div class="col-xs-2 center-icon mute">

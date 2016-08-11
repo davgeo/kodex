@@ -36,6 +36,22 @@
       <ul class="nav navbar-nav navbar-right end-of-navbar">
         <li {% block configActive %}{% endblock %}><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i></a></li>
       </ul>
+      <span class="nav navbar-nav navbar-right" id="navbar-control-panel-dropdown">
+        <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+        <ul class="dropdown-menu">
+          <li><a data-toggle="collapse" data-target="#playercontrols"><i class="fa fa-chevron-up"></i> Toggle player controls</a></li>
+          <li><a data-toggle="collapse" data-target="#playlist"><i class="fa fa-chevron-up"></i> Toggle playlist</a></li>
+          <hr class="hr-list">
+          {% if server %}
+            <li><a href="{% url 'togglesubtitles' server.id %}"><i class="fa fa-commenting"></i> Toggle Subtitles</a></li>
+            <li><a href="{% url 'cyclesubtitles' server.id %}"><i class="fa fa-commenting"></i> Cycle Subtitles</a></li>
+            <li><a href="{% url 'videoscan' server.id %}"><i class="fa fa-file-video-o"></i> Video Library Scan</a></li>
+            <li><a href="{% url 'clear' server.id %}"><i class="fa fa-eraser"></i> Clear playlist</a></li>
+            <hr class="hr-list">
+            <li><a href="{% url 'quit' server.id %}"><i class="fa fa-warning"></i> Close Kodi</a></li>
+          {% endif %}
+        </ul>
+      </span>
       <button class="nav navbar-nav navbar-right btn btn-primary btn-xs" id="navbar-serverstatus-button"><i class="fa fa-question-circle" id="navbar-serverstatus-icon"></i></button>
       <form class="navbar-form navbar-right" role="form" action="#" method="post">
         {% csrf_token %}
