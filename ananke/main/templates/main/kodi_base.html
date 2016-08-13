@@ -10,50 +10,23 @@
 {% endblock %}
 
 {% block appnav %}
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myAppNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="{% url 'kodi' %}">
-        <img src="{% static 'images' %}/kodex_logo.png">
-      </a>
-    </div>
-    <div class="collapse navbar-collapse" id="myAppNavbar">
-      <ul class="nav navbar-nav navbar-left">
-        {% if server %}
-          <li {% block overviewActive %}{% endblock %}><a id="kodi-navbar-overview-link" href="{% url 'server' server.id %}">Overview</a></li>
-          <li {% block tvActive %}{% endblock %}><a id="kodi-navbar-tv-link" href="{% url 'tvindex' server.id %}"><i class="fa fa-television"></i> TV</a></li>
-          <li {% block movieActive %}{% endblock %}><a id="kodi-navbar-movie-link" href="{% url 'movies_index' server.id %}"><i class="fa fa-film"></i> Movies</a></li>
-        {% else %}
-          <li class="kodi-navbar-button disabled"><a id="kodi-navbar-overview-link" href="{% url 'server' 0 %}">Overview</a></li>
-          <li class="kodi-navbar-button disabled"><a id="kodi-navbar-tv-link" href="{% url 'tvindex' 0 %}"><i class="fa fa-television"></i> TV</a></li>
-          <li class="kodi-navbar-button disabled"><a id="kodi-navbar-movie-link" href="{% url 'movies_index' 0 %}"><i class="fa fa-film"></i> Movies</a></li>
-        {% endif %}
-      </ul>
-      <ul class="nav navbar-nav navbar-right end-of-navbar">
-        <li {% block configActive %}{% endblock %}><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i></a></li>
-      </ul>
-      <span class="nav navbar-nav navbar-right" id="navbar-control-panel-dropdown">
-        <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-        <ul class="dropdown-menu">
-          <li><a data-toggle="collapse" data-target="#playercontrols"><i class="fa fa-chevron-up"></i> Toggle player controls</a></li>
-          <li><a data-toggle="collapse" data-target="#playlist"><i class="fa fa-chevron-up"></i> Toggle playlist</a></li>
-          <hr class="hr-list">
-          {% if server %}
-            <li><a href="{% url 'togglesubtitles' server.id %}"><i class="fa fa-commenting"></i> Toggle Subtitles</a></li>
-            <li><a href="{% url 'cyclesubtitles' server.id %}"><i class="fa fa-commenting"></i> Cycle Subtitles</a></li>
-            <li><a href="{% url 'videoscan' server.id %}"><i class="fa fa-file-video-o"></i> Video Library Scan</a></li>
-            <li><a href="{% url 'clear' server.id %}"><i class="fa fa-eraser"></i> Clear playlist</a></li>
-            <hr class="hr-list">
-            <li><a href="{% url 'quit' server.id %}"><i class="fa fa-warning"></i> Close Kodi</a></li>
-          {% endif %}
-        </ul>
-      </span>
-      <button class="nav navbar-nav navbar-right btn btn-primary btn-xs" id="navbar-serverstatus-button"><i class="fa fa-question-circle" id="navbar-serverstatus-icon"></i></button>
-      <form class="navbar-form navbar-right" role="form" action="#" method="post">
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+  <!-- Left hand side (inc title) -->
+  <div class="navbar-header pull-left">
+    <a class="navbar-brand" href="{% url 'kodi' %}">
+      <img src="{% static 'images' %}/kodex_logo.png">
+    </a>
+    <!-- Required bootstrap placeholder for the collapsed menu -->
+    <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
+      <i class="fa fa-bars fa-lg"></i>
+    </button>
+  </div>
+
+  <!-- Non-collapsing right-side menu items -->
+  <div class="navbar-header pull-right">
+    <!-- Server select form -->
+    <ul class="nav pull-left" id="navbar-serverselect-form">
+      <form class="navbar-form" role="form" action="#" method="post">
         {% csrf_token %}
         <select class="form-control navbar-server-select" name="server_id">
           {% if server %}
@@ -90,8 +63,48 @@
           {% endfor %}
         </select>
       </form>
-    </div>
-  </nav>
+    </ul>
+    <!-- Server status button -->
+    <ul class="nav pull-right">
+      <button class="nav navbar-nav navbar-right btn btn-primary btn-xs" id="navbar-serverstatus-button">
+        <i class="fa fa-question-circle" id="navbar-serverstatus-icon"></i>
+      </button>
+    </ul>
+    <!-- Player control dropdown -->
+    <ul class="nav pull-right" id="navbar-control-panel-dropdown">
+      <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+      <ul class="dropdown-menu">
+        <li><a data-toggle="collapse" data-target="#playercontrols"><i class="fa fa-chevron-up"></i> Toggle player controls</a></li>
+        <li><a data-toggle="collapse" data-target="#playlist"><i class="fa fa-chevron-up"></i> Toggle playlist</a></li>
+        <hr class="hr-list">
+        {% if server %}
+          <li><a href="{% url 'togglesubtitles' server.id %}"><i class="fa fa-commenting"></i> Toggle Subtitles</a></li>
+          <li><a href="{% url 'cyclesubtitles' server.id %}"><i class="fa fa-commenting"></i> Cycle Subtitles</a></li>
+          <li><a href="{% url 'videoscan' server.id %}"><i class="fa fa-file-video-o"></i> Video Library Scan</a></li>
+          <li><a href="{% url 'clear' server.id %}"><i class="fa fa-eraser"></i> Clear playlist</a></li>
+          <hr class="hr-list">
+          <li><a href="{% url 'quit' server.id %}"><i class="fa fa-warning"></i> Close Kodi</a></li>
+        {% endif %}
+      </ul>
+    </ul>
+  </div>
+
+  <!-- Collapsing menu items -->
+  <div class="collapse navbar-collapse navbar-left">
+    <ul class="nav navbar-nav">
+      {% if server %}
+        <li {% block overviewActive %}{% endblock %}><a id="kodi-navbar-overview-link" href="{% url 'server' server.id %}"><i class="fa fa-home"></i> Home</a></li>
+        <li {% block tvActive %}{% endblock %}><a id="kodi-navbar-tv-link" href="{% url 'tvindex' server.id %}"><i class="fa fa-television"></i> TV</a></li>
+        <li {% block movieActive %}{% endblock %}><a id="kodi-navbar-movie-link" href="{% url 'movies_index' server.id %}"><i class="fa fa-film"></i> Movies</a></li>
+      {% else %}
+        <li class="kodi-navbar-button disabled"><a id="kodi-navbar-overview-link" href="{% url 'server' 0 %}"><i class="fa fa-home"></i> Home</a></li>
+        <li class="kodi-navbar-button disabled"><a id="kodi-navbar-tv-link" href="{% url 'tvindex' 0 %}"><i class="fa fa-television"></i> TV</a></li>
+        <li class="kodi-navbar-button disabled"><a id="kodi-navbar-movie-link" href="{% url 'movies_index' 0 %}"><i class="fa fa-film"></i> Movies</a></li>
+      {% endif %}
+        <li {% block configActive %}{% endblock %}><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i> Config</a></li>
+    </ul>
+  </div>
+</nav>
 {% endblock %}
 
 {% block content %}

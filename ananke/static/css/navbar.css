@@ -11,6 +11,10 @@
   height: 30px;
 }
 
+.navbar-fixed-top {
+  z-index: 9999;
+}
+
 .navbar-header > .navbar-brand {
   padding-top: 0px;
 }
@@ -54,6 +58,47 @@
   margin-left: 1px;
   padding-right: 1px;
   padding-left: 1px;
+}
+
+@media (max-width: 767px) {
+  .navbar-toggle {
+    height: 26px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: rgba(235,245,247,0.9);
+  }
+
+  .navbar-form {
+    height: 30px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    border-style: none;
+  }
+
+  .navbar-form > .form-control {
+    height: 28px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    font-size: 0.8em;
+  }
+
+  .navbar-collapse {
+    margin-top: 32px;
+    border-style: none;
+  }
+
 }
 
 /* Colour scheme */
