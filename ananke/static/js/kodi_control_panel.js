@@ -238,6 +238,11 @@ function InitialiseControlPanel() {
     toggleIcon("#toggleplayercontrolsicon", 'fa-chevron-up', 'fa-chevron-down');
   });
 
+  // Disable clickability of disable links
+  $(".nav li.disabled a").click(function() {
+    return false;
+  });
+
   /* Control panel */
   dropdownControlPlaylist(".playlistclear a"); // Clear playlist
   dropdownControlBasic(".videolibscan a"); // Video library scan
