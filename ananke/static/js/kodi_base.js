@@ -33,8 +33,18 @@ $(function() {
       updateNavURL("#kodi-navbar-tv-link", current_server_select, server);
       updateNavURL("#kodi-navbar-movie-link", current_server_select, server);
 
+      updateNavURL("#kodi-navbar-togglesubtitles-link", current_server_select, server);
+      updateNavURL("#kodi-navbar-cyclesubtitles-link", current_server_select, server);
+      updateNavURL("#kodi-navbar-videoscan-link", current_server_select, server);
+      updateNavURL("#kodi-navbar-clear-link", current_server_select, server);
+      updateNavURL("#kodi-navbar-quit-link", current_server_select, server);
+
       // Enable navbar links
       $(".kodi-navbar-button").removeClass("disabled");
+      $(".disable_href").removeClass("disabled");
+
+      // Enable navbar playcontrol dropdown button
+      $("#kodi-navbar-playcontrol-dropdown-button").removeAttr("disabled")
 
       // Load control panel
       console.log(url);

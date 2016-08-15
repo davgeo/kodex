@@ -124,7 +124,7 @@ function dropdownControlBasic(id) {
   $(id).click(function() {
     var url = this.href;
     console.log(url);
-    $('#playercontrol_dropdown').dropdown('toggle');
+    $('#kodi-navbar-playcontrol-dropdown-button').dropdown('toggle');
     $.get(url);
     return false;
   });
@@ -135,7 +135,7 @@ function dropdownControlPlaylist(id) {
   $(id).click(function() {
     var url = this.href;
     console.log(url);
-    $('#playercontrol_dropdown').dropdown('toggle');
+    $('#kodi-navbar-playcontrol-dropdown-button').dropdown('toggle');
     $.get(url, function(data) {
       updatePlaylist(data);
     });
@@ -206,6 +206,13 @@ function getStatusWrapper() {
   }
 }
 
+/* Initialise navbar */
+function InitialiseNavbar() {
+  dropdownControlPlaylist(".playlistclear a"); // Clear playlist
+  dropdownControlBasic(".videolibscan a"); // Video library scan
+  dropdownControlBasic(".subtitles a"); // Subtitles
+}
+
 /* Initialise control panel */
 function InitialiseControlPanel() {
   // Initialise player progress bar
@@ -239,17 +246,14 @@ function InitialiseControlPanel() {
   });
 
   // Disable clickability of disable links
-  $(".nav li.disabled a").click(function() {
-    return false;
+  $(".disable_href").click(function() {
+    if($(".disable_href").hasClass('disabled')) {
+      return false;
+    }
   });
 
   /* Control panel */
-  dropdownControlPlaylist(".playlistclear a"); // Clear playlist
-  dropdownControlBasic(".videolibscan a"); // Video library scan
-  dropdownControlBasic(".subtitles a"); // Subtitles
-
   buttonControlToggle(".mute a", 'fa-volume-up', 'fa-volume-off'); // Mute
-
   buttonControlToggle(".playpause a", 'fa-play', 'fa-pause'); // Playpause
   buttonControlPlaylistIcon(".stop a", '.playercontrol.playpause', 'fa-pause', 'fa-play'); // Stop
   buttonControlBasic(".forward a"); // Forward
@@ -310,8 +314,8 @@ $(document).on("keypress", function (e) {
   }
   else if(e.which == 115) {
     // s
-    if($("#toggle-subtitles-link").length) {
-      var url = $("#toggle-subtitles-link").attr('href');
+    if($("#kodi-navbar-togglesubtitles-link").length) {
+      var url = $("#kodi-navbar-togglesubtitles-link").attr('href');
       $.get(url);
     }
     return false;
@@ -320,5 +324,6 @@ $(document).on("keypress", function (e) {
 
 /* Execute processes after page DOM is ready */
 $(function() {
+  InitialiseNavbar();
   InitialiseControlPanel();
 });
