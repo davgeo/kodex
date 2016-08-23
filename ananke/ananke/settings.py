@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -19,14 +20,29 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7mhw-qi9+k3u*mr81dl!38$ua^j--yr!jc(epp*4fvvd)a7%r)'
+# SECRET KEY: Generate unique key for new project
+def generate_secret_key(filePath):
+    from django.utils.crypto import get_random_string
+    chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+    secret_key_str = "SECRET_KEY = '{}'".format(get_random_string(50, chars))
+    with open(filePath, 'w') as f:
+        f.write(secret_key_str)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+try:
+    from .secret_key import *
+except ImportError:
+    SETTINGS_DIR=os.path.abspath(os.path.dirname(__file__))
+    generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
+    from .secret_key import *
 
-ALLOWED_HOSTS = []
+# DEBUG: Disable if special isdevserver file does not exist
+DEBUG_FILE=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'isdevserver')
+if os.path.exists(DEBUG_FILE):
+    DEBUG = True
+else:
+    DEBUG = False
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.*']
 
 # Application definition
 

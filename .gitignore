@@ -6,3 +6,6 @@
 
 # Database files
 *.sqlite3
+
+# Secret Key file
+secret_key.py
