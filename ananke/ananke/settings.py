@@ -36,11 +36,23 @@ except ImportError:
     from .secret_key import *
 
 # DEBUG: Disable if special isdevserver file does not exist
+# This also controls static file deployment
+STATIC_URL = '/static/'
+STATIC_BASE = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = (STATIC_BASE,)
+
 DEBUG_FILE=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'isdevserver')
 if os.path.exists(DEBUG_FILE):
     DEBUG = True
 else:
     DEBUG = False
+    STATIC_ROOT = STATIC_BASE
+
+
+
+
+
+
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.*']
 
@@ -112,13 +124,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 # Logging
 LOGGING = {
