@@ -48,16 +48,9 @@ else:
     DEBUG = False
     STATIC_ROOT = STATIC_BASE
 
-
-
-
-
-
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.*']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
