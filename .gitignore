@@ -9,3 +9,6 @@
 
 # Secret Key file
 secret_key.py
+
+# Development server file
+isdevserver
