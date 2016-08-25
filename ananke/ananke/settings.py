@@ -24,16 +24,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def generate_secret_key(filePath):
     from django.utils.crypto import get_random_string
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-    secret_key_str = "SECRET_KEY = '{}'".format(get_random_string(50, chars))
+    secret_key = get_random_string(50, chars)
+    secret_key_str = "SECRET_KEY = '{}'".format(secret_key)
     with open(filePath, 'w') as f:
         f.write(secret_key_str)
+    return secret_key
 
 try:
     from .secret_key import *
 except ImportError:
     SETTINGS_DIR=os.path.abspath(os.path.dirname(__file__))
-    generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
-    from .secret_key import *
+    SECRET_KEY=generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
 
 # DEBUG: Disable if special isdevserver file does not exist
 # This also controls static file deployment
