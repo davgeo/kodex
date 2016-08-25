@@ -3,7 +3,7 @@ Download Manager README
 
 To run this script:
 
-python3 ananke.py --arg1 --arg2
+python3 kodex.py --arg1 --arg2
 
 Use --help to see all available arguments
 
@@ -40,7 +40,7 @@ This needs a django supporting web server.
 * Python Gunicorn package (Suggested)
 
 Add start-on-boot script:
-* Copy ananke.sh to /usr/local/etc/rc.d
+* Copy kodex.sh to /usr/local/etc/rc.d
 
 -----------------------------------------------------
 

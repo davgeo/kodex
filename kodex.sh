@@ -1,7 +1,7 @@
 #!/bin/sh
-# Synology DSM bootup script for Gunicorn webserver running Ananke
-PACKAGE="ananke"
-EXEC_DIR="/volume1/scripts/ananke/ananke"
+# Synology DSM bootup script for Gunicorn webserver running Kodex
+PACKAGE="kodex"
+EXEC_DIR="/volume1/scripts/kodex/kodex"
 
 WSGI_EXEC="${PACKAGE}.wsgi"
 PID_FILE="/var/run/${PACKAGE}.pid"
