@@ -1,4 +1,4 @@
-{% extends "main/kodi_server_base.html" %}
+{% extends "kodidj/kodi_server_base.html" %}
 
 {% load staticfiles %}
 
@@ -6,8 +6,8 @@
 
 {% block center %}
 <h2>{{ server }}</h2>
-{% if starred_movies %}{% include "main/kodi_starred_movie_section.html" %}{% endif %}
-{% if starred_tvshows %}{% include "main/kodi_starred_tv_section.html" %}{% endif %}
+{% if starred_movies %}{% include "kodidj/kodi_starred_movie_section.html" %}{% endif %}
+{% if starred_tvshows %}{% include "kodidj/kodi_starred_tv_section.html" %}{% endif %}
 <h3>Recently Added</h3>
 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
   <h4>TV Episodes</h4>

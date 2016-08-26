@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 from .models import Server, StarredTV, StarredMovie
 
-import main.kodi as KodiLookUp
+import kodidj.kodi as KodiLookUp
 
 from operator import itemgetter
 
@@ -163,20 +163,20 @@ def GetTVShowList(server, context):
 #################################################
 @GetServerList
 def index(request, context):
-  return render(request, 'main/index.html', context)
+  return render(request, 'kodidj/index.html', context)
 
 def kodi(request):
   return redirect(reverse('config'))
 
 @GetServerList
 def config(request, context):
-  return render(request, 'main/kodi_config.html', context)
+  return render(request, 'kodidj/kodi_config.html', context)
 
 @GetPlaylist
 def setserver(request, server, context, server_down):
   if server_down:
     context = {}
-  return render(request, 'main/kodi_control_panel.html', context)
+  return render(request, 'kodidj/kodi_control_panel.html', context)
 
 @GetServer
 def pingserver(request, server, context):
@@ -216,20 +216,20 @@ def server(request, server, context):
   GetTVShowList(server, context)
   context['recentepisodes'] = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server)
   context['recentmovies'] = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server)
-  return render(request, 'main/kodi_server_index.html', context)
+  return render(request, 'kodidj/kodi_server_index.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
 def tvindex(request, server, context):
   GetTVShowList(server, context)
-  return render(request, 'main/kodi_server_tv.html', context)
+  return render(request, 'kodidj/kodi_server_tv.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
 def tvshow(request, server, context, show_id):
   context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
   context['seasons'] = KodiLookUp.VideoLibrary_GetSeasons(*server, show_id=show_id)
-  return render(request, 'main/kodi_server_tv_show.html', context)
+  return render(request, 'kodidj/kodi_server_tv_show.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
@@ -238,7 +238,7 @@ def tvseason(request, server, context, show_id, season_id):
   context['season'] = season_id
   unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
   context['episodes'] = sorted(unsorted_episode_list, key=itemgetter('episode'))
-  return render(request, 'main/kodi_server_tv_season.html', context)
+  return render(request, 'kodidj/kodi_server_tv_season.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
@@ -257,24 +257,24 @@ def tvepisode(request, server, context, show_id, season_id, episode_id):
   context.update({'activeepisode' : active_episode,
                   'episodes'      : episode_list})
 
-  return render(request, 'main/kodi_server_tv_season.html', context)
+  return render(request, 'kodidj/kodi_server_tv_season.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
 def movies_index(request, server, context):
   GetMovieList(server, context)
-  return render(request, 'main/kodi_server_movies.html', context)
+  return render(request, 'kodidj/kodi_server_movies.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
 def movie(request, server, context, movie_id):
   GetMovieList(server, context, movie_id)
-  return render(request, 'main/kodi_server_movies.html', context)
+  return render(request, 'kodidj/kodi_server_movies.html', context)
 
 @GetPlaylist
 @ServerDownNoRedirect
 def getplaylist(request, server, context):
-  return render(request, 'main/kodi_playlist_panel.html', context)
+  return render(request, 'kodidj/kodi_playlist_panel.html', context)
 
 @GetServer
 def playmovie(request, server, context, movie_id):

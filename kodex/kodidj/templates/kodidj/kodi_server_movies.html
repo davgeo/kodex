@@ -1,4 +1,4 @@
-{% extends "main/kodi_server_base.html" %}
+{% extends "kodidj/kodi_server_base.html" %}
 
 {% load staticfiles %}
 
@@ -53,7 +53,7 @@
     <hr>
   {% endif %}
 
-      {% include "main/kodi_starred_movie_section.html" %}
+      {% include "kodidj/kodi_starred_movie_section.html" %}
       <hr>
       <div class="row">
         {% for movie in movies %}
