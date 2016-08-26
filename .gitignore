@@ -12,3 +12,7 @@ secret_key.py
 
 # Development server file
 isdevserver
+
+# Ignore cached directories
+cache/
+__pycache__
