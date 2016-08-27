@@ -1,15 +1,19 @@
 #!/bin/sh
-# Synology DSM bootup script for Gunicorn webserver running Kodex
+# Bootup script for Kodex running on Gunicorn webserver
+
 PACKAGE="kodex"
+
+### EDIT THESE AS REQUIRED ###
 EXEC_DIR="/volume1/scripts/kodex/kodex"
+GUNICORN_EXEC="/volume1/@appstore/py3k/usr/local/bin/gunicorn"
+
+BIND_IP='0.0.0.0:8000'
+TIMEOUT="300"
+
+PID_FILE="/var/run/${PACKAGE}.pid"
+### --- END EDIT --- ###
 
 WSGI_EXEC="${PACKAGE}.wsgi"
-PID_FILE="/var/run/${PACKAGE}.pid"
-
-GUNICORN_EXEC="/volume1/@appstore/py3k/usr/local/bin/gunicorn"
-BIND_IP='0.0.0.0:8000'
-
-TIMEOUT="300"
 
 start_daemon()
 {
