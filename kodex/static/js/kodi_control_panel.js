@@ -1,6 +1,7 @@
-/* ---------- */
-/* JavaScript */
-/* ---------- */
+/* ---------------------------------------------------
+    JavaScript/jQuery
+    Controls for kodi control panel
+   --------------------------------------------------- */
 
 // Get value of volume slider
 function getVolume() {
@@ -33,10 +34,6 @@ function plusVolume() {
   updateVolSlider(x);
   return x;
 }
-
-/* ------ */
-/* jQuery */
-/* ------ */
 
 // Volume slider control
 function volumeControl(volume) {

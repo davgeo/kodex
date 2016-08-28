@@ -161,10 +161,6 @@ def GetTVShowList(server, context):
 #################################################
 # Views
 #################################################
-@GetServerList
-def index(request, context):
-  return render(request, 'kodidj/index.html', context)
-
 def kodi(request):
   return redirect(reverse('config'))
 

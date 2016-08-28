@@ -1,14 +1,13 @@
-/* ---------- */
-/* JavaScript */
-/* ---------- */
+/* ---------------------------------------------------
+    JavaScript/jQuery
+    Controls for kodi navbar and control panel
+   --------------------------------------------------- */
+
 function updateNavURL(id, prev_server, server) {
   var url = $(id).attr("href");
   $(id).attr("href", url.replace(prev_server, server));
 }
 
-/* ------ */
-/* jQuery */
-/* ------ */
 /* Execute processes after page DOM is ready */
 $(function() {
   var current_server_select;

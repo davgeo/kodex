@@ -1,6 +1,7 @@
-/* ------ */
-/* jQuery */
-/* ------ */
+/* ---------------------------------------------------
+    JavaScript/jQuery
+    Controls for kodi server pages
+   --------------------------------------------------- */
 
 /* Execute processes after page DOM is ready */
 $(function() {

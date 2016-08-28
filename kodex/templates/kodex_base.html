@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% load staticfiles %}
+
+    <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.min.css' %}>
+    <link rel="stylesheet" href={% static 'font-awesome/css/font-awesome.min.css' %}>
+    <link rel="stylesheet" href={% static 'jquery/jquery-ui.min.css' %}>
+    <link rel="stylesheet" href={% static 'css/kodex.css' %}>
+    <link rel="stylesheet" href={% static 'css/navbar.css' %}>
+    <script src={% static 'jquery/jquery-1.11.3.min.js' %}></script>
+    <script src={% static 'jquery/jquery-ui.min.js' %}></script>
+    <script src={% static 'bootstrap/js/bootstrap.min.js' %}></script>
+
+    <title>Kodex</title>
+
+    <link rel="icon" href="{% static 'images' %}/kodex_favicon.png">
+
+    {% block appheader %}{% endblock %}
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+          <!-- Left hand side (inc title) -->
+          <div class="navbar-header pull-left">
+            <a class="navbar-brand" href="{% url 'index' %}">
+              <img src="{% static 'images' %}/kodex_logo.png">
+            </a>
+            <!-- Required bootstrap placeholder for the collapsed menu -->
+            <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
+              <i class="fa fa-bars fa-lg"></i>
+            </button>
+          </div>
+          {% block navbar %}{% endblock %}
+        </nav>
+        <div class ="content">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    <div>
+  </body>
+</html>

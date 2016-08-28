@@ -9,19 +9,7 @@
   {% block kodiextraheader %}{% endblock %}
 {% endblock %}
 
-{% block appnav %}
-<nav role="navigation" class="navbar navbar-default navbar-fixed-top">
-  <!-- Left hand side (inc title) -->
-  <div class="navbar-header pull-left">
-    <a class="navbar-brand" href="{% url 'kodi' %}">
-      <img src="{% static 'images' %}/kodex_logo.png">
-    </a>
-    <!-- Required bootstrap placeholder for the collapsed menu -->
-    <button type="button" data-toggle="collapse" data-target=".navbar-collapse" class="navbar-toggle">
-      <i class="fa fa-bars fa-lg"></i>
-    </button>
-  </div>
-
+{% block navbar %}
   <!-- Non-collapsing right-side menu items -->
   <div class="navbar-header pull-right">
     <!-- Server select form -->
@@ -115,7 +103,6 @@
         <li class="kodi-navbar-button {% block configActive %}{% endblock %}" ><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i> Config</a></li>
     </ul>
   </div>
-</nav>
 {% endblock %}
 
 {% block content %}

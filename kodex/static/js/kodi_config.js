@@ -1,10 +1,8 @@
-/* ---------- */
-/* JavaScript */
-/* ---------- */
+/* ---------------------------------------------------
+    JavaScript/jQuery
+    Controls for kodi configuration page
+   --------------------------------------------------- */
 
-/* ------ */
-/* jQuery */
-/* ------ */
 // Ping server control
 function serverPing(id) {
   var button = id;

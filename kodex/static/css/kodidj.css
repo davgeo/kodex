@@ -1,13 +1,5 @@
 /* CSS content */
 
-body {
-  background-color: #ECECEA;
-}
-
-.content {
-  padding-top: 32px;
-}
-
 .control-panel-wrapper.affix {
   top: 32px;
   width: 100%;
