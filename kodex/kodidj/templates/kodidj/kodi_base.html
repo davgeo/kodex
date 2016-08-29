@@ -1,8 +1,12 @@
-{% extends "kodidj/base.html" %}
+{% extends "kodex_base.html" %}
 
 {% load staticfiles %}
 
-{% block extraheader %}
+{% block appheader %}
+  <link rel="stylesheet" href={% static 'css/kodidj.css' %}>
+  <link rel="stylesheet" href={% static 'css/playlist.css' %}>
+
+  <script src={% static 'js/kodi_common.js' %}></script>
   <script src={% static 'js/kodi_base.js' %}></script>
   <script src={% static 'js/kodi_control_panel.js' %}></script>
   <script src={% static 'js/kodi_server.js' %}></script>

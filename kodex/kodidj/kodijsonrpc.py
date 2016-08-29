@@ -1,12 +1,15 @@
-#!/usr/bin/env python3
+'''
+kodijsonrpc.py
 
-''' KODI JSON RPC Client '''
-# Python default package imports
+Set up Kodi specific JSON RPC client.
+
+All Kodi JSON methods can be called as functions
+to the KodiJSONClient instance.
+
+'''
 
 # Third-party package imports
 from jsonrpcclient.http_server import HTTPServer
-
-# Local file imports
 
 # Enable logging on jsconrpcclient module
 import logging
@@ -67,11 +70,10 @@ class KodiNamespace(object):
   def UpdateServer(self, server):
     self.server = server
 
-# Dynamic create classes for all namespaces
+# Dynamically create classes for all namespaces
 for namespace in KODI_JSON_NAMESPACES:
   newClass = "class {0}(KodiNamespace):\n\t\tpass\n".format(namespace)
   exec (newClass)
-
 
 #################################################
 #

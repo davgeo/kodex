@@ -275,52 +275,59 @@ function InitialiseControlPanel() {
  * m        - Toggle mute
  * s        - Subtitles
  */
-$(document).on("keypress", function (e) {
-  console.log("KEY CODE: ".concat(e.which));
-  if(e.which == 32) {
-    // Spacebar
-    if($("#playpause").length) {
-      var url = $("#playpause-link").attr('href');
-      $.get(url);
-      toggleIcon("#playpause", 'fa-play', 'fa-pause');
+function InitialiseHotKeys() {
+  $(document).on("keypress", function (e) {
+    var focus = document.activeElement;
+
+    if(!(focus && (focus.tagName.toLowerCase() == 'input'))) {
+      console.log("KEY CODE: ".concat(e.which));
+      if(e.which == 32) {
+        // Spacebar
+        if($("#playpause").length) {
+          var url = $("#playpause-link").attr('href');
+          $.get(url);
+          toggleIcon("#playpause", 'fa-play', 'fa-pause');
+        }
+        return false;
+      }
+      else if((e.which == 45)||(e.which == 95)) {
+        // Minus key (with or without shift)
+        if($("#volslider").length) {
+          volumeControl(minusVolume());
+        }
+        return false;
+      }
+      else if((e.which == 61)||(e.which == 43)) {
+        // Plus key (with or without shift)
+        if($("#volslider").length) {
+          volumeControl(plusVolume());
+        }
+        return false;
+      }
+      else if(e.which == 109) {
+        // m
+        if($("#mute").length) {
+          var url = $("#mute-link").attr('href');
+          $.get(url);
+          toggleIcon("#mute", 'fa-volume-up', 'fa-volume-off');
+        }
+        return false;
+      }
+      else if(e.which == 115) {
+        // s
+        if($("#kodi-navbar-togglesubtitles-link").length) {
+          var url = $("#kodi-navbar-togglesubtitles-link").attr('href');
+          $.get(url);
+        }
+        return false;
+      }
     }
-    return false;
-  }
-  else if((e.which == 45)||(e.which == 95)) {
-    // Minus key (with or without shift)
-    if($("#volslider").length) {
-      volumeControl(minusVolume());
-    }
-    return false;
-  }
-  else if((e.which == 61)||(e.which == 43)) {
-    // Plus key (with or without shift)
-    if($("#volslider").length) {
-      volumeControl(plusVolume());
-    }
-    return false;
-  }
-  else if(e.which == 109) {
-    // m
-    if($("#mute").length) {
-      var url = $("#mute-link").attr('href');
-      $.get(url);
-      toggleIcon("#mute", 'fa-volume-up', 'fa-volume-off');
-    }
-    return false;
-  }
-  else if(e.which == 115) {
-    // s
-    if($("#kodi-navbar-togglesubtitles-link").length) {
-      var url = $("#kodi-navbar-togglesubtitles-link").attr('href');
-      $.get(url);
-    }
-    return false;
-  }
-});
+  });
+}
 
 /* Execute processes after page DOM is ready */
 $(function() {
   InitialiseNavbar();
   InitialiseControlPanel();
+  InitialiseHotKeys();
 });

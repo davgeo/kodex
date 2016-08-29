@@ -1,6 +1,13 @@
-#!/usr/bin/env python3
 
-''' KODI '''
+'''
+kodi.py
+
+Contains functions which set up the correct parameters
+for the corresponding Kodi JSON methods, calls the JSON method
+via the instantiated KodiJSONClient and processes the responses.
+
+'''
+
 # Python default package imports
 import urllib
 import re
@@ -8,11 +15,10 @@ import requests
 import os
 import shutil
 import hashlib
+import logging
 
 # Local file imports
 from .kodijsonrpc import KodiJSONClient
-
-import logging
 
 #################################################
 # GetServer
@@ -289,10 +295,6 @@ def VideoLibrary_GetRecentlyAddedMusicVideos(server):
 
 @GetServer
 def VideoLibrary_GetSeasonDetails(server, season_id):
-  '''params = {'seasonid':int(season_id),
-            'properties':['title',
-                          'thumbnail',
-                          'plot']}'''
   raise NotImplementedError
 
 @GetServer

@@ -1,6 +1,6 @@
 /* ---------------------------------------------------
     JavaScript/jQuery
-    Controls for kodi navbar and control panel
+    Controls for kodi navbar
    --------------------------------------------------- */
 
 function updateNavURL(id, prev_server, server) {
