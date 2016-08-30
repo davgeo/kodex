@@ -21,6 +21,11 @@
   width: 170px;
 }
 
+.episode_thumb_mini {
+  height: 50px;
+  width: 85px;
+}
+
 .episode_wrapper {
   height: 140px;
   width: 200px;

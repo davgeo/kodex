@@ -17,7 +17,11 @@
   {% if activeepisode %}
     <div class="row">
       <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12 active_episode_thumb_wrapper">
-        <img src="{% static 'cache' %}/{{ activeepisode.thumbnail }}" class="img-responsive active_episode_thumb">
+        {% if activeepisode.thumbnail == '' %}
+          <img src="{% static 'images' %}/no_thumbnail_episode_icon.png" class="img-responsive episode_thumb" alt={{ activeepisode.title }}>
+        {% else %}
+          <img src="{% static 'cache' %}/{{ activeepisode.thumbnail }}" class="img-responsive episode_thumb" alt={{ activeepisode.title }}>
+        {% endif %}
         {% if activeepisode.resume.position < activeepisode.resume.total %}
           <div class="progress active-ep-resume-bar">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{ activeepisode.resume.position }} " aria-valuemin="0" aria-valuemax="{{ activeepisode.resume.total }}" style="width:{{ activeepisode.resume.percentage }}%">
@@ -57,7 +61,11 @@
   {% for episode in episodes %}
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 episode_wrapper">
       <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
-        <img src="{% static 'cache' %}/{{ episode.thumbnail }}" class="img-responsive episode_thumb">
+        {% if episode.thumbnail == '' %}
+          <img src="{% static 'images' %}/no_thumbnail_episode_icon.png" class="img-responsive episode_thumb" alt={{ episode.title }}>
+        {% else %}
+          <img src="{% static 'cache' %}/{{ episode.thumbnail }}" class="img-responsive episode_thumb" alt={{ episode.title }}>
+        {% endif %}
       </a>
       {% if episode.resume.position < episode.resume.total %}
         <div class="progress ep-resume-bar">

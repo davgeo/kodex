@@ -9,7 +9,11 @@
 
   <div class="row">
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 active-poster-thumb-wrapper">
-      <img src="{% static 'cache' %}/{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
+      {% if tvshow.thumbnail == '' %}
+        <img src="{% static 'images' %}/no_thumbnail_poster_icon.png" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
+      {% else %}
+        <img src="{% static 'cache' %}/{{ tvshow.thumbnail }}" class="img-responsive poster_thumb" alt={{ tvshow.title }}>
+      {% endif %}
     </div>
 
     <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7 text">
@@ -18,7 +22,6 @@
         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Misc <span class="caret"></span></button>
         <ul class="dropdown-menu">
           <li><a href={% url 'removetvshow' server.id tvshow.tvshowid %}>Remove TV Show</a></li>
-          <li><a href="#">...</a></li>
         </ul>
       </span>
     </div>
@@ -29,7 +32,11 @@
   {% for season in seasons %}
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 poster-wrapper">
       <a href="{% url 'tvseason' server.id season.tvshowid season.season %}">
-        <img src="{% static 'cache' %}/{{ season.thumbnail }}" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
+        {% if season.thumbnail == '' %}
+          <img src="{% static 'images' %}/no_thumbnail_poster_icon.png" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
+        {% else %}
+          <img src="{% static 'cache' %}/{{ season.thumbnail }}" class="img-responsive poster_thumb" alt="Season {{ season.season }}">
+        {% endif %}
         <a href="{% url 'watchedtvseason' server.id season.tvshowid season.season %}">
           {% if season.watchedepisodes == season.episode %}
             <i class="fa fa-check-square-o pull-right"></i>

@@ -10,7 +10,11 @@
   {% if activemovie %}
     <div class="row">
       <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 active-poster-thumb-wrapper">
-        <img src="{% static 'cache' %}/{{ activemovie.thumbnail }}" class="img-responsive poster_thumb">
+        {% if activemovie.thumbnail == '' %}
+          <img src="{% static 'images' %}/no_thumbnail_poster_icon.png" class="img-responsive poster_thumb" alt={{ activemovie.title }}>
+        {% else %}
+          <img src="{% static 'cache' %}/{{ activemovie.thumbnail }}" class="img-responsive poster_thumb" alt={{ activemovie.title }}>
+        {% endif %}
         {% if activemovie.resume.position < activemovie.resume.total %}
           <div class="progress active-movie-resume-bar">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{ activemovie.resume.position }} " aria-valuemin="0" aria-valuemax="{{ activemovie.resume.total }}" style="width:{{ activemovie.resume.percentage }}%">
@@ -59,7 +63,11 @@
         {% for movie in movies %}
           <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 poster-wrapper">
             <a href="{% url 'movie' server.id movie.movieid %}">
+            {% if movie.thumbnail == '' %}
+              <img src="{% static 'images' %}/no_thumbnail_poster_icon.png" class="img-responsive poster_thumb" alt={{ movie.title }}>
+            {% else %}
               <img src="{% static 'cache' %}/{{ movie.thumbnail }}" class="img-responsive poster_thumb" alt={{ movie.title }}>
+            {% endif %}
             </a>
             <div class="addplaylist">
               <a href="{% url 'addmovie' server.id movie.movieid %}"><i class="fa fa-plus-circle pull-right"></i></span></a>

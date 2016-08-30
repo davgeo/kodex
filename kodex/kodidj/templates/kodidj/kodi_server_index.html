@@ -17,7 +17,11 @@
       <tr>
         <td>
           <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}">
-            <img src="{% static 'cache' %}/{{ episode.thumbnail }}" class="img-responsive" alt={{ episode.title }} width="50" height="50">
+            {% if episode.thumbnail == '' %}
+              <img src="{% static 'images' %}/no_thumbnail_episode_icon.png" class="img-responsive episode_thumb_mini" alt={{ episode.title }}>
+            {% else %}
+              <img src="{% static 'cache' %}/{{ episode.thumbnail }}" class="img-responsive episode_thumb_mini" alt={{ episode.title }}>
+            {% endif %}
           </a>
         </td>
         <td>
@@ -41,7 +45,11 @@
     {% for movie in recentmovies %}
       <div class="col-lg-3 col-md-4 col-sm-3 col-xs-2 no-padding">
         <a href="{% url 'movie' server.id movie.movieid %}">
-          <img src="{% static 'cache' %}/{{ movie.thumbnail }}" class="img-responsive small-movie-poster" alt={{ movie.title }}>
+          {% if movie.thumbnail == '' %}
+            <img src="{% static 'images' %}/no_thumbnail_poster_icon.png" class="img-responsive small-movie-poster" alt={{ movie.title }}>
+          {% else %}
+            <img src="{% static 'cache' %}/{{ movie.thumbnail }}" class="img-responsive small-movie-poster" alt={{ movie.title }}>
+          {% endif %}
         </a>
       </div>
     {% endfor %}

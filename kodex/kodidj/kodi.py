@@ -57,27 +57,24 @@ def GetPlaylists(func):
 
 #################################################
 # GetThumbnail
-# TODO: Revisit dir paths
 #################################################
-def GetThumbnail(server, thumbnail, staticDir='static', cacheDir='cache'):
+def GetThumbnail(server, thumbnail, cacheDir):
   try:
     re.findall(r'.jpg', thumbnail)[0]
   except IndexError:
     return ''
   else:
-    fileDir = os.path.join(staticDir, cacheDir)
-
     # Generate hash to avoid illegal characters in filepath (and give unique reference)
     fileHash = hashlib.md5(thumbnail.encode())
-    imgPath = os.path.join(fileDir, fileHash.hexdigest())
+    imgPath = os.path.join(cacheDir, fileHash.hexdigest())
 
     if not os.path.exists(imgPath):
       logging.info("Downloading thumbnail from kodi server: {0}".format(thumbnail))
 
-      if not os.path.exists(fileDir):
-        os.mkdir(fileDir)
+      if not os.path.exists(cacheDir):
+        os.mkdir(cacheDir)
 
-      if not os.path.isdir(fileDir):
+      if not os.path.isdir(cacheDir):
         raise Exception("Image cache directory path exists but is not a directory")
 
       url = server.GetUrl('image/') + urllib.parse.quote_plus(thumbnail)
@@ -91,19 +88,13 @@ def GetThumbnail(server, thumbnail, staticDir='static', cacheDir='cache'):
 
 #################################################
 # ProcessThumbnails
+# TODO: Revisit hardcoded static paths
 #################################################
-def ProcessThumbnails(server, thumbnailList, tvEpisode=False):
+def ProcessThumbnails(server, thumbnailList):
+  cacheDir = os.path.join('static', 'cache')
+
   for item in thumbnailList:
-    thumbnail = GetThumbnail(server, item['thumbnail'])
-
-    if tvEpisode and thumbnail == '':
-      showDetails = server.VideoLibrary.GetTVShowDetails({'tvshowid': item['tvshowid'], 'properties':['thumbnail',]})['tvshowdetails']
-      thumbnail = GetThumbnail(server, showDetails['thumbnail'])
-
-    if thumbnail == '':
-      thumbnail = 'http://placekitten.com/g/50/50' # TODO: Replace with local image
-
-    item['thumbnail'] = thumbnail
+    item['thumbnail'] = GetThumbnail(server, item['thumbnail'], cacheDir)
 
 #################################################
 # GetResumePercent
@@ -199,7 +190,7 @@ def VideoLibrary_GetEpisodes(server, show_id, season_id):
   for item in episodes:
     item['episode'] = int(item['episode'])
 
-  ProcessThumbnails(server, episodes, tvEpisode=True)
+  ProcessThumbnails(server, episodes)
   GetResumePercent(episodes)
   return episodes
 
@@ -271,7 +262,7 @@ def VideoLibrary_GetRecentlyAddedEpisodes(server):
 
   recentEpisodes = server.VideoLibrary.GetRecentlyAddedEpisodes(params)
   episodes = recentEpisodes['episodes']
-  ProcessThumbnails(server, episodes, tvEpisode=True)
+  ProcessThumbnails(server, episodes)
   return episodes
 
 @GetServer
@@ -414,7 +405,7 @@ def Player_GetItem(server, player_id):
   response = server.Player.GetItem(params)
 
   item = response['item']
-  ProcessThumbnails(server, (item, ), tvEpisode=True)
+  ProcessThumbnails(server, (item, ))
   return item
 
 @GetServer
@@ -576,7 +567,7 @@ def Playlist_GetItems(server, playlist_id):
   except KeyError:
     episodes = []
   else:
-    ProcessThumbnails(server, episodes, tvEpisode=True)
+    ProcessThumbnails(server, episodes)
 
   return episodes
 
@@ -619,7 +610,7 @@ def Favourites_GetFavourites(server):
   except KeyError:
     favourites = []
   else:
-    ProcessThumbnails(server, favourites, tvEpisode=False)
+    ProcessThumbnails(server, favourites)
 
   return favourites
 
