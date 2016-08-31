@@ -8,13 +8,7 @@ to the KodiJSONClient instance.
 
 '''
 
-# Third-party package imports
 from jsonrpcclient.http_server import HTTPServer
-
-# Enable logging on jsconrpcclient module
-import logging
-logging.getLogger('jsonrpcclient').setLevel(logging.INFO)
-logging.basicConfig()
 
 KODI_JSON_NAMESPACES = ["VideoLibrary",
                         "Settings",
@@ -35,85 +29,64 @@ KODI_JSON_NAMESPACES = ["VideoLibrary",
 
 #################################################
 #
-# KodiNamespace
+# KodiNamespaceMethodCatcher
+#
+# This provides a __getattr__ method which
+# catches all method calls and makes the
+# corresponding server requests.
 #
 #################################################
-class KodiNamespace(object):
+class KodiNamespaceMethodCatcher(object):
   #################################################
   # __init__
   #################################################
-  def __init__(self):
-    self.server = None
-
-  #################################################
-  # __getattr__
-  # catch undefined methods
-  #################################################
-  def __getattr__(self, name):
-    className = self.__class__.__name__
-
-    if self.server is None:
-      logging.error("No server instantiated in {0}".format(className))
-      return None
-
-    method = name
-    kodiMethod = "{0}.{1}".format(className, method)
-
-    def func(*args, **kwargs):
-      resp = self.server.request(kodiMethod, *args, **kwargs)
-      return resp
-    return func
-
-  #################################################
-  # UpdateServer
-  #################################################
-  def UpdateServer(self, server):
+  def __init__(self, server, namespace):
     self.server = server
+    self.namespace = namespace
 
-# Dynamically create classes for all namespaces
-for namespace in KODI_JSON_NAMESPACES:
-  newClass = "class {0}(KodiNamespace):\n\t\tpass\n".format(namespace)
-  exec (newClass)
+  #################################################
+  # __getattr__ : catch all function calls
+  #################################################
+  def __getattr__(self, function):
+    def func(*args, **kwargs):
+      return self.server.request("{0}.{1}".format(self.namespace, function), *args, **kwargs)
+    return func
 
 #################################################
 #
 # KodiJSONClient
 #
+# Insantiate KodiNamespaceMethodCatcher classes
+# for all Kodi JSON namespaces. This allows any
+# of the Kodi JSON methods to be called as methods
+# of the KodiJSONClient
+#
+# e.g <KodiJSONClient object>.JSONRPC.Ping()
+# would result in a ping request sent to the
+# configured kodi server.
+#
 #################################################
 class KodiJSONClient(object):
-  headers = {'content-type': 'application/json'}
-
   #################################################
   # __init__
   #################################################
   def __init__(self, host, port, user, pwd):
-    self._AddNamespaces()
-    self._SwitchServer(host, port, user, pwd)
-
-  ############################################################################
-  # _AddNamespaces
-  # Dynamically add namespace classes
-  ############################################################################
-  def _AddNamespaces(self):
-    for namespace in KODI_JSON_NAMESPACES:
-      s = "self.{0} = {0}()".format(namespace)
-      exec(s)
-
-  ############################################################################
-  # _SwitchServer
-  # Switch or set server
-  ############################################################################
-  def _SwitchServer(self, host, port, user, pwd):
     self.url = 'http://{0}:{1}/'.format(host, port)
-    self.server = HTTPServer(self.GetUrl('jsonrpc'), headers=self.headers, auth=(user, pwd))
+    self.server = HTTPServer(self.url + 'jsonrpc', headers={'content-type': 'application/json'}, auth=(user, pwd))
     for namespace in KODI_JSON_NAMESPACES:
-      s = "self.{0}.UpdateServer(self.server)".format(namespace)
-      exec(s)
+      inst = "self.{0} = KodiNamespaceMethodCatcher(self.server, '{0}')".format(namespace)
+      exec(inst)
 
-  ############################################################################
-  # GetUrl
-  # Get url to current active server
-  ############################################################################
-  def GetUrl(self, path=''):
-    return self.url + path
+#################################################
+#
+# EnableJSONLogging
+#
+# Enable logging on jsconrpcclient module
+#
+#################################################
+def EnableJSONLogging():
+  import logging
+  logging.getLogger('jsonrpcclient').setLevel(logging.INFO)
+  logging.basicConfig()
+
 

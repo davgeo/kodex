@@ -18,7 +18,9 @@ import hashlib
 import logging
 
 # Local file imports
-from .kodijsonrpc import KodiJSONClient
+from .kodijsonrpc import KodiJSONClient, EnableJSONLogging
+
+EnableJSONLogging()
 
 #################################################
 # GetServer
@@ -77,7 +79,7 @@ def GetThumbnail(server, thumbnail, cacheDir):
       if not os.path.isdir(cacheDir):
         raise Exception("Image cache directory path exists but is not a directory")
 
-      url = server.GetUrl('image/') + urllib.parse.quote_plus(thumbnail)
+      url = server.url + 'image/' + urllib.parse.quote_plus(thumbnail)
       response = requests.get(url, auth=('xbmc', 'xbmc'), stream=True)
 
       with open(imgPath, 'wb') as f:
