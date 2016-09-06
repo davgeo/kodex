@@ -1,5 +1,5 @@
 # Kodex
-A web-based control interface for Kodi which allows easy control of multiple Kodi instances from a single point.
+A web browser UI for Kodi which allows easy control of multiple Kodi instances from a single location.
 
 Kodex is ideal for Kodi setups which have multiple instances that share a common library.
 
@@ -15,7 +15,7 @@ This is a python django based web application and requires the following package
 - Python requests package
 - Python kodicontroller package
 
-The django runserver can be used to temporarily test this application however a proper web sever should be used for final depoyment. Gunicorn is recommended:
+The django runserver can be used to test this application however Gunicorn is recommended for final deployment:
 - Python Gunicorn (http://gunicorn.org/)
 
 And of course to have a purpose at least one Kodi instance is required:
@@ -61,3 +61,9 @@ On top of the additional python packages listed above Kodex is making use of a n
 A massive thank you to all those who have worked on any of the supporting libraries for this project.
 
 ## Screenshots
+
+### TV panel
+![alt text](https://raw.githubusercontent.com/davgeo/kodex/master/screenshots/kodex_tv.jpg "TV panel")
+
+### Config
+![alt text](https://raw.githubusercontent.com/davgeo/kodex/master/screenshots/kodex_config.jpg "Config")
