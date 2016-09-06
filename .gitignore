@@ -4,6 +4,9 @@
 # Compiled python files
 *.pyc
 
+# Virtualenv directory
+pyenv*
+
 # Database files
 *.sqlite3
 
@@ -16,3 +19,4 @@ isdevserver
 # Ignore cached directories
 cache/
 __pycache__
+

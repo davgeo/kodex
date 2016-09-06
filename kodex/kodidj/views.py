@@ -6,13 +6,13 @@ from django.core.urlresolvers import reverse
 
 from .models import Server, StarredTV, StarredMovie
 
-import kodidj.kodi as KodiLookUp
-
-from operator import itemgetter
-
+import os
 import re
 import logging
 import threading
+from operator import itemgetter
+
+import kodicontroller
 
 #################################################
 # Decorators
@@ -32,16 +32,25 @@ def GetServer(func):
     return func(request, server.conn(), context, *args, **kwargs)
   return wrapper
 
-def GetPlaylist(func):
+def GetController(func):
   @GetServer
   def wrapper(request, server, context, *args, **kwargs):
+    controller = kodicontroller.KodiController()
+    controller.SetServer(*server)
+    controller.SetThumbnailCache(os.path.join('static', 'cache'))
+    return func(request, controller, context, *args, **kwargs)
+  return wrapper
+
+def GetPlaylist(func):
+  @GetController
+  def wrapper(request, controller, context, *args, **kwargs):
     server_down = True
 
     try:
-      context['playing']    = KodiLookUp.Player_GetItem(*server)
-      context['player']     = KodiLookUp.Player_GetProperties(*server)
-      context['playlist']   = KodiLookUp.Playlist_GetItems(*server, playlistType='video')
-      context['properties'] = KodiLookUp.Application_GetProperties(*server)
+      context['playing']    = controller.Player_GetItem()
+      context['player']     = controller.Player_GetProperties()
+      context['playlist']   = controller.Playlist_GetItems(playlistType='video')
+      context['properties'] = controller.Application_GetProperties()
     except Exception as e:
       logging.info(e)
     else:
@@ -57,23 +66,23 @@ def GetPlaylist(func):
         if playing_id not in playlist_id_list:
           context['special_play'] = True
 
-    return func(request, server, context, server_down, *args, **kwargs)
+    return func(request, controller, context, server_down, *args, **kwargs)
   return wrapper
 
 def ServerDownRedirect(func):
-  def wrapper(request, server, context, server_down, *args, **kwargs):
+  def wrapper(request, controller, context, server_down, *args, **kwargs):
     if server_down:
       return kodi(request)
     else:
-      return func(request, server, context, *args, **kwargs)
+      return func(request, controller, context, *args, **kwargs)
   return wrapper
 
 def ServerDownNoRedirect(func):
-  def wrapper(request, server, context, server_down, *args, **kwargs):
+  def wrapper(request, controller, context, server_down, *args, **kwargs):
     if server_down:
       return HttpResponse(status=503)
     else:
-      return func(request, server, context, *args, **kwargs)
+      return func(request, controller, context, *args, **kwargs)
   return wrapper
 
 #################################################
@@ -116,8 +125,8 @@ def GetStarredMovie():
 #################################################
 # Other Functions
 #################################################
-def GetMovieList(server, context, movie_id=None):
-  unsorted_movie_list = KodiLookUp.VideoLibrary_GetMovies(*server)
+def GetMovieList(controller, context, movie_id=None):
+  unsorted_movie_list = controller.VideoLibrary_GetMovies()
 
   starred_movie_id_list = GetStarredMovie()
 
@@ -139,8 +148,8 @@ def GetMovieList(server, context, movie_id=None):
   context['starred_movies'] = sorted(starred_movie_list, key=itemgetter('title'))
   context['movies'] = sorted(unstarred_movie_list, key=itemgetter('title'))
 
-def GetTVShowList(server, context):
-  unsorted_tvshow_list = KodiLookUp.VideoLibrary_GetTVShows(*server)
+def GetTVShowList(controller, context):
+  unsorted_tvshow_list = controller.VideoLibrary_GetTVShows()
 
   starred_tv_id_list = GetStarredTV()
 
@@ -169,14 +178,14 @@ def config(request, context):
   return render(request, 'kodidj/kodi_config.html', context)
 
 @GetPlaylist
-def setserver(request, server, context, server_down):
+def setserver(request, controller, context, server_down):
   if server_down:
     context = {}
   return render(request, 'kodidj/kodi_control_panel.html', context)
 
-@GetServer
-def pingserver(request, server, context):
-  status = KodiLookUp.Status(*server)
+@GetController
+def pingserver(request, controller, context):
+  status = controller.Status()
 
   if status is 'Offline':
     return HttpResponse(status=500)
@@ -207,42 +216,42 @@ def removeserver(request):
 
 @GetPlaylist
 @ServerDownRedirect
-def server(request, server, context):
-  GetMovieList(server, context)
-  GetTVShowList(server, context)
-  context['recentepisodes'] = KodiLookUp.VideoLibrary_GetRecentlyAddedEpisodes(*server)
-  context['recentmovies'] = KodiLookUp.VideoLibrary_GetRecentlyAddedMovies(*server)
+def server(request, controller, context):
+  GetMovieList(controller, context)
+  GetTVShowList(controller, context)
+  context['recentepisodes'] = controller.VideoLibrary_GetRecentlyAddedEpisodes()
+  context['recentmovies'] = controller.VideoLibrary_GetRecentlyAddedMovies()
   return render(request, 'kodidj/kodi_server_index.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
-def tvindex(request, server, context):
-  GetTVShowList(server, context)
+def tvindex(request, controller, context):
+  GetTVShowList(controller, context)
   return render(request, 'kodidj/kodi_server_tv.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
-def tvshow(request, server, context, show_id):
-  context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
-  context['seasons'] = KodiLookUp.VideoLibrary_GetSeasons(*server, show_id=show_id)
+def tvshow(request, controller, context, show_id):
+  context['tvshow'] = controller.VideoLibrary_GetTVShowDetails(show_id=show_id)
+  context['seasons'] = controller.VideoLibrary_GetSeasons(show_id=show_id)
   return render(request, 'kodidj/kodi_server_tv_show.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
-def tvseason(request, server, context, show_id, season_id):
-  context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
+def tvseason(request, controller, context, show_id, season_id):
+  context['tvshow'] = controller.VideoLibrary_GetTVShowDetails(show_id=show_id)
   context['season'] = season_id
-  unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  unsorted_episode_list = controller.VideoLibrary_GetEpisodes(show_id=show_id, season_id=season_id)
   context['episodes'] = sorted(unsorted_episode_list, key=itemgetter('episode'))
   return render(request, 'kodidj/kodi_server_tv_season.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
-def tvepisode(request, server, context, show_id, season_id, episode_id):
-  context['tvshow'] = KodiLookUp.VideoLibrary_GetTVShowDetails(*server, show_id=show_id)
+def tvepisode(request, controller, context, show_id, season_id, episode_id):
+  context['tvshow'] = controller.VideoLibrary_GetTVShowDetails(show_id=show_id)
   context['season'] = season_id
 
-  unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  unsorted_episode_list = controller.VideoLibrary_GetEpisodes(show_id=show_id, season_id=season_id)
 
   episode_list = sorted(unsorted_episode_list, key=itemgetter('episode'))
 
@@ -257,51 +266,51 @@ def tvepisode(request, server, context, show_id, season_id, episode_id):
 
 @GetPlaylist
 @ServerDownRedirect
-def movies_index(request, server, context):
-  GetMovieList(server, context)
+def movies_index(request, controller, context):
+  GetMovieList(controller, context)
   return render(request, 'kodidj/kodi_server_movies.html', context)
 
 @GetPlaylist
 @ServerDownRedirect
-def movie(request, server, context, movie_id):
-  GetMovieList(server, context, movie_id)
+def movie(request, context, movie_id):
+  GetMovieList(controller, context, movie_id)
   return render(request, 'kodidj/kodi_server_movies.html', context)
 
 @GetPlaylist
 @ServerDownNoRedirect
-def getplaylist(request, server, context):
+def getplaylist(request, controller, context):
   return render(request, 'kodidj/kodi_playlist_panel.html', context)
 
-@GetServer
-def playmovie(request, server, context, movie_id):
-  KodiLookUp.Playlist_Clear(*server, playlistType='video')
-  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
-  movieInfo = KodiLookUp.VideoLibrary_GetMovieDetails(*server, movie_id=movie_id)
-  KodiLookUp.Player_Open(*server, playlistType='video')
-  KodiLookUp.Player_Seek(*server, position=movieInfo['resume']['percentage'])
-  #KodiLookUp.Player_Open(*server, params={'item':{'movieid':int(movie_id)}, "options" : {"resume" : True}})
+@GetController
+def playmovie(request, controller, context, movie_id):
+  controller.Playlist_Clear(playlistType='video')
+  controller.Playlist_Add(playlistType='video', params={'item':{'movieid':int(movie_id)}})
+  movieInfo = controller.VideoLibrary_GetMovieDetails(movie_id=movie_id)
+  controller.Player_Open(playlistType='video')
+  controller.Player_Seek(position=movieInfo['resume']['percentage'])
+  #controller.Player_Open(params={'item':{'movieid':int(movie_id)}, "options" : {"resume" : True}})
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def addmovie(request, server, context, movie_id):
-  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'movieid':int(movie_id)}})
+@GetController
+def addmovie(request, controller, context, movie_id):
+  controller.Playlist_Add(playlistType='video', params={'item':{'movieid':int(movie_id)}})
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def watchedmovie(request, server, context, movie_id):
+@GetController
+def watchedmovie(request, controller, context, movie_id):
   url = request.get_full_path().replace('_watched', '')
-  movieInfo = KodiLookUp.VideoLibrary_GetMovieDetails(*server, movie_id=movie_id)
+  movieInfo = controller.VideoLibrary_GetMovieDetails(movie_id=movie_id)
 
   if movieInfo['playcount'] > 0:
     playcount = 0
   else:
     playcount = 1
 
-  KodiLookUp.VideoLibrary_SetMovieDetails(*server, movie_id=movie_id, playcount=playcount)
+  controller.VideoLibrary_SetMovieDetails(movie_id=movie_id, playcount=playcount)
   return HttpResponse(status=200)
 
-@GetServer
-def starredmovie(request, server, context, movie_id):
+@GetController
+def starredmovie(request, controller, context, movie_id):
   url = request.get_full_path().replace('/{}_starred'.format(movie_id), '')
 
   starred_movie_id_list = GetStarredMovie()
@@ -313,54 +322,54 @@ def starredmovie(request, server, context, movie_id):
 
   return redirect(url)
 
-@GetServer
-def removemovie(request, server, context, movie_id):
+@GetController
+def removemovie(request, controller, context, movie_id):
   url = request.get_full_path().replace('/{}_remove'.format(movie_id), '')
-  KodiLookUp.VideoLibrary_RemoveMovie(*server, movie_id=movie_id)
+  controller.VideoLibrary_RemoveMovie(movie_id=movie_id)
   return redirect(url)
 
-@GetServer
-def playtv(request, server, context, show_id, season_id, episode_id):
-  KodiLookUp.Playlist_Clear(*server, playlistType='video')
-  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'episodeid':int(episode_id)}})
-  episodeInfo = KodiLookUp.VideoLibrary_GetEpisodeDetails(*server, episode_id=episode_id)
-  KodiLookUp.Player_Open(*server, playlistType='video')
-  KodiLookUp.Player_Seek(*server, position=episodeInfo['resume']['percentage'])
-  #KodiLookUp.Player_Open(*server, params={'item':{'episodeid':int(episode_id)}, "options" : {"resume" : True}})
+@GetController
+def playtv(request, controller, context, show_id, season_id, episode_id):
+  controller.Playlist_Clear(playlistType='video')
+  controller.Playlist_Add(playlistType='video', params={'item':{'episodeid':int(episode_id)}})
+  episodeInfo = controller.VideoLibrary_GetEpisodeDetails(episode_id=episode_id)
+  controller.Player_Open(playlistType='video')
+  controller.Player_Seek(position=episodeInfo['resume']['percentage'])
+  #controller.Player_Open(params={'item':{'episodeid':int(episode_id)}, "options" : {"resume" : True}})
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def addtv(request, server, context, show_id, season_id, episode_id):
-  KodiLookUp.Playlist_Add(*server, playlistType='video', params={'item':{'episodeid':int(episode_id)}})
+@GetController
+def addtv(request, controller, context, show_id, season_id, episode_id):
+  controller.Playlist_Add(playlistType='video', params={'item':{'episodeid':int(episode_id)}})
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def watchedtv(request, server, context, show_id, season_id, episode_id):
+@GetController
+def watchedtv(request, controller, context, show_id, season_id, episode_id):
   url = request.get_full_path().replace('_watched', '')
-  episodeInfo = KodiLookUp.VideoLibrary_GetEpisodeDetails(*server, episode_id=episode_id)
+  episodeInfo = controller.VideoLibrary_GetEpisodeDetails(episode_id=episode_id)
 
   if episodeInfo['playcount'] > 0:
     playcount = 0
   else:
     playcount = 1
 
-  KodiLookUp.VideoLibrary_SetEpisodeDetails(*server, episode_id=episode_id, playcount=playcount)
+  controller.VideoLibrary_SetEpisodeDetails(episode_id=episode_id, playcount=playcount)
   return HttpResponse(status=200)
 
-@GetServer
-def removetvepisode(request, server, context, show_id, season_id, episode_id):
+@GetController
+def removetvepisode(request, controller, context, show_id, season_id, episode_id):
   url = request.get_full_path().replace('/{}_remove'.format(episode_id), '')
-  KodiLookUp.VideoLibrary_RemoveEpisode(*server, episode_id=episode_id)
+  controller.VideoLibrary_RemoveEpisode(episode_id=episode_id)
   return redirect(url)
 
-@GetServer
-def removetvshow(request, server, context, show_id):
+@GetController
+def removetvshow(request, controller, context, show_id):
   url = request.get_full_path().replace('/{}_remove'.format(show_id), '')
-  KodiLookUp.VideoLibrary_RemoveTVShow(*server, show_id=show_id)
+  controller.VideoLibrary_RemoveTVShow(show_id=show_id)
   return redirect(url)
 
-@GetServer
-def starredtvshow(request, server, context, show_id):
+@GetController
+def starredtvshow(request, controller, context, show_id):
   url = request.get_full_path().replace('/{}_starred'.format(show_id), '')
 
   starred_tv_id_list = GetStarredTV()
@@ -372,11 +381,11 @@ def starredtvshow(request, server, context, show_id):
 
   return redirect(url)
 
-@GetServer
-def watchedtvseason(request, server, context, show_id, season_id):
+@GetController
+def watchedtvseason(request, controller, context, show_id, season_id):
   url = request.get_full_path().replace('/{}_watched'.format(season_id), '')
 
-  seasons = KodiLookUp.VideoLibrary_GetSeasons(*server, show_id=show_id)
+  seasons = controller.VideoLibrary_GetSeasons(show_id=show_id)
 
   for season in seasons:
     if int(season['season']) == int(season_id):
@@ -387,114 +396,114 @@ def watchedtvseason(request, server, context, show_id, season_id):
   else:
     playcount = 1
 
-  unsorted_episode_list = KodiLookUp.VideoLibrary_GetEpisodes(*server, show_id=show_id, season_id=season_id)
+  unsorted_episode_list = controller.VideoLibrary_GetEpisodes(show_id=show_id, season_id=season_id)
   episode_list = sorted(unsorted_episode_list, key=itemgetter('episode'))
 
   for episode in episode_list:
-    KodiLookUp.VideoLibrary_SetEpisodeDetails(*server, episode_id=episode['episodeid'], playcount=playcount)
+    controller.VideoLibrary_SetEpisodeDetails(episode_id=episode['episodeid'], playcount=playcount)
 
   return redirect(url)
 
-@GetServer
-def playpause(request, server, context):
+@GetController
+def playpause(request, controller, context):
   # Revisit this, doesn't play if stopped
-  KodiLookUp.Player_PlayPause(*server)
+  controller.Player_PlayPause()
   return HttpResponse(status=200)
 
-@GetServer
-def stop(request, server, context):
-  KodiLookUp.Player_Stop(*server)
+@GetController
+def stop(request, controller, context):
+  controller.Player_Stop()
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def forward(request, server, context):
-  KodiLookUp.Player_SetSpeed(*server, speed='increment')
+@GetController
+def forward(request, controller, context):
+  controller.Player_SetSpeed(speed='increment')
   return HttpResponse(status=200)
 
-@GetServer
-def backward(request, server, context):
-  KodiLookUp.Player_SetSpeed(*server, speed='decrement')
+@GetController
+def backward(request, controller, context):
+  controller.Player_SetSpeed(speed='decrement')
   return HttpResponse(status=200)
 
-@GetServer
-def skip(request, server, context):
+@GetController
+def skip(request, controller, context):
   # goto next item in playlist ?
-  KodiLookUp.Player_Seek(*server, position=100)
+  controller.Player_Seek(position=100)
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def restart(request, server, context):
+@GetController
+def restart(request, controller, context):
   # get current position
   # if 0 Player.GoTo previous item in playlist
-  KodiLookUp.Player_Seek(*server, position=0)
+  controller.Player_Seek(position=0)
   return HttpResponse(status=200)
 
-@GetServer
-def mute(request, server, context):
-  KodiLookUp.Application_SetMute(*server)
+@GetController
+def mute(request, controller, context):
+  controller.Application_SetMute()
   return HttpResponse(status=200)
 
-@GetServer
-def togglesubtitles(request, server, context):
-  properties = KodiLookUp.Player_GetProperties(*server)
+@GetController
+def togglesubtitles(request, controller, context):
+  properties = controller.Player_GetProperties()
   if properties['subtitleenabled']:
     mode = 'off'
   else:
     mode = 'on'
-  KodiLookUp.Player_SetSubtitle(*server, mode=mode)
+  controller.Player_SetSubtitle(mode=mode)
   return HttpResponse(status=200)
 
-@GetServer
-def cyclesubtitles(request, server, context):
+@GetController
+def cyclesubtitles(request, controller, context):
   mode = 'next'
-  KodiLookUp.Player_SetSubtitle(*server, mode=mode)
+  controller.Player_SetSubtitle(mode=mode)
   return HttpResponse(status=200)
 
-@GetServer
-def remove(request, server, context, index):
-  KodiLookUp.Playlist_Remove(*server, playlistType='video', index=index)
+@GetController
+def remove(request, controller, context, index):
+  controller.Playlist_Remove(playlistType='video', index=index)
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def playlistplay(request, server, context, index):
-  KodiLookUp.Player_GoTo(*server, index=index)
+@GetController
+def playlistplay(request, controller, context, index):
+  controller.Player_GoTo(index=index)
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def clear(request, server, context):
-  KodiLookUp.Playlist_Clear(*server,  playlistType='video')
+@GetController
+def clear(request, controller, context):
+  controller.Playlist_Clear( playlistType='video')
   return getplaylist(request, context['server'].id)
 
-@GetServer
-def videoscan(request, server, context):
-  KodiLookUp.VideoLibrary_Scan(*server, show_dialog=True)
+@GetController
+def videoscan(request, controller, context):
+  controller.VideoLibrary_Scan(show_dialog=True)
   return HttpResponse(status=200)
 
-@GetServer
-def quit(request, server, context):
-  KodiLookUp.System_Shutdown(*server)
+@GetController
+def quit(request, controller, context):
+  controller.System_Shutdown()
   return HttpResponseRedirect(reverse('kodi'))
 
-@GetServer
-def setvolume(request, server, context):
+@GetController
+def setvolume(request, controller, context):
   try:
     volume = request.GET['volume']
   except:
     pass
   else:
-    KodiLookUp.Application_SetVolume(*server, volume=volume)
+    controller.Application_SetVolume(volume=volume)
   finally:
     return HttpResponse(status=200)
 
-@GetServer
-def setprogress(request, server, context, percentage):
-  KodiLookUp.Player_Seek(*server, position=percentage)
+@GetController
+def setprogress(request, controller, context, percentage):
+  controller.Player_Seek(position=percentage)
   return HttpResponse(status=200)
 
-@GetServer
-def getstatus(request, server, context):
-  player_properties = KodiLookUp.Player_GetProperties(*server)
-  application_properties = KodiLookUp.Application_GetProperties(*server)
+@GetController
+def getstatus(request, controller, context):
+  player_properties = controller.Player_GetProperties()
+  application_properties = controller.Application_GetProperties()
 
   data = {}
 

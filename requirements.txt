@@ -1,0 +1,4 @@
+Django==1.8.4
+requests==2.6.0
+dj-static==0.0.6
+kodicontroller
