@@ -272,7 +272,7 @@ def movies_index(request, controller, context):
 
 @GetPlaylist
 @ServerDownRedirect
-def movie(request, context, movie_id):
+def movie(request, controller, context, movie_id):
   GetMovieList(controller, context, movie_id)
   return render(request, 'kodidj/kodi_server_movies.html', context)
 
