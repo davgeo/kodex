@@ -99,10 +99,16 @@
         <li class="kodi-navbar-button {% block overviewActive %}{% endblock %}"><a class="disable_href" id="kodi-navbar-overview-link" href="{% url 'server' server.id %}"><i class="fa fa-home"></i> Home</a></li>
         <li class="kodi-navbar-button {% block tvActive %}{% endblock %}" ><a class="disable_href" id="kodi-navbar-tv-link" href="{% url 'tvindex' server.id %}"><i class="fa fa-television"></i> TV</a></li>
         <li class="kodi-navbar-button {% block movieActive %}{% endblock %}" ><a class="disable_href" id="kodi-navbar-movie-link" href="{% url 'movies_index' server.id %}"><i class="fa fa-film"></i> Movies</a></li>
+        <li class="kodi-navbar-button {% block mmusicActive %}{% endblock %}" ><a class="disable_href" id="kodi-navbar-music-link" href="{% url 'musicindex' server.id %}"><i class="fa fa-music"></i> Music</a></li>
+        <li class="kodi-navbar-button {% block addonActive %}{% endblock %}" ><a class="disable_href" id="kodi-navbar-addon-link" href="{% url 'addonsindex' server.id %}"><i class="fa fa-database"></i> Addons</a></li>
+        <li class="kodi-navbar-button {% block fileActive %}{% endblock %}" ><a class="disable_href" id="kodi-navbar-file-link" href="{% url 'filesindex' server.id %}"><i class="fa fa-file-o"></i> Files</a></li>
       {% else %}
         <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-overview-link" href="{% url 'server' 0 %}"><i class="fa fa-home"></i> Home</a></li>
         <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-tv-link" href="{% url 'tvindex' 0 %}"><i class="fa fa-television"></i> TV</a></li>
         <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-movie-link" href="{% url 'movies_index' 0 %}"><i class="fa fa-film"></i> Movies</a></li>
+        <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-music-link" href="{% url 'musicindex' 0 %}"><i class="fa fa-music"></i> Music</a></li>
+        <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-addon-link" href="{% url 'addonsindex' 0 %}"><i class="fa fa-database"></i> Addons</a></li>
+        <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-file-link" href="{% url 'filesindex' 0 %}"><i class="fa fa-file-o"></i> Files</a></li>
       {% endif %}
         <li class="kodi-navbar-button {% block configActive %}{% endblock %}" ><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i> Config</a></li>
     </ul>

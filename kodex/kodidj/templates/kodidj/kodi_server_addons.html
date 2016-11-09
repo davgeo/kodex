@@ -1,0 +1,53 @@
+{% extends "kodidj/kodi_base.html" %}
+
+{% load staticfiles %}
+
+{% block addonsActive %}active{% endblock %}
+
+{% block center %}
+  <h2>Addons</h2>
+
+  {% if activeaddon %}
+    <div class="row">
+      <div class="col-lg-2 col-md-3 col-sm-4 col-xs-5 active-poster-thumb-wrapper">
+        {% if activeaddon.thumbnail == '' %}
+          <img src="{% static 'images' %}/no_thumbnail_poster_icon.png" class="img-responsive poster_thumb" alt={{ activeaddon.name }}>
+        {% else %}
+          <img src="{% static 'cache' %}/{{ activeaddon.thumbnail }}" class="img-responsive poster_thumb" alt={{ activeaddon.name }}>
+        {% endif %}
+     </div>
+
+      <div class="col-lg-10 col-md-9 col-sm-8 col-xs-7">
+        <h3>{{ activeaddon.name }}</h3>
+        <p>{{ activeaddon.description }}</p>
+        <a href="{% url 'executeaddon' server.id activeaddon.addonid %}">Execute addon</a>
+      </div>
+    </div>
+  {% endif %}
+
+  <hr>
+
+  {% if activeaddon %}
+    <button type="button" data-toggle="collapse" data-target="#addons">Show All Addons</button>
+    <div id="addons" class="collapse">
+    <hr>
+  {% endif %}
+      <div class="row">
+        {% for addon in addons %}
+          <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 poster-wrapper">
+            <a href="{% url 'addon' server.id addon.addonid %}">
+            {% if addon.thumbnail == '' %}
+              <img src="{% static 'images' %}/no_thumbnail_poster_icon.png" class="img-responsive poster_thumb" alt={{ addon.name }}>
+            {% else %}
+              <img src="{% static 'cache' %}/{{ addon.thumbnail }}" class="img-responsive poster_thumb" alt={{ addon.name }}>
+            {% endif %}
+            </a>
+            <p>{{ addon.name }}</p>
+          </div>
+        {% endfor %}
+      </div>
+
+  {% if activeaddon %}
+    </div>
+  {% endif %}
+{% endblock %}

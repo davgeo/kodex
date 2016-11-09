@@ -167,6 +167,26 @@ def GetTVShowList(controller, context):
   context['starred_tvshows'] = sorted(starred_tv_list, key=itemgetter('title'))
   context['tvshows'] = sorted(unstarred_tv_list, key=itemgetter('title'))
 
+def GetAddonList(controller, context, addon_id=None):
+  addon_content = ('video', 'audio', 'image', 'executable')
+  addon_list = []
+  for content in addon_content:
+    addons = controller.Addons_GetAddons(addoncontent=content)
+    for addon in addons:
+      if addon not in addon_list:
+        addon_list.append(addon)
+
+  context_addons = []
+  for addon in addon_list:
+    addon_details = controller.Addons_GetAddonDetails(addon['addonid'])
+    context_addons.append(addon_details)
+
+    if addon_id is not None:
+      if addon_id == addon['addonid']:
+        context['activeaddon'] = addon_details
+
+  context['addons'] = context_addons
+
 #################################################
 # Views
 #################################################
@@ -275,6 +295,36 @@ def movies_index(request, controller, context):
 def movie(request, controller, context, movie_id):
   GetMovieList(controller, context, movie_id)
   return render(request, 'kodidj/kodi_server_movies.html', context)
+
+@GetPlaylist
+@ServerDownRedirect
+def musicindex(request, controller, context):
+  pass
+
+@GetPlaylist
+@ServerDownRedirect
+def addonsindex(request, controller, context):
+  GetAddonList(controller, context)
+  return render(request, 'kodidj/kodi_server_addons.html', context)
+
+@GetPlaylist
+@ServerDownRedirect
+def addon(request, controller, context, addon_id):
+  GetAddonList(controller, context, addon_id)
+  return render(request, 'kodidj/kodi_server_addons.html', context)
+
+@GetPlaylist
+@ServerDownRedirect
+def executeaddon(request, controller, context, addon_id):
+  controller.EnableLogging()
+  controller.Addons_ExecuteAddon(addon_id)
+  GetAddonList(controller, context, addon_id)
+  return render(request, 'kodidj/kodi_server_addons.html', context)
+
+@GetPlaylist
+@ServerDownRedirect
+def filesindex(request, controller, context):
+  pass
 
 @GetPlaylist
 @ServerDownNoRedirect
