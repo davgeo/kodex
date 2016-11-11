@@ -1,0 +1,85 @@
+{% extends "kodidj/kodi_base.html" %}
+
+{% load staticfiles %}
+
+{% block filesActive %}active{% endblock %}
+
+{% block kodiextraheader %}
+  <script src={% static 'js/kodi_filebrowser.js' %}></script>
+{% endblock %}
+
+{% block center %}
+<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+  <h4>File Sources</h4>
+
+  {% if video_files %}
+    <h4>Video</h4>
+    <table class="table table-condensed table-striped table-responsive" style="width:100%">
+      <tbody>
+        {% for file in video_files %}
+          <tr>
+            <td>
+              <span class="fileselect"><a class={{ file.file }} href="{% url 'files' server.id %}">{{ file.label }}</a></span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if music_files %}
+    <h4>Music</h4>
+    <table class="table table-condensed table-striped table-responsive" style="width:100%">
+      <tbody>
+        {% for file in music_files %}
+          <tr>
+            <td>
+              <a href="#">
+               {{ file.label }}
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if pictures_files %}
+    <h4>Pictures</h4>
+    <table class="table table-condensed table-striped table-responsive" style="width:100%">
+      <tbody>
+        {% for file in pictures_files %}
+          <tr>
+            <td>
+              <a href="#">
+               {{ file.label }}
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  {% if programs_files %}
+    <h4>Programs</h4>
+    <table class="table table-condensed table-striped table-responsive" style="width:100%">
+      <tbody>
+        {% for file in programs_files %}
+          <tr>
+            <td>
+              <a href="#">
+               {{ file.label }}
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+
+<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+  {% include "kodidj/kodi_filebrowser_panel.html" %}
+</div>
+{% endblock %}

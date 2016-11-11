@@ -324,7 +324,21 @@ def executeaddon(request, controller, context, addon_id):
 @GetPlaylist
 @ServerDownRedirect
 def filesindex(request, controller, context):
-  pass
+  media_list = ['video', 'music', 'pictures', 'files', 'programs']
+  for media in media_list:
+    context_entry = "{}_files".format(media)
+    context[context_entry] = controller.Files_GetSources(media)
+  return render(request, 'kodidj/kodi_server_files.html', context)
+
+@GetController
+def files(request, controller, context):
+  try:
+    dirpath = request.GET['dirpath']
+  except KeyError:
+    return HttpResponse(status=500)
+  else:
+    context['filebrowser_list'] = controller.Files_GetDirectory(dirpath)
+    return render(request, 'kodidj/kodi_filebrowser_panel.html', context)
 
 @GetPlaylist
 @ServerDownNoRedirect

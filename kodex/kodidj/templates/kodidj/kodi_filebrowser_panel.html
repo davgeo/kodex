@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<div class="filebrowser-wrapper">
+  <h4>File Browser</h4>
+  <table class="table table-condensed table-striped table-responsive" style="width:100%">
+    <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for file in filebrowser_list %}
+        <tr>
+          <td>
+             {{ file.label }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+

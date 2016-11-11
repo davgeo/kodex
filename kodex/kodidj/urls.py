@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^([0-9]+)/addons/(.+?)_addon$', views.addon, name='addon'),
     url(r'^([0-9]+)/addons/(.+?)_executeaddon$', views.executeaddon, name='executeaddon'),
     url(r'^([0-9]+)/files$', views.filesindex, name='filesindex'),
+    url(r'^([0-9]+)/file_explorer$', views.files, name='files'),
     url(r'^([0-9]+).*?_playpause$', views.playpause, name='playpause'),
     url(r'^([0-9]+).*?_stop$', views.stop, name='stop'),
     url(r'^([0-9]+).*?_forward$', views.forward, name='forward'),
