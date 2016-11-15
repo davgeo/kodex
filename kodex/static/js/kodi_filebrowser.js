@@ -12,6 +12,7 @@ function buttonControlFilebrowser(id) {
     $.get(url, pathid, function(data) {
       console.log("Updated file browser");
       $(".filebrowser-wrapper").replaceWith(data);
+      buttonControlFilebrowser(".fileselect a")
     });
     return false;
   });

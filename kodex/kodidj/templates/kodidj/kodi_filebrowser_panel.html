@@ -5,15 +5,23 @@
   <table class="table table-condensed table-striped table-responsive" style="width:100%">
     <thead>
       <tr>
+        <th></th>
         <th>Name</th>
       </tr>
     </thead>
     <tbody>
       {% for file in filebrowser_list %}
         <tr>
-          <td>
-             {{ file.label }}
-          </td>
+          {% if file.filetype == 'file' %}
+            <td><i class="fa fa-file-o"></i></td>
+            <td><a class={{ file.file }} href="#">{{ file.label }}</a></td>
+          {% elif file.filetype == 'directory' %}
+            <td><i class="fa fa-folder-o"></i></td>
+            <td><span class="fileselect"><a class="{{ file.file }}" href="{% url 'files' server.id %}">{{ file.label }}</a></span></td>
+          {% else %}
+            <td><i class="fa fa-question"></i></td>
+            <td>{{ file.label }}</td>
+          {% endif %}
         </tr>
       {% endfor %}
     </tbody>

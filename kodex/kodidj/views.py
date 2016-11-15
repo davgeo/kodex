@@ -316,7 +316,6 @@ def addon(request, controller, context, addon_id):
 @GetPlaylist
 @ServerDownRedirect
 def executeaddon(request, controller, context, addon_id):
-  controller.EnableLogging()
   controller.Addons_ExecuteAddon(addon_id)
   GetAddonList(controller, context, addon_id)
   return render(request, 'kodidj/kodi_server_addons.html', context)
@@ -337,7 +336,9 @@ def files(request, controller, context):
   except KeyError:
     return HttpResponse(status=500)
   else:
-    context['filebrowser_list'] = controller.Files_GetDirectory(dirpath)
+    controller.EnableLogging()
+    dirlist = controller.Files_GetDirectory(dirpath)
+    context['filebrowser_list'] = sorted(dirlist, key=itemgetter('filetype', 'file'))
     return render(request, 'kodidj/kodi_filebrowser_panel.html', context)
 
 @GetPlaylist
