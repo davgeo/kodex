@@ -19,7 +19,7 @@
         {% for file in video_files %}
           <tr>
             <td>
-              <span class="fileselect"><a class="{{ file.file }}"" href="{% url 'files' server.id %}">{{ file.label }}</a></span>
+              <span class="filesourceselect"><a class="{{ file.file }}"" href="{% url 'files' server.id %}">{{ file.label }}</a></span>
             </td>
           </tr>
         {% endfor %}
@@ -79,7 +79,7 @@
   {% endif %}
 </div>
 
-<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+<div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" id='file-browser'>
   {% include "kodidj/kodi_filebrowser_panel.html" %}
 </div>
 {% endblock %}

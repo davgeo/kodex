@@ -6,13 +6,39 @@
 // GET url and update filebrowser with response
 function buttonControlFilebrowser(id) {
   $(id).click(function() {
-    pathid = { 'dirpath': $(this).attr('class')};
-    console.log(pathid);
     var url = this.href;
+    var targetpath = $(this).attr('class');
+    var prevpathlist = $('#file-browser').data('source');
+
+    var currentpath = prevpathlist.pop();
+    var prevpath = prevpathlist.pop();
+
+    var pathhistory;
+    if(targetpath == prevpath) {
+      pathhistory = prevpathlist.pop();
+    } else {
+      pathhistory = currentpath;
+    }
+
+    pathid = { 'targetpath': targetpath,
+                'pathhistory': pathhistory};
     $.get(url, pathid, function(data) {
-      console.log("Updated file browser");
       $(".filebrowser-wrapper").replaceWith(data);
-      buttonControlFilebrowser(".fileselect a")
+      buttonControlFilebrowser(".filebrowserselect a");
+
+      if(targetpath != prevpath) {
+        if(prevpath != undefined) {
+          prevpathlist.push(prevpath);
+        }
+
+        if(currentpath != undefined) {
+          prevpathlist.push(currentpath);
+        }
+      } else {
+        prevpathlist.push(pathhistory);
+      }
+
+      prevpathlist.push(targetpath);
     });
     return false;
   });
@@ -20,5 +46,7 @@ function buttonControlFilebrowser(id) {
 
 /* Execute processes after page DOM is ready */
 $(function() {
-  buttonControlFilebrowser(".fileselect a")
+  buttonControlFilebrowser(".filesourceselect a")
+  buttonControlFilebrowser(".filebrowserselect a")
+  $('#file-browser').data('source', [])
 });

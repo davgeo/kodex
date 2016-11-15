@@ -332,12 +332,18 @@ def filesindex(request, controller, context):
 @GetController
 def files(request, controller, context):
   try:
-    dirpath = request.GET['dirpath']
+    targetpath = request.GET['targetpath']
   except KeyError:
     return HttpResponse(status=500)
   else:
-    controller.EnableLogging()
-    dirlist = controller.Files_GetDirectory(dirpath)
+    try:
+      pathhistory = request.GET['pathhistory']
+    except KeyError:
+      pass
+    else:
+      context['dir_history'] = pathhistory
+    #controller.EnableLogging()
+    dirlist = controller.Files_GetDirectory(targetpath)
     context['filebrowser_list'] = sorted(dirlist, key=itemgetter('filetype', 'file'))
     return render(request, 'kodidj/kodi_filebrowser_panel.html', context)
 
