@@ -62,9 +62,13 @@ def GetPlaylist(func):
       except KeyError:
         pass
       else:
-        playlist_id_list = [item['id'] for item in context['playlist']]
-        if playing_id not in playlist_id_list:
-          context['special_play'] = True
+        try:
+          playlist_id_list = [item['id'] for item in context['playlist']]
+        except KeyError:
+          pass
+        else:
+          if playing_id not in playlist_id_list:
+            context['special_play'] = True
 
     return func(request, controller, context, server_down, *args, **kwargs)
   return wrapper
@@ -342,15 +346,51 @@ def files(request, controller, context):
       pass
     else:
       context['dir_history'] = pathhistory
-    #controller.EnableLogging()
     dirlist = controller.Files_GetDirectory(targetpath)
     context['filebrowser_list'] = sorted(dirlist, key=itemgetter('filetype', 'file'))
     return render(request, 'kodidj/kodi_filebrowser_panel.html', context)
+
+#TODO: Review file details
+@GetController
+def filedetails(request, controller, context):
+  try:
+    targetfile = request.GET['targetfile']
+  except KeyError:
+    return HttpResponse(status=500)
+  else:
+    controller.EnableLogging()
+    context['file_details'] = controller.Files_GetFileDetails(targetfile)
+    #controller.Playlist_Clear(playlistType='video')
+    #controller.Playlist_Add(playlistType='video', params={'item':{'file':targetfile}})
+    #controller.Player_Open(playlistType='video')
+    return HttpResponse(status=200)
 
 @GetPlaylist
 @ServerDownNoRedirect
 def getplaylist(request, controller, context):
   return render(request, 'kodidj/kodi_playlist_panel.html', context)
+
+@GetController
+def playfile(request, controller, context):
+  try:
+    targetfile = request.GET['targetfile']
+  except KeyError:
+    return HttpResponse(status=500)
+  else:
+    controller.Playlist_Clear(playlistType='video')
+    controller.Playlist_Add(playlistType='video', params={'item':{'file':targetfile}})
+    controller.Player_Open(playlistType='video')
+  return getplaylist(request, context['server'].id)
+
+@GetController
+def addfile(request, controller, context):
+  try:
+    targetfile = request.GET['targetfile']
+  except KeyError:
+    return HttpResponse(status=500)
+  else:
+    controller.Playlist_Add(playlistType='video', params={'item':{'file':targetfile}})
+  return getplaylist(request, context['server'].id)
 
 @GetController
 def playmovie(request, controller, context, movie_id):

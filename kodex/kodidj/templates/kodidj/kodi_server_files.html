@@ -9,12 +9,18 @@
 {% endblock %}
 
 {% block center %}
+<h3>File Browser</h3>
+
 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-  <h4>File Sources</h4>
+  <h4>Sources</h4>
 
   {% if video_files %}
-    <h4>Video</h4>
     <table class="table table-condensed table-striped table-responsive" style="width:100%">
+    <thead>
+      <tr>
+        <th>Video</th>
+      </tr>
+    </thead>
       <tbody>
         {% for file in video_files %}
           <tr>
@@ -28,8 +34,12 @@
   {% endif %}
 
   {% if music_files %}
-    <h4>Music</h4>
     <table class="table table-condensed table-striped table-responsive" style="width:100%">
+    <thead>
+      <tr>
+        <th>Music</th>
+      </tr>
+    </thead>
       <tbody>
         {% for file in music_files %}
           <tr>
@@ -45,8 +55,12 @@
   {% endif %}
 
   {% if pictures_files %}
-    <h4>Pictures</h4>
     <table class="table table-condensed table-striped table-responsive" style="width:100%">
+    <thead>
+      <tr>
+        <th>Pictures</th>
+      </tr>
+    </thead>
       <tbody>
         {% for file in pictures_files %}
           <tr>
@@ -62,8 +76,12 @@
   {% endif %}
 
   {% if programs_files %}
-    <h4>Programs</h4>
     <table class="table table-condensed table-striped table-responsive" style="width:100%">
+    <thead>
+      <tr>
+        <th>Programs</th>
+      </tr>
+    </thead>
       <tbody>
         {% for file in programs_files %}
           <tr>

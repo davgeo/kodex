@@ -1,38 +1,50 @@
 {% load staticfiles %}
 
 <div class="filebrowser-wrapper">
-  <h4>File Browser</h4>
-  <table class="table table-condensed table-striped table-responsive" style="width:100%">
-    <thead>
-      <tr>
-        <th style="width:1%">
-          {% if dir_history %}
-            <span class="filebrowserselect">
-              <a class="{{ dir_history }}" href="{% url 'files' server.id %}">
-                <i class="fa fa-arrow-left"></i>
-              </a>
-            </span>
-          {% endif %}
-        </th>
-        <th>Name</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for file in filebrowser_list %}
+  {% if filebrowser_list %}
+    <h4>Files</h4>
+    <table class="table table-condensed table-striped table-responsive" style="width:100%">
+      <thead>
         <tr>
-          {% if file.filetype == 'file' %}
-            <td style="width:1%"><i class="fa fa-file-o"></i></td>
-            <td><a class={{ file.file }} href="#">{{ file.label }}</a></td>
-          {% elif file.filetype == 'directory' %}
-            <td style="width:1%"><i class="fa fa-folder-o"></i></td>
-            <td><span class="filebrowserselect"><a class="{{ file.file }}" href="{% url 'files' server.id %}">{{ file.label }}</a></span></td>
-          {% else %}
-            <td style="width:1%"><i class="fa fa-question"></i></td>
-            <td>{{ file.label }}</td>
-          {% endif %}
+          <th style="width:1%">
+            {% if dir_history %}
+              <span class="filebrowserselect">
+                <a class="{{ dir_history }}" href="{% url 'files' server.id %}">
+                  <i class="fa fa-arrow-left"></i>
+                </a>
+              </span>
+            {% endif %}
+          </th>
+          <th>Name</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for file in filebrowser_list %}
+          <tr>
+            {% if file.filetype == 'file' %}
+              <td style="width:1%"><i class="fa fa-file-o"></i></td>
+              <td>
+                <span class="filedetailselect">
+                  {{ file.label }}
+                </span>
+                <span class="addfileplaylist">
+                  <a class="{{ file.file }}" href="{% url 'addfile' server.id %}"><i class="fa fa-plus-circle pull-right"></i></a>
+                </span>
+                <span class="playfileplaylist">
+                  <a class="{{ file.file }}" href="{% url 'playfile' server.id %}"><i class="fa fa-play-circle-o pull-right"></i></a>
+                </span>
+              </td>
+            {% elif file.filetype == 'directory' %}
+              <td style="width:1%"><i class="fa fa-folder-o"></i></td>
+              <td><span class="filebrowserselect"><a class="{{ file.file }}" href="{% url 'files' server.id %}">{{ file.label }}</a></span></td>
+            {% else %}
+              <td style="width:1%"><i class="fa fa-question"></i></td>
+              <td>{{ file.label }}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 </div>
 
