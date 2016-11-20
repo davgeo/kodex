@@ -303,7 +303,8 @@ def movie(request, controller, context, movie_id):
 @GetPlaylist
 @ServerDownRedirect
 def musicindex(request, controller, context):
-  pass
+  # TODO : Implement this
+  return redirect(reverse('config'))
 
 @GetPlaylist
 @ServerDownRedirect
@@ -350,9 +351,9 @@ def files(request, controller, context):
     context['filebrowser_list'] = sorted(dirlist, key=itemgetter('filetype', 'file'))
     return render(request, 'kodidj/kodi_filebrowser_panel.html', context)
 
-#TODO: Review file details
 @GetController
 def filedetails(request, controller, context):
+  # TODO : Review file details
   try:
     targetfile = request.GET['targetfile']
   except KeyError:
