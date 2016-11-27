@@ -25,7 +25,7 @@
         {% for file in video_files %}
           <tr>
             <td>
-              <span class="filesourceselect"><a class="{{ file.file }}"" href="{% url 'files' server.id %}">{{ file.label }}</a></span>
+              <span class="filesourceselect"><a class="{{ file.file }}" href="{% url 'files' server.id %}">{{ file.label }}</a></span>
             </td>
           </tr>
         {% endfor %}

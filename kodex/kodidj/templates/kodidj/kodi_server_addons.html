@@ -4,6 +4,10 @@
 
 {% block addonsActive %}active{% endblock %}
 
+{% block kodiextraheader %}
+  <script src={% static 'js/kodi_filebrowser.js' %}></script>
+{% endblock %}
+
 {% block center %}
   <h2>Addons</h2>
 
@@ -21,6 +25,10 @@
         <h3>{{ activeaddon.name }}</h3>
         <p>{{ activeaddon.description }}</p>
         <a href="{% url 'executeaddon' server.id activeaddon.addonid %}">Execute addon</a>
+        <div class="filesourceselect"><a class="plugin://{{ activeaddon.addonid }}" href="{% url 'files' server.id %}">Show file browser</a></div>
+        <div id='file-browser'>
+          {% include "kodidj/kodi_filebrowser_panel.html" %}
+        </div>
       </div>
     </div>
   {% endif %}
