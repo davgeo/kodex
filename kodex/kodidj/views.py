@@ -191,6 +191,17 @@ def GetAddonList(controller, context, addon_id=None):
 
   context['addons'] = context_addons
 
+def GetSortedEpisodeList(controller, show_id, season_id):
+  unsorted_episode_list = controller.VideoLibrary_GetEpisodes(show_id=show_id, season_id=season_id)
+
+  # Set specialsortepisode values for any unset values
+  for item in unsorted_episode_list:
+    if item['specialsortepisode'] < 0:
+      item['specialsortepisode'] = item['episode']
+
+  # Sort by specialsortepsiode then by season (specials go first if they share the same episode number)
+  return sorted(unsorted_episode_list, key=itemgetter('specialsortepisode', 'season', 'episode'))
+
 #################################################
 # Views
 #################################################
@@ -265,8 +276,7 @@ def tvshow(request, controller, context, show_id):
 def tvseason(request, controller, context, show_id, season_id):
   context['tvshow'] = controller.VideoLibrary_GetTVShowDetails(show_id=show_id)
   context['season'] = season_id
-  unsorted_episode_list = controller.VideoLibrary_GetEpisodes(show_id=show_id, season_id=season_id)
-  context['episodes'] = sorted(unsorted_episode_list, key=itemgetter('episode'))
+  context['episodes'] = GetSortedEpisodeList(controller, show_id, season_id)
   return render(request, 'kodidj/kodi_server_tv_season.html', context)
 
 @GetPlaylist
@@ -275,9 +285,7 @@ def tvepisode(request, controller, context, show_id, season_id, episode_id):
   context['tvshow'] = controller.VideoLibrary_GetTVShowDetails(show_id=show_id)
   context['season'] = season_id
 
-  unsorted_episode_list = controller.VideoLibrary_GetEpisodes(show_id=show_id, season_id=season_id)
-
-  episode_list = sorted(unsorted_episode_list, key=itemgetter('episode'))
+  episode_list = GetSortedEpisodeList(controller, show_id, season_id)
 
   for episode in episode_list:
     if int(episode['episodeid']) == int(episode_id):
@@ -508,8 +516,7 @@ def watchedtvseason(request, controller, context, show_id, season_id):
   else:
     playcount = 1
 
-  unsorted_episode_list = controller.VideoLibrary_GetEpisodes(show_id=show_id, season_id=season_id)
-  episode_list = sorted(unsorted_episode_list, key=itemgetter('episode'))
+  episode_list = GetSortedEpisodeList(controller, show_id, season_id)
 
   for episode in episode_list:
     controller.VideoLibrary_SetEpisodeDetails(episode_id=episode['episodeid'], playcount=playcount)

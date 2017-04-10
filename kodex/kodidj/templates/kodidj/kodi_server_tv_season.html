@@ -89,7 +89,7 @@
       <div class="playplaylist">
         <a href="{% url 'playtv' server.id episode.tvshowid episode.season episode.episodeid %}"><i class="fa fa-play-circle-o pull-right"></i></a>
       </div>
-      <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}"><p>{{ episode.episode }}. {{ episode.title }}</p></a>
+      <a href="{% url 'tvepisode' server.id episode.tvshowid episode.season episode.episodeid %}"><p>{{ episode.season }}.{{ episode.episode }} {{ episode.title }}</p></a>
     </div>
   {% endfor %}
 {% endblock %}
