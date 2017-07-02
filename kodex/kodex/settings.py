@@ -13,9 +13,18 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import errno
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Create persistent dir to contain changes which should be kept on shutdown/redeployment (i.e. sqlite database)
+PERSISTENT_DIR = os.path.join(BASE_DIR, 'persistent')
+
+try:
+    os.makedirs(PERSISTENT_DIR)
+except OSError as err:
+    if err.errno != errno.EEXIST:
+        raise
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -100,7 +109,7 @@ WSGI_APPLICATION = 'kodex.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(PERSISTENT_DIR, 'kodex_db.sqlite3'),
     }
 }
 

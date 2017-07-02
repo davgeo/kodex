@@ -1,0 +1,22 @@
+# Docker ignore file #
+
+# Unnecessary files
+.git
+.gitignore
+__pycache__
+
+./Dockerfile
+./.dockerignore
+./README.md
+./helper/boot_gunicorn.sh
+
+# Special run-time files
+isdevserver
+secret_key.py
+
+# Useless directories
+./venv/
+./screenshots/
+
+# Special run-time directories
+./kodex/persistent/
