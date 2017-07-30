@@ -31,7 +31,6 @@ $(function() {
       updateNavURL("#kodi-navbar-overview-link", current_server_select, server);
       updateNavURL("#kodi-navbar-tv-link", current_server_select, server);
       updateNavURL("#kodi-navbar-movie-link", current_server_select, server);
-      updateNavURL("#kodi-navbar-music-link", current_server_select, server);
       updateNavURL("#kodi-navbar-addon-link", current_server_select, server);
       updateNavURL("#kodi-navbar-file-link", current_server_select, server);
 
