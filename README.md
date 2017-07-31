@@ -10,7 +10,7 @@ Kodex should be hosted on the same location that hosts the MySQL library and/or 
 ## Deployment
 ### Docker
 The simplest deployment is to run the containerised version from Docker. To do this install Docker (see https://www.docker.com/ for more info) and execute the follow:
-- docker run -d -p &lt;PORT>:8000 -v &lt;HOST_DIR>:/app/kodex/persistent davgeo/kodex:v1.0
+- docker run -d -p &lt;PORT>:8000 -v &lt;HOST_DIR>:/app/kodex/persistent davgeo/kodex:latest
 
 where &lt;PORT> should be replaced with the port you want to use and &lt;HOST_DIR> a folder on the host filesystem where the kodex container will store persistent files.
 
