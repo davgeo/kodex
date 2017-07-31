@@ -108,7 +108,7 @@
         <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-addon-link" href="{% url 'addonsindex' 0 %}"><i class="fa fa-database"></i> Addons</a></li>
         <li class="kodi-navbar-button disabled"><a class="disable_href disabled" id="kodi-navbar-file-link" href="{% url 'filesindex' 0 %}"><i class="fa fa-file-o"></i> Files</a></li>
       {% endif %}
-        <li class="kodi-navbar-button {% block configActive %}{% endblock %} visible-md" ><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i> Config</a></li>
+        <li class="kodi-navbar-button {% block configActive %}{% endblock %} hidden-sm" ><a href="{% url 'config' %}"><i class="fa fa-cog fa-lg"></i> Config</a></li>
     </ul>
   </div>
 {% endblock %}
